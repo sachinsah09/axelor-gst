@@ -17,7 +17,8 @@
 		<field name="gstin" />
 	</grid>
 	<form name="party-form" title="Party-Form"
-		model="com.axelor.gst.db.Party">
+		model="com.axelor.gst.db.Party"
+		onSave="action.party.party.generate.method.setPartySequence">
 		<panel title="Fill all Details">
 			<field name="partySeq" />
 			<field name="name" />
@@ -34,8 +35,8 @@
 		<field name="partySeq" />
 		<field name="name" />
 		<field name="type" />
-		<field name="isCustomer" />
-		<field name="isSupplier" />
+		<field name="isCustomer" widget="boolean-switch" />
+		<field name="isSupplier" widget="boolean-switch" />
 		<field name="gstin" />
 		<field name="address" />
 		<field name="contact" />
@@ -52,4 +53,10 @@
       </div>  
     ]]></template>
 	</cards>
+
+	<action-method
+		name="action.party.party.generate.method.setPartySequence">
+		<call class="com.axelor.gst.web.PartyController"
+			method="setPartySequence" />
+	</action-method>
 </object-views>

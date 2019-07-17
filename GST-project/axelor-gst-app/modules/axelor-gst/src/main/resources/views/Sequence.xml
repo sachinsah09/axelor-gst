@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.1.xsd">
+
+	<grid name="sequence-grid" title="Sequence-Details"
+		model="com.axelor.gst.db.Sequence">
+		<field name="prefix" />
+		<field name="suffix" />
+		<field name="padding" />
+		<field name="nextNumber" />
+		<field name="model" />
+	</grid>
+	<form name="sequence-form" title="Sequence-Form"
+		model="com.axelor.gst.db.Sequence">
+		<panel title="Fill all Details">
+			<field name="prefix" />
+			<field name="suffix" />
+			<field name="padding" />
+			<field name="nextNumber" />
+			<field name="model"  onChange="save,action.company.sequence.generate.calculateSequenceNumber"/>
+		</panel>
+	</form>
+
+	<action-method
+		name="action.company.sequence.generate.calculateSequenceNumber">
+		<call class="com.axelor.gst.web.SequenceController"
+			method="calculateSequenceNumber" />
+	</action-method>
+
+</object-views>

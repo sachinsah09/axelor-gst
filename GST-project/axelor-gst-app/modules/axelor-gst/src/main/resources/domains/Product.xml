@@ -14,7 +14,8 @@
 			ref="com.axelor.gst.db.ProductCategory" />
 		<decimal name="salesPrice" title="Sales Price" />
 		<decimal name="costPrice" title="Cost Price" />
-		<binary name="image" title="Product Image" />
+		<many-to-one name="image" title="Product Image"
+			help="Max size 1MB." ref="com.axelor.meta.db.MetaFile" />
 		<decimal name="gstRate" title="Gst Rate" />
 	</entity>
 </domain-models>

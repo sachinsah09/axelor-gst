@@ -1,5 +1,7 @@
 package com.axelor.gst.service;
 
-public class SequenceService {
+import com.axelor.gst.db.Sequence;
 
+public interface SequenceService {
+	public String calculateSequenceNumber(Sequence sequence);
 }

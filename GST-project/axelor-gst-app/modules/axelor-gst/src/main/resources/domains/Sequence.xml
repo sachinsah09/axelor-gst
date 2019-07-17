@@ -13,7 +13,7 @@
 			title="Sequence Padding" />
 		<string name="nextNumber" title="Next Number" />
 		<many-to-one name="model" help="Max size 1MB."
-			title="Model to assign this Sequence"
+			title="Select Model to assign this Sequence"
 			ref="com.axelor.meta.db.MetaModel" />
 	</entity>
 </domain-models>

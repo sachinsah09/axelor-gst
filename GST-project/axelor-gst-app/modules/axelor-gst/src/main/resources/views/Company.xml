@@ -23,22 +23,4 @@
 		<panel-related field="bankDetailsList" />
 	</form>
 
-	<grid name="sequence-grid" title="Sequence-Details"
-		model="com.axelor.gst.db.Sequence">
-		<field name="prefix" />
-		<field name="suffix" />
-		<field name="padding" />
-		<field name="nextNumber" />
-		<field name="model"/>
-	</grid>
-	<form name="sequence-form" title="Sequence-Form"
-		model="com.axelor.gst.db.Sequence">
-		<panel title="Fill all Details">
-		<field name="prefix" />
-		<field name="suffix" />
-		<field name="padding" />
-		<field name="nextNumber" />
-		<field name="model"/>
-		</panel>
-	</form>
 </object-views>
