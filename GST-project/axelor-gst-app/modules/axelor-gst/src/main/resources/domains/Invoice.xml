@@ -12,7 +12,7 @@
 		<many-to-one name="company"
 			ref="com.axelor.gst.db.Company" required="true" />
 		<string name="invoiceSeq" readonly="true" />
-		<datetime name="date" />
+		<datetime name="onDate" />
 		<integer name="priority" />
 		<many-to-one name="party" ref="com.axelor.gst.db.Party"
 			required="true" />
@@ -30,20 +30,6 @@
 		<decimal name="netSgst" readonly="true" />
 		<one-to-many name="invoiceItemsList"
 			ref="com.axelor.gst.db.InvoiceLine" mappedBy="invoice" />
-	</entity>
-	<entity name="InvoiceLine" sequential="true" cachable="true">
-		<many-to-one name="product"
-			ref="com.axelor.gst.db.Product" />
-		<string name="hsbn" />
-		<string name="item" required="true" />
-		<integer name="qty" />
-		<decimal name="price" />
-		<decimal name="netAmount" />
-		<decimal name="gstRate" />
-		<decimal name="igst" />
-		<decimal name="sgst" />
-		<decimal name="cgst" />
-		<decimal name="grossAmount" />
 	</entity>
 </domain-models>
 

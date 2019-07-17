@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.1.xsd">
+
+	<grid name="product-grid" title="product-Details"
+		model="com.axelor.gst.db.Product">
+		<field name="name" />
+		<field name="code" />
+		<field name="hsbn" />
+		<field name="category" />
+		<field name="salesPrice" />
+		<field name="costPrice" />
+		<field name="gstRate" />
+	</grid>
+	<form name="product-form" title="Product-Form"
+		model="com.axelor.gst.db.Product">
+		<panel title="Fill all Details">
+			<field name="name" />
+			<field name="code" />
+			<field name="hsbn" />
+			<field name="category" onChange="save,action.product.product.method.generate.setgstrate"/>
+			<field name="salesPrice" />
+			<field name="costPrice" />
+			<field name="image" widget="image" />
+			<field name="gstRate" />
+		</panel>
+	</form>
+	<action-method name="action.product.product.method.generate.setgstrate">
+		<call class="com.axelor.gst.web.ProductController"
+			method="setGstRate" />
+	</action-method>
+
+</object-views>

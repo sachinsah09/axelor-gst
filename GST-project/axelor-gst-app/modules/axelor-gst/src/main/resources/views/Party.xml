@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.1.xsd">
+
+	<selection name="gst.party.type.select">
+		<option value="individual">individual</option>
+		<option value="company">Company</option>
+	</selection>
+	<grid name="party-grid" title="Party-Details"
+		model="com.axelor.gst.db.Party">
+		<field name="partySeq" />
+		<field name="name" />
+		<field name="type" />
+		<field name="isCustomer" />
+		<field name="isSupplier" />
+		<field name="gstin" />
+	</grid>
+	<form name="party-form" title="Party-Form"
+		model="com.axelor.gst.db.Party">
+		<panel title="Fill all Details">
+			<field name="partySeq" />
+			<field name="name" />
+			<field name="type" />
+			<field name="isCustomer" />
+			<field name="isSupplier" />
+			<field name="gstin" />
+		</panel>
+		<panel-related field="contactList" widget="editor" />
+		<panel-related field="addressList" widget="editor" />
+	</form>
+	<cards name="party-cards" title="Party"
+		model="com.axelor.gst.db.Party">
+		<field name="partySeq" />
+		<field name="name" />
+		<field name="type" />
+		<field name="isCustomer" />
+		<field name="isSupplier" />
+		<field name="gstin" />
+		<field name="address" />
+		<field name="contact" />
+		<template><![CDATA[
+        <strong>{{partySeq}}</strong>
+      <div class="span8">
+         <abbr ng-if="name" title="name">name:</abbr><strong> {{name}}</strong><br>
+         <abbr ng-if="type" title="type">Type:</abbr><strong> {{type}}</strong><br>
+          <abbr ng-if="isCustomer" title="isCustomer">Customer:</abbr><strong> {{isCustomer}}</strong><br>
+          <abbr ng-if="isSupplier" title="isSupplier">Supplier:</abbr><strong> {{isSupplier}}</strong><br>
+         <contact>
+          <abbr ng-if="contact" title=""contact"">Contact:</abbr><strong> {{contact.name}}</strong><br>
+      	</contact>
+      </div>  
+    ]]></template>
+	</cards>
+</object-views>

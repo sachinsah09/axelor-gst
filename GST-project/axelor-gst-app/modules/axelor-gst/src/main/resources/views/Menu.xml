@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+
+	<menuitem name="company-root" title="Company" order="-90"
+		tag-get="com.axelor.mail.web.MailController:inboxMenuTag()"
+		tag="company" tag-style="info" icon="fa-book" icon-background="white" />
+
+	<menuitem name="company-root-company" parent="company-root"
+		title="Company" action="action.customer.view.customer" />
+	<action-view name="action.customer.view.customer"
+		title="Payslip" model="com.axelor.gst.db.Company">
+		<view type="grid" name="company-grid" />
+		<view type="form" name="company-form" />
+	</action-view>
+	<menuitem name="company-root-sequence" parent="company-root"
+		title="Sequence" action="action.customer.view.sequence" />
+	<action-view name="action.customer.view.sequence"
+		title="Sequence" model="com.axelor.gst.db.Sequence">
+		<view type="grid" name="sequence-grid" />
+		<view type="form" name="sequence-form" />
+	</action-view>
+	<menuitem name="company-root-bankaccount"
+		parent="company-root" title="Bank Account"
+		action="action.customer.view.bankaccount" />
+	<action-view name="action.customer.view.bankaccount"
+		title="Bank Account" model="com.axelor.gst.db.BankAccount">
+		<view type="grid" name="bankaccount-grid" />
+		<view type="form" name="bankaccount-form" />
+	</action-view>
+
+
+	<menuitem name="party-root" title="Party" order="-90"
+		tag-get="com.axelor.mail.web.MailController:inboxMenuTag()"
+		tag="party" tag-style="info" icon="fa-contact" icon-background="pink" />
+
+	<menuitem name="party-root-party" parent="party-root"
+		title="Party" action="action.party.view.party" />
+	<action-view name="action.party.view.party" title="Party"
+		model="com.axelor.gst.db.Party">
+		<view type="grid" name="party-grid" />
+		<view type="form" name="party-form" />
+		<view type="cards" name="party-cards" />
+		<context name="json-enhance" expr="true" />
+	</action-view>
+	<menuitem name="party-root-contact" parent="party-root"
+		title="Contact" action="action.party.view.contact" />
+	<action-view name="action.party.view.contact"
+		title="Contact" model="com.axelor.gst.db.Contact">
+		<view type="grid" name="contact-grid" />
+		<view type="form" name="contact-form" />
+	</action-view>
+
+	<menuitem name="party-root-configurations" parent="party-root"
+		title="Configurations" />
+	<menuitem name="party-root-configurations-city"
+		parent="party-root-configurations" title="City"
+		action="action.party.configuartions.view.city" />
+	<action-view name="action.party.configuartions.view.city"
+		title="City" model="com.axelor.gst.db.City">
+		<view type="grid" name="City-grid" />
+		<view type="form" name="City-form" />
+	</action-view>
+	<menuitem name="party-root-configurations-state"
+		parent="party-root-configurations" title="State"
+		action="action.party.configuartions.view.state" />
+	<action-view name="action.party.configuartions.view.state"
+		title="State" model="com.axelor.gst.db.State">
+		<view type="grid" name="State-grid" />
+		<view type="form" name="State-form" />
+	</action-view>
+	<menuitem name="party-root-configurations-country"
+		parent="party-root-configurations" title="Country"
+		action="action.party.configuartions.view.Country" />
+	<action-view
+		name="action.party.configuartions.view.Country" title="Country"
+		model="com.axelor.gst.db.Country">
+		<view type="grid" name="Country-grid" />
+		<view type="form" name="Country-form" />
+	</action-view>
+
+	<menuitem name="product-root" title="Product" order="-90"
+		tag-get="com.axelor.mail.web.MailController:inboxMenuTag()"
+		tag="Product" tag-style="info" icon="fa-book" icon-background="yellow" />
+	<menuitem name="product-root-product" parent="product-root"
+		title="Product" action="action.product.view.product" />
+	<action-view name="action.product.view.product"
+		title="Product" model="com.axelor.gst.db.Product">
+		<view type="grid" name="product-grid" />
+		<view type="form" name="product-form" />
+	</action-view>
+	<menuitem name="company-root-productcategory" parent="product-root"
+		title="Product categories" action="action.product.view.productcategory" />
+	<action-view name="action.product.view.productcategory"
+		title="Product Categories" model="com.axelor.gst.db.ProductCategory">
+		<view type="grid" name="productcategory-grid" />
+		<view type="form" name="productcategory-form" />
+	</action-view>
+
+</object-views>
+

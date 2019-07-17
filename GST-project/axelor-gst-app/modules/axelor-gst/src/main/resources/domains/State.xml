@@ -6,17 +6,11 @@
   http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
 
 	<module name="gst" package="com.axelor.gst.db" />
-	<entity name="Address" sequential="true" cachable="true">
-		<string name="type" required="true"
-			selection="gst.address.type.select" namecolumn="true"/>
-		<string name="line1" required="true" />
-		<string name="line2" />
-		<many-to-one name="city" required="true"
-			ref="com.axelor.gst.db.City" />
-		<many-to-one name="state" ref="com.axelor.gst.db.State" />
+
+	<entity name="State" sequential="true" cachable="true">
+		<string name="name" required="true" namecolumn="true" />
 		<many-to-one name="country" required="true"
 			ref="com.axelor.gst.db.Country" />
-		<string name="pinCode" />
 	</entity>
 </domain-models>
 

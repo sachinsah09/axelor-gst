@@ -10,7 +10,7 @@
 		<string name="bank" required="true" />
 		<string name="accountNumber" required="true" />
 		<string name="ifsc" required="true" />
-		<string name="type" selection="gst.gst.bankaccount.gst.bankaccount.type.select" default="current"/>
+		<string name="type" default="current" selection="gst.bankaccount.type.select"  />
 		<string name="address" />
 	</entity>
 </domain-models>

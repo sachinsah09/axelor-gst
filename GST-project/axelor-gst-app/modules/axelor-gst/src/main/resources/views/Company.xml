@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.1.xsd">
+
+	<grid name="company-grid" title="Company-Details"
+		model="com.axelor.gst.db.Company">
+		<field name="name" />
+		<field name="logo" />
+		<field name="gstin" />
+		<field name="address" />
+	</grid>
+
+	<form name="company-form" title="Company-Form"
+		model="com.axelor.gst.db.Company">
+		<panel title="Fill all Details">
+			<field name="name" />
+			<field name="logo" widget="image" />
+			<field name="gstin" />
+			<field name="address" />
+		</panel>
+		<panel-related field="contactList" widget="editor" />
+		<panel-related field="bankDetailsList" />
+	</form>
+
+	<grid name="sequence-grid" title="Sequence-Details"
+		model="com.axelor.gst.db.Sequence">
+		<field name="prefix" />
+		<field name="suffix" />
+		<field name="padding" />
+		<field name="nextNumber" />
+		<field name="model"/>
+	</grid>
+	<form name="sequence-form" title="Sequence-Form"
+		model="com.axelor.gst.db.Sequence">
+		<panel title="Fill all Details">
+		<field name="prefix" />
+		<field name="suffix" />
+		<field name="padding" />
+		<field name="nextNumber" />
+		<field name="model"/>
+		</panel>
+	</form>
+</object-views>

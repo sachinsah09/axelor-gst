@@ -9,7 +9,7 @@
 	<entity name="Contact" sequential="true" cachable="true">
 		<string name="name" required="true" />
 		<string name="type" required="true"
-			selection="gst.gst.contact.gst.contact.type.select" />
+			selection="gst.contact.type.select" />
 		<string name="primaryEmail" />
 		<string name="secondaryEmail" />
 		<string name="primaryPhone" />
