@@ -7,15 +7,15 @@
 
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="Company" sequential="true" cachable="true">
-		<string name="name" required="true" />
-		<many-to-one name="logo" help="Max size 1MB."
-			ref="com.axelor.meta.db.MetaFile" />
-		<one-to-many name="contactList"
+		<string name="name" title="Company Name" required="true" />
+		<many-to-one name="logo" title="Company's Logo"
+			help="Max size 1MB." ref="com.axelor.meta.db.MetaFile" />
+		<one-to-many name="contactList" title="Contacts"
 			ref="com.axelor.gst.db.Contact" />
-		<string name="gstin" min="15" max="15" />
-		<one-to-many name="bankDetailsList"
+		<string name="gstin" title="GSTIN" min="15" max="15" />
+		<one-to-many name="bankDetailsList" title="Bank Details"
 			ref="com.axelor.gst.db.BankAccount" />
-		<many-to-one name="address"
+		<many-to-one name="address" title="Company Address"
 			ref="com.axelor.gst.db.Address" />
 	</entity>
 </domain-models>

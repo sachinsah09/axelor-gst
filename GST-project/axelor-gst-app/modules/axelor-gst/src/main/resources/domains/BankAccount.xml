@@ -7,11 +7,11 @@
 
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="BankAccount" sequential="true" cachable="true">
-		<string name="bank" required="true" />
-		<string name="accountNumber" required="true" />
-		<string name="ifsc" required="true" />
-		<string name="type" default="current" selection="gst.bankaccount.type.select"  />
-		<string name="address" />
+		<string name="bank" title="Bank Name" required="true" />
+		<string name="accountNumber" title="Account Number" required="true" />
+		<string name="ifsc" title="IFSC Code" required="true" />
+		<string name="type" title="Acocunt Type" default="current" selection="gst.bankaccount.type.select"  />
+		<string name="address" title="Bank Address"/>
 	</entity>
 </domain-models>
 

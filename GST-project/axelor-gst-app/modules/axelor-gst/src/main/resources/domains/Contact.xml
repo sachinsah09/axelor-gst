@@ -7,13 +7,13 @@
 
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="Contact" sequential="true" cachable="true">
-		<string name="name" required="true" />
-		<string name="type" required="true"
+		<string name="name" title="Contact Name" required="true" />
+		<string name="type" title="Contact Type" required="true"
 			selection="gst.contact.type.select" />
-		<string name="primaryEmail" />
-		<string name="secondaryEmail" />
-		<string name="primaryPhone" />
-		<string name="secondaryPhone" />
+		<string name="primaryEmail"  title="Primary Email"/>
+		<string name="secondaryEmail"  title="Secondary Email" />
+		<string name="primaryPhone"  title="Primary Phone"/>
+		<string name="secondaryPhone" title="Secondary Phone" />
 	</entity>
 </domain-models>
 

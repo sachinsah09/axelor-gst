@@ -7,10 +7,12 @@
 
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="City" sequential="true" cachable="true">
-		<string name="city" required="true" namecolumn="true" />
-		<many-to-one name="state" ref="com.axelor.gst.db.State" />
-		<many-to-one name="country" required="true"
-			ref="com.axelor.gst.db.Country" />
+		<string name="city" required="true" title="City Name"
+			namecolumn="true" />
+		<many-to-one name="state" title="State"
+			ref="com.axelor.gst.db.State" />
+		<many-to-one name="country" title="Country"
+			required="true" ref="com.axelor.gst.db.Country" />
 	</entity>
 </domain-models>
 

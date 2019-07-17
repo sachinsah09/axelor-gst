@@ -6,12 +6,14 @@
   http://axelor.com/xml/ns/domain-models/domain-models_5.0.xsd">
 
 	<module name="gst" package="com.axelor.gst.db" />
-	<entity name="Sequence" sequential="true" cachable="true">
-		<string name="prefix" required="true" />
-		<string name="suffix" />
-		<integer name="padding" min="1" max="10" />
-		<string name="nextNumber" />
+	<entity name="Sequence" sequential="true" cachable="true" >
+		<string name="prefix" required="true" title="Sequence Prefix " />
+		<string name="suffix" title="Sequence Suffix" />
+		<integer name="padding" min="1" max="10"
+			title="Sequence Padding" />
+		<string name="nextNumber" title="Next Number" />
 		<many-to-one name="model" help="Max size 1MB."
+			title="Model to assign this Sequence"
 			ref="com.axelor.meta.db.MetaModel" />
 	</entity>
 </domain-models>

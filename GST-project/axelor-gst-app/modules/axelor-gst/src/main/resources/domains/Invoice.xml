@@ -7,29 +7,30 @@
 
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="Invoice" sequential="true" cachable="true">
-		<string name="status" required="true"
+		<string name="status" title="Status" required="true"
 			selection="gst.gst.invoice.gst.invoice.status.select" readonly="true" />
-		<many-to-one name="company"
+		<many-to-one name="company" title="Company Name"
 			ref="com.axelor.gst.db.Company" required="true" />
-		<string name="invoiceSeq" readonly="true" />
-		<datetime name="onDate" />
-		<integer name="priority" />
-		<many-to-one name="party" ref="com.axelor.gst.db.Party"
-			required="true" />
-		<many-to-one name="partyContact"
+		<string name="invoiceSeq" readonly="true"
+			title="Invoice Number" />
+		<datetime name="onDate" title="Invoice Generated Date" />
+		<integer name="priority" title="Set Prority" />
+		<many-to-one name="party" title="Party Name"
+			ref="com.axelor.gst.db.Party" required="true" />
+		<many-to-one name="partyContact"  title="Party Contact"
 			ref="com.axelor.gst.db.Contact" />
-		<many-to-one name="invoiceAddress"
+		<many-to-one name="invoiceAddress"  title="Invoice Address"
 			ref="com.axelor.gst.db.Address" required="true" />
-		<many-to-one name="shippingAddress"
+		<many-to-one name="shippingAddress"  title="Shipping Address"
 			ref="com.axelor.gst.db.Address" />
-		<boolean name="isInvoiceAddressAsShippingAddress"
+		<boolean name="isInvoiceAddressAsShippingAddress"  title="Use Shipping Address as Invoice Address "
 			default="true" />
-		<decimal name="netAmount" readonly="true" />
-		<decimal name="netIgst" readonly="true" />
-		<decimal name="netCgst" readonly="true" />
-		<decimal name="netSgst" readonly="true" />
+		<decimal name="netAmount" readonly="true"  title="Net Amount" />
+		<decimal name="netIgst" readonly="true"  title="Net IGST"/>
+		<decimal name="netCgst" readonly="true"  title="Net CGST"/>
+		<decimal name="netSgst" readonly="true"  title="Net SGST"/>
 		<one-to-many name="invoiceItemsList"
-			ref="com.axelor.gst.db.InvoiceLine" mappedBy="invoice" />
+			ref="com.axelor.gst.db.InvoiceLine" mappedBy="invoice"  title="Invoice Items" />
 	</entity>
 </domain-models>
 

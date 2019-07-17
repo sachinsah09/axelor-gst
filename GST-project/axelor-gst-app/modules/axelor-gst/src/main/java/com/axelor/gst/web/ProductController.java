@@ -16,8 +16,13 @@ public class ProductController extends JpaSupport {
 
 	public void setGstRate(ActionRequest request, ActionResponse response) {
 		Product product = request.getContext().asType(Product.class);
-		BigDecimal gstrate= service.setGstRate(product);
-		response.setValue("gstRate", gstrate);
+		try {
+		BigDecimal gstRate= service.setGstRate(product);
+		response.setValue("gstRate", gstRate);
+		}
+		catch(Exception e) { 
+			response.setError("Error while fetching ID");
+		}
 	}
 
 }

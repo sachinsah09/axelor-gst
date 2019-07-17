@@ -9,14 +9,11 @@ public class ProductServiceImp implements ProductService {
 
 	@Override
 	public BigDecimal setGstRate(Product product) {
-		BigDecimal gstrate = null;
+		BigDecimal gstRate = null;
 		if (!ObjectUtils.isEmpty(product.getId())) {
 			ProductCategory pc = product.getCategory();
-			gstrate = pc.getGstRate();
-			System.out.print(gstrate);
-		} else {
-			System.out.println("ID is NULL");
-		}
-		return gstrate;
+			gstRate = pc.getGstRate();
+		} 
+		return gstRate;
 	}
 }
