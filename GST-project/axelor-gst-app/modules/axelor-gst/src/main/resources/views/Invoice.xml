@@ -10,6 +10,7 @@
 		<field name="company" />
 		<field name="onDate" />
 		<field name="priority" />
+		<field name="party" />
 		<field name="partyContact" />
 		<field name="invoiceAddress" />
 		<field name="shippingAddress" />
@@ -42,6 +43,7 @@
 			<field name="company" />
 			<field name="onDate" />
 			<field name="priority" />
+			<field name="party" onChange="action.invoice.create.invoice.generate.method.setInvoicePartyPrimaryContact,action.invoice.create.invoice.generate.method.setInvoicePartyAddress" />
 			<field name="partyContact" />
 			<field name="invoiceAddress" />
 			<field name="shippingAddress" />
@@ -63,7 +65,16 @@
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoiceSequence" />
 	</action-method>
-	
+	<action-method
+		name="action.invoice.create.invoice.generate.method.setInvoicePartyPrimaryContact">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setInvoicePartyPrimaryContact" />
+	</action-method>
+	<action-method
+	name="action.invoice.create.invoice.generate.method.setInvoicePartyAddress">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setInvoicePartyAddress" />
+	</action-method>
 	<action-record name="action.invoice.set.default.company"
 		model="com.axelor.gst.db.Invoice">
 		<field name="company" expr="action:action.default.company"
@@ -75,7 +86,7 @@
 		search="self.name = 'Axelor pvt ltd'">
 		<field name="com" expr="action:default-title-record" />
 	</action-record>
-
+	
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.draft"
 		model="com.axelor.gst.db.Invoice">

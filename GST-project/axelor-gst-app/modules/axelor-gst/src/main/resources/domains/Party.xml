@@ -15,9 +15,9 @@
 		<boolean name="isSupplier"  title="Party is a Supplier"/>
 		<string name="gstin"  title="GSTIN"/>
 		<one-to-many name="contactList"  title="Contacts"
-			ref="com.axelor.gst.db.Contact" />
+			ref="com.axelor.gst.db.Contact" mappedBy="party" />
 		<one-to-many name="addressList"  title="Addresses"
-			ref="com.axelor.gst.db.Address" />
+			ref="com.axelor.gst.db.Address" mappedBy="party"/>
 	</entity>
 </domain-models>
 

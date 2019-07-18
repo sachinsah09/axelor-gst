@@ -10,10 +10,11 @@
 		<string name="name" title="Contact Name" required="true" />
 		<string name="type" title="Contact Type" required="true"
 			selection="gst.contact.type.select" />
-		<string name="primaryEmail"  title="Primary Email"/>
-		<string name="secondaryEmail"  title="Secondary Email" />
-		<string name="primaryPhone"  title="Primary Phone"/>
+		<string name="primaryEmail" title="Primary Email" />
+		<string name="secondaryEmail" title="Secondary Email" />
+		<string name="primaryPhone" title="Primary Phone" />
 		<string name="secondaryPhone" title="Secondary Phone" />
+		<many-to-one name="party" ref="com.axelor.gst.db.Party" />
 	</entity>
 </domain-models>
 

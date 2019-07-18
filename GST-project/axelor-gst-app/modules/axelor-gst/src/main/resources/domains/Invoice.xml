@@ -20,7 +20,7 @@
 		<many-to-one name="partyContact"  title="Party Contact"
 			ref="com.axelor.gst.db.Contact" />
 		<many-to-one name="invoiceAddress"  title="Invoice Address"
-			ref="com.axelor.gst.db.Address" required="true" />
+			ref="com.axelor.gst.db.Address"  />
 		<many-to-one name="shippingAddress"  title="Shipping Address"
 			ref="com.axelor.gst.db.Address" />
 		<boolean name="isInvoiceAddressAsShippingAddress"  title="Use Shipping Address as Invoice Address "
