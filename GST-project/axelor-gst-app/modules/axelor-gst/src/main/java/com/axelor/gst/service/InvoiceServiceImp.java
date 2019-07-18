@@ -1,25 +1,24 @@
 package com.axelor.gst.service;
 
 import com.axelor.db.JPA;
-import com.axelor.gst.db.Party;
+import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.Sequence;
-import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
-import com.axelor.meta.db.repo.MetaModelRepository;
 import com.google.inject.persist.Transactional;
 
-public class PartyServiceImp implements PartyService {
-
+public class InvoiceServiceImp implements InvoiceService {
+	
+	@Override
 	@Transactional
-	public String setPartySequence(Party party) {
+	public String setInvoiceSequence(Invoice invoice) {
 
 		String sequenceNumber = "";
-		if (party.getPartySeq() == null) {
+		if (invoice.getInvoiceSeq() == null) {
 			long modelId;
 			int addPaddingZero = 0;
 
 			// method 1 to find model id
-			modelId = JPA.all(MetaModel.class).filter("self.id = 47").fetchOne().getId();
+			modelId = JPA.all(MetaModel.class).filter("self.id = 45").fetchOne().getId();
 
 			// method 2 to find model id
 			// MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
@@ -48,8 +47,10 @@ public class PartyServiceImp implements PartyService {
 			JPA.em().persist(sequence);
 
 		} else {
-				 sequenceNumber=party.getPartySeq();
+				 sequenceNumber=invoice.getInvoiceSeq();
 		}
 		return sequenceNumber;
 	}
+
+
 }

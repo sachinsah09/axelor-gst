@@ -27,33 +27,34 @@
 			<field name="isSupplier" />
 			<field name="gstin" />
 		</panel>
-		<panel-related field="contactList" widget="editor" />
-		<panel-related field="addressList" widget="editor" />
+		<panel-related field="contactList"
+			widget="boolean-switch" />
+		<panel-related field="addressList"
+			widget="boolean-switch" />
 	</form>
 	<cards name="party-cards" title="Party"
 		model="com.axelor.gst.db.Party">
 		<field name="partySeq" />
 		<field name="name" />
 		<field name="type" />
-		<field name="isCustomer" widget="boolean-switch" />
-		<field name="isSupplier" widget="boolean-switch" />
+		<field name="isCustomer" widget="boolean" />
+		<field name="isSupplier" widget="boolean" />
 		<field name="gstin" />
 		<field name="address" />
 		<field name="contact" />
 		<template><![CDATA[
-        <strong>{{partySeq}}</strong>
-      <div class="span8">
+		<div>
+        Party No.<strong>{{partySeq}}</strong><br>
          <abbr ng-if="name" title="name">name:</abbr><strong> {{name}}</strong><br>
          <abbr ng-if="type" title="type">Type:</abbr><strong> {{type}}</strong><br>
           <abbr ng-if="isCustomer" title="isCustomer">Customer:</abbr><strong> {{isCustomer}}</strong><br>
-          <abbr ng-if="isSupplier" title="isSupplier">Supplier:</abbr><strong> {{isSupplier}}</strong><br>
-         <contact>
-          <abbr ng-if="contact" title=""contact"">Contact:</abbr><strong> {{contact.name}}</strong><br>
-      	</contact>
-      </div>  
+          <abbr  title="isSupplier">Supplier:</abbr><strong> {{isSupplier}}</strong><br>
+          Address:<strong> {{address}}</strong><br>
+    	  Email:<strong> {{contact}}</strong><br>
+    	</div>
     ]]></template>
 	</cards>
-
+	
 	<action-method
 		name="action.party.party.generate.method.setPartySequence">
 		<call class="com.axelor.gst.web.PartyController"

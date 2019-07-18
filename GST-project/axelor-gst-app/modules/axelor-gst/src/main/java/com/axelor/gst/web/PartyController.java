@@ -18,7 +18,7 @@ public class PartyController extends JpaSupport {
 		String partySequenceNumber=service.setPartySequence(party);
 		response.setValue("partySeq",partySequenceNumber);
 		}catch(Exception e){
-				System.out.println(e);;
+				System.out.println(e);
 		}
 	}
 }

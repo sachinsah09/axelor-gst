@@ -8,7 +8,6 @@
 		<field name="type" />
 		<field name="line1" />
 		<field name="line2" />
-		<field name="address" />
 		<field name="city" />
 		<field name="state" />
 		<field name="country" />
@@ -21,7 +20,6 @@
 			<field name="type" />
 			<field name="line1" />
 			<field name="line2" />
-			<field name="address" />
 			<field name="city" />
 			<field name="state" />
 			<field name="country" />

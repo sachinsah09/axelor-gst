@@ -8,7 +8,7 @@
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="Party" sequential="true" cachable="true" repository="abstract">
 		<string name="partySeq"  title="Party No." readonly="true"  default="" />
-		<string name="name" required="true"  title="Party Name"/>
+		<string name="name" required="true"  title="Party Name" namecolumn="true"/>
 		<string name="type"  title="Party Type" required="true" default="company"
 			sequence="gst.party.type.select" />
 		<boolean name="isCustomer"  title="Party is a Customer"/>

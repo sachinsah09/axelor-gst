@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.1.xsd">
+
+	<grid name="invoice-grid" title="Invoice-Details"
+		model="com.axelor.gst.db.Invoice">
+		<field name="invoiceSeq" />
+		<field name="status" />
+		<field name="company" />
+		<field name="onDate" />
+		<field name="priority" />
+		<field name="partyContact" />
+		<field name="invoiceAddress" />
+		<field name="shippingAddress" />
+		<field name="isInvoiceAddressAsShippingAddress" />
+		<field name="netAmount" />
+		<field name="netIgst" />
+		<field name="netCgst" />
+		<field name="netSgst" />
+	</grid>
+	<form name="invoice-form" title="Invoice-Form"
+		model="com.axelor.gst.db.Invoice"
+		onNew="action.invoice.set.default.company"
+		onSave="action.invoice.create.invoice.generate.method.setInvoiceSequence">
+		<panel title="Fill all Details">
+			<field name="status" widget="NavSelect"
+				selection="gst.invoice.status.select" colspan="9" />
+			<field name="invoiceSeq" colSpan="3" />
+			<panel title="Click to Update Status">
+				<button-group colspan="2">
+					<button name="draft" title="Draft"
+						onClick="action.invoice.create.invoice.set.status.value.draft" />
+					<button name="validated" title="Validated"
+						onClick="action.invoice.create.invoice.set.status.value.validated" />
+					<button name="paid" title="Paid"
+						onClick="action.invoice.create.invoice.set.status.value.paid" />
+					<button name="cancelled" title="cancelled"
+						onClick="action.invoice.create.invoice.set.status.value.cancelled" />
+				</button-group>
+			</panel>
+			<field name="company" />
+			<field name="onDate" />
+			<field name="priority" />
+			<field name="partyContact" />
+			<field name="invoiceAddress" />
+			<field name="shippingAddress" />
+			<field name="isInvoiceAddressAsShippingAddress" />
+			<field name="netAmount" />
+			<field name="netIgst" />
+			<field name="netCgst" />
+			<field name="netSgst" />
+		</panel>
+		<panel-related field="invoiceItemsList" />
+	</form>
+
+	<action-attrs name="action.invoice.status.enable">
+		<attribute for="status" name="!readonly" expr="!id" />
+	</action-attrs>
+
+	<action-method
+		name="action.invoice.create.invoice.generate.method.setInvoiceSequence">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setInvoiceSequence" />
+	</action-method>
+	
+	<action-record name="action.invoice.set.default.company"
+		model="com.axelor.gst.db.Invoice">
+		<field name="company" expr="action:action.default.company"
+			if="!(__ref__ instanceof Invoice)" />
+	</action-record>
+
+	<action-record name="action.default.company"
+		model="com.axelor.gst.db.Company"
+		search="self.name = 'Axelor pvt ltd'">
+		<field name="com" expr="action:default-title-record" />
+	</action-record>
+
+	<action-record
+		name="action.invoice.create.invoice.set.status.value.draft"
+		model="com.axelor.gst.db.Invoice">
+		<field name="status" expr="draft" />
+	</action-record>
+	<action-record
+		name="action.invoice.create.invoice.set.status.value.validated"
+		model="com.axelor.gst.db.Invoice">
+		<field name="status" expr="validated" />
+	</action-record>
+	<action-record
+		name="action.invoice.create.invoice.set.status.value.paid"
+		model="com.axelor.gst.db.Invoice">
+		<field name="status" expr="paid" />
+	</action-record>
+	<action-record
+		name="action.invoice.create.invoice.set.status.value.cancelled"
+		model="com.axelor.gst.db.Invoice">
+		<field name="status" expr="cancelled" />
+	</action-record>
+</object-views>
