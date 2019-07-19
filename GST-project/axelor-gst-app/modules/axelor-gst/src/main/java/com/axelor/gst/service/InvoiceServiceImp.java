@@ -5,6 +5,7 @@ import java.util.List;
 import com.axelor.common.ObjectUtils;
 import com.axelor.db.JPA;
 import com.axelor.gst.db.Address;
+import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.Party;
@@ -60,23 +61,15 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Override
 	public Contact setInvoicePartyPrimaryContact(Invoice invoice) {
-		Contact setInvoicePartyPrimaryContact = null ;
+		Contact setInvoicePartyPrimaryContact = null;
+		Party party = invoice.getParty();
+		long partyId = party.getId();
+		List<Contact> partyContactList = JPA.all(Contact.class).filter("self.party = " + partyId).fetch();
 
-		if (ObjectUtils.isEmpty(invoice.getId())) {
-			return null;
-		}
-		if (!ObjectUtils.isEmpty(invoice.getId())) {
-			System.out.println(invoice.getId());
-			Party party = invoice.getParty();
-			long partyId = party.getId();
-			System.out.println(partyId);
-			List<Contact> partyContactId = JPA.all(Contact.class).filter("self.party = " + partyId).fetch();
-			
-			for (Contact contact : partyContactId) {
-					if(contact.getType().equals("primary"))
-					{
-						setInvoicePartyPrimaryContact=JPA.em().find(Contact.class,contact.getId());;		
-					}
+		for (Contact contact : partyContactList) {
+			if (contact.getType().equals("primary")) {
+				setInvoicePartyPrimaryContact = JPA.em().find(Contact.class, contact.getId());
+				;
 			}
 		}
 		return setInvoicePartyPrimaryContact;
@@ -84,33 +77,55 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Override
 	public Address setInvoicePartyAddress(Invoice invoice) {
-		Address setInvoicePartyAddress = null ;
+		Address setInvoicePartyAddress = null;
 
-		if (ObjectUtils.isEmpty(invoice.getId())) {
-			return null;
-		}
-		if (!ObjectUtils.isEmpty(invoice.getId())) {
-			System.out.println(invoice.getId());
-			Party party = invoice.getParty();
-			long partyId = party.getId();
-			System.out.println(partyId);
-			List<Address> partyAddressId = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
-			
-			for (Address address : partyAddressId) {
-					if(address.getType().equals("default"))
-					{
-						setInvoicePartyAddress=JPA.em().find(Address.class,address.getId());		
-					}
-					else if(address.getType().equals("invoice")){
-						setInvoicePartyAddress=JPA.em().find(Address.class,address.getId());
-					}
-					else
-					{
-						
-					}
+		Party party = invoice.getParty();
+		long partyId = party.getId();
+		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
+
+		for (Address address : partyAddressList) {
+			if (address.getType().equals("default")) {
+				setInvoicePartyAddress = JPA.em().find(Address.class, address.getId());
+			} else if (address.getType().equals("invoice")) {
+				setInvoicePartyAddress = JPA.em().find(Address.class, address.getId());
 			}
 		}
 		return setInvoicePartyAddress;
 	}
 
+	@Override
+	public Company setInvoiceDefaultCompany(Invoice invoice) {
+		Company setInvoiceDefaultCompany = null;
+		List<Company> companyList = JPA.all(Company.class).fetch();
+
+		for (Company company : companyList) {
+			if (company.getName().equals("Axelor pvt ltd")) {
+				setInvoiceDefaultCompany = JPA.em().find(Company.class, company.getId());
+			} else {
+				setInvoiceDefaultCompany = JPA.em().find(Company.class, company.getId());
+			}
+		}
+		return setInvoiceDefaultCompany;
+	}
+
+	@Override
+	public Address setInvoiceShippingAddress(Invoice invoice) {
+		Address setInvoiceShippingAddress = null;
+
+		Party party = invoice.getParty();
+		long partyId = party.getId();
+		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
+
+		if (invoice.getIsInvoiceAddressAsShippingAddress() == true)
+		{
+		for (Address address : partyAddressList) {
+			if (address.getType().equals("default")) {
+				setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+			} else if (address.getType().equals("shipping")) {
+				setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+			}
+		  }
+		}
+		return setInvoiceShippingAddress;
+	}
 }

@@ -22,13 +22,15 @@
 	</grid>
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice"
-		onNew="action.invoice.set.default.company"
+		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany"
 		onSave="action.invoice.create.invoice.generate.method.setInvoiceSequence">
 		<panel title="Fill all Details">
+			<field name="invoiceSeq" colSpan="4" />
 			<field name="status" widget="NavSelect"
-				selection="gst.invoice.status.select" colspan="9" />
-			<field name="invoiceSeq" colSpan="3" />
+				selection="gst.invoice.status.select" colSpan="8" />
+			<field name="company" />
 			<panel title="Click to Update Status">
+
 				<button-group colspan="2">
 					<button name="draft" title="Draft"
 						onClick="action.invoice.create.invoice.set.status.value.draft" />
@@ -40,14 +42,14 @@
 						onClick="action.invoice.create.invoice.set.status.value.cancelled" />
 				</button-group>
 			</panel>
-			<field name="company" />
 			<field name="onDate" />
 			<field name="priority" />
-			<field name="party" onChange="action.invoice.create.invoice.generate.method.setInvoicePartyPrimaryContact,action.invoice.create.invoice.generate.method.setInvoicePartyAddress" />
+			<field name="party"
+				onChange="action.invoice.create.invoice.generate.method.setInvoicePartyPrimaryContact,action.invoice.create.invoice.generate.method.setInvoicePartyAddress,action.invoice.create.invoice.generate.method.setInvoiceShippingAddress" />
 			<field name="partyContact" />
-			<field name="invoiceAddress" />
+			<field name="invoiceAddress"  />
 			<field name="shippingAddress" />
-			<field name="isInvoiceAddressAsShippingAddress" />
+			<field name="isInvoiceAddressAsShippingAddress" onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress"/>
 			<field name="netAmount" />
 			<field name="netIgst" />
 			<field name="netCgst" />
@@ -71,22 +73,22 @@
 			method="setInvoicePartyPrimaryContact" />
 	</action-method>
 	<action-method
-	name="action.invoice.create.invoice.generate.method.setInvoicePartyAddress">
+		name="action.invoice.create.invoice.generate.method.setInvoicePartyAddress">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoicePartyAddress" />
 	</action-method>
-	<action-record name="action.invoice.set.default.company"
-		model="com.axelor.gst.db.Invoice">
-		<field name="company" expr="action:action.default.company"
-			if="!(__ref__ instanceof Invoice)" />
-	</action-record>
+	<action-method
+		name="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setInvoiceDefaultCompany" />
+	</action-method>
+	<action-method
+		name="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setInvoiceShippingAddress" />
+	</action-method>
 
-	<action-record name="action.default.company"
-		model="com.axelor.gst.db.Company"
-		search="self.name = 'Axelor pvt ltd'">
-		<field name="com" expr="action:default-title-record" />
-	</action-record>
-	
+
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.draft"
 		model="com.axelor.gst.db.Invoice">

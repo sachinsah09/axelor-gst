@@ -2,6 +2,7 @@ package com.axelor.gst.web;
 
 import com.axelor.db.JpaSupport;
 import com.axelor.gst.db.Address;
+import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.service.InvoiceService;
@@ -27,18 +28,38 @@ public class InvoiceController extends JpaSupport {
 	public void setInvoicePartyPrimaryContact(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			Contact setInvoicePartyPrimaryContact=service.setInvoicePartyPrimaryContact(invoice);
-			response.setValue("partyContact",setInvoicePartyPrimaryContact );			
+			Contact setInvoicePartyPrimaryContact = service.setInvoicePartyPrimaryContact(invoice);
+			response.setValue("partyContact", setInvoicePartyPrimaryContact);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void setInvoicePartyAddress(ActionRequest request, ActionResponse response) {
+		Invoice invoice = request.getContext().asType(Invoice.class);
+		try {
+			Address setInvoicePartyAddress = service.setInvoicePartyAddress(invoice);
+			response.setValue("invoiceAddress", setInvoicePartyAddress);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
 	
-	public void setInvoicePartyAddress(ActionRequest request, ActionResponse response) {
+	public void setInvoiceDefaultCompany(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			Address setInvoicePartyAddress=service.setInvoicePartyAddress(invoice);
-			response.setValue("invoiceAddress",setInvoicePartyAddress );			
+			Company setInvoiceDefaultCompany = service.setInvoiceDefaultCompany(invoice);
+			response.setValue("company", setInvoiceDefaultCompany);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void setInvoiceShippingAddress(ActionRequest request, ActionResponse response) {
+		Invoice invoice = request.getContext().asType(Invoice.class);
+		try {
+			Address setInvoiceShippingAddress = service.setInvoiceShippingAddress(invoice);
+			response.setValue("shippingAddress", setInvoiceShippingAddress);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
