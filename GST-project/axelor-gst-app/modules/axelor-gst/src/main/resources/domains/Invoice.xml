@@ -12,7 +12,7 @@
 		<many-to-one name="company" title="Company Name"
 			ref="com.axelor.gst.db.Company" required="true" />
 		<string name="invoiceSeq" readonly="true"
-			title="Invoice Number" />
+			title="Invoice Number" namecolumn="true"/>
 		<datetime name="onDate" title="Invoice Generated Date" />
 		<integer name="priority" title="Set Prority" />
 		<many-to-one name="party" title="Party Name"

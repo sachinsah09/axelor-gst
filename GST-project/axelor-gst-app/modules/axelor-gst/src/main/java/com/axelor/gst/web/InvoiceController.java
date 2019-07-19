@@ -21,7 +21,7 @@ public class InvoiceController extends JpaSupport {
 			String invoiceSequenceNumber = service.setInvoiceSequence(invoice);
 			response.setValue("invoiceSeq", invoiceSequenceNumber);
 		} catch (Exception e) {
-			System.out.println(e);
+			response.setError("Domain not Registered");
 		}
 	}
 
@@ -44,7 +44,7 @@ public class InvoiceController extends JpaSupport {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void setInvoiceDefaultCompany(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
@@ -54,12 +54,22 @@ public class InvoiceController extends JpaSupport {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void setInvoiceShippingAddress(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
 			Address setInvoiceShippingAddress = service.setInvoiceShippingAddress(invoice);
 			response.setValue("shippingAddress", setInvoiceShippingAddress);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void calculateFieldValue(ActionRequest request, ActionResponse response) {
+		Invoice invoice = request.getContext().asType(Invoice.class);
+		try {
+			Invoice setinvoicecalculatedfieldvalue=service.invoiceCalculateFieldValue(invoice);
+			response.setValue("netAmount", setinvoicecalculatedfieldvalue);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

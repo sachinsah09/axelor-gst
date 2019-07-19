@@ -1,8 +1,7 @@
 package com.axelor.gst.service;
 
+import java.math.BigDecimal;
 import java.util.List;
-
-import com.axelor.common.ObjectUtils;
 import com.axelor.db.JPA;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
@@ -116,16 +115,21 @@ public class InvoiceServiceImp implements InvoiceService {
 		long partyId = party.getId();
 		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
 
-		if (invoice.getIsInvoiceAddressAsShippingAddress() == true)
-		{
-		for (Address address : partyAddressList) {
-			if (address.getType().equals("default")) {
-				setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
-			} else if (address.getType().equals("shipping")) {
-				setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
+			for (Address address : partyAddressList) {
+				if (address.getType().equals("default")) {
+					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+				} else if (address.getType().equals("shipping")) {
+					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+				}
 			}
-		  }
 		}
 		return setInvoiceShippingAddress;
 	}
+
+	@Override
+	public Invoice invoiceCalculateFieldValue(Invoice invoice) {
+		return null;
+	}
+
 }

@@ -24,32 +24,30 @@
 		model="com.axelor.gst.db.Invoice"
 		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany"
 		onSave="action.invoice.create.invoice.generate.method.setInvoiceSequence">
-		<panel title="Fill all Details">
-			<field name="invoiceSeq" colSpan="4" />
+		<panel>
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" colSpan="8" />
+			<button name="draft" title="Draft"
+				onClick="action.invoice.create.invoice.set.status.value.draft" colSpan="2" />
+			<button name="validated" title="Validated"
+				onClick="action.invoice.create.invoice.set.status.value.validated" colSpan="2"/>
+			<button name="paid" title="Paid"
+				onClick="action.invoice.create.invoice.set.status.value.paid" colSpan="2"/>
+			<button name="cancelled" title="cancelled"
+				onClick="action.invoice.create.invoice.set.status.value.cancelled" colSpan="2"/>
+		</panel>
+		<panel title="Fill all Details">
+			<field name="invoiceSeq" colSpan="4" />
 			<field name="company" />
-			<panel title="Click to Update Status">
-
-				<button-group colspan="2">
-					<button name="draft" title="Draft"
-						onClick="action.invoice.create.invoice.set.status.value.draft" />
-					<button name="validated" title="Validated"
-						onClick="action.invoice.create.invoice.set.status.value.validated" />
-					<button name="paid" title="Paid"
-						onClick="action.invoice.create.invoice.set.status.value.paid" />
-					<button name="cancelled" title="cancelled"
-						onClick="action.invoice.create.invoice.set.status.value.cancelled" />
-				</button-group>
-			</panel>
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
 				onChange="action.invoice.create.invoice.generate.method.setInvoicePartyPrimaryContact,action.invoice.create.invoice.generate.method.setInvoicePartyAddress,action.invoice.create.invoice.generate.method.setInvoiceShippingAddress" />
 			<field name="partyContact" />
-			<field name="invoiceAddress"  />
+			<field name="invoiceAddress" />
 			<field name="shippingAddress" />
-			<field name="isInvoiceAddressAsShippingAddress" onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress"/>
+			<field name="isInvoiceAddressAsShippingAddress"
+				onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress" />
 			<field name="netAmount" />
 			<field name="netIgst" />
 			<field name="netCgst" />
@@ -86,6 +84,11 @@
 		name="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoiceShippingAddress" />
+	</action-method>
+	<action-method
+		name="action.invoice.create.invoice.generate.method.calculateFieldValue">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="calculateFieldValue" />
 	</action-method>
 
 

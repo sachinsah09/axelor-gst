@@ -17,7 +17,7 @@
 			<field name="name" />
 			<field name="logo" widget="image" />
 			<field name="gstin" />
-			<field name="address" widget="Text" />
+			<field name="address"/>
 		</panel>
 		<panel-related field="contactList" widget="editor" />
 		<panel-related field="bankDetailsList" />

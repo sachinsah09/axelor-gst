@@ -11,4 +11,5 @@ public interface InvoiceService {
 	public Contact setInvoicePartyPrimaryContact(Invoice invoice);
 	public Address setInvoicePartyAddress(Invoice invoice);
 	public Address setInvoiceShippingAddress(Invoice invoice);
+	public Invoice invoiceCalculateFieldValue(Invoice invoice);
 }
