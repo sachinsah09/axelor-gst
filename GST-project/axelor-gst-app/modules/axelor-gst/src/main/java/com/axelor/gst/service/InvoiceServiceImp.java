@@ -7,6 +7,7 @@ import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
+import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Sequence;
 import com.axelor.meta.db.MetaModel;
@@ -68,7 +69,6 @@ public class InvoiceServiceImp implements InvoiceService {
 		for (Contact contact : partyContactList) {
 			if (contact.getType().equals("primary")) {
 				setInvoicePartyPrimaryContact = JPA.em().find(Contact.class, contact.getId());
-				;
 			}
 		}
 		return setInvoicePartyPrimaryContact;
@@ -129,7 +129,27 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Override
 	public Invoice invoiceCalculateFieldValue(Invoice invoice) {
-		return null;
-	}
 
+		long invoiceId = invoice.getId();
+		List<InvoiceLine> invoiceLineList = JPA.all(InvoiceLine.class).filter("self.invoice = " + invoiceId).fetch();
+		System.out.println(invoiceLineList);
+
+		BigDecimal netAmount = new BigDecimal(0);
+		BigDecimal netCgst = new BigDecimal(0);
+		BigDecimal netSgst = new BigDecimal(0);
+		BigDecimal netIgst = new BigDecimal(0);
+		for (InvoiceLine invoiceLine : invoiceLineList) {
+			netAmount = netAmount.add(invoiceLine.getNetAmount());
+			netCgst = netCgst.add(invoiceLine.getCgst());
+			netSgst = netSgst.add(invoiceLine.getSgst());
+			netIgst = netIgst.add(invoiceLine.getIgst());
+		}
+		System.out.println("hello");
+		System.out.println(netAmount);
+		invoice.setNetAmount(netAmount);
+		invoice.setNetCgst(netCgst);
+		invoice.setNetIgst(netIgst);
+		invoice.setNetSgst(netSgst);
+		return invoice;
+	}	
 }

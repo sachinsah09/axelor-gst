@@ -17,9 +17,7 @@ public class InvoiceLineController  extends JpaSupport {
 	public void calculatedFieldValue(ActionRequest request, ActionResponse response) {
 		InvoiceLine invoiceLine = request.getContext().asType(InvoiceLine.class);
 		try {
-			System.err.println("hello");
 		InvoiceLine invoiceline=service.calculatedFieldValue(invoiceLine);
-		
 		response.setValue("netAmount",invoiceline.getNetAmount());
 		response.setValue("igst",invoiceline.getIgst());
 		response.setValue("sgst",invoiceline.getSgst());

@@ -19,15 +19,18 @@
 		<field name="grossAmount" />
 	</grid>
 	<form name="invoiceline-form" title="Invoice-Line-Form"
-		model="com.axelor.gst.db.InvoiceLine" >
+		model="com.axelor.gst.db.InvoiceLine"
+		onSave="action.invoiceLine.generate.method.calculatedFieldValue">
 		<panel title="Fill all Details">
-			<field name="product"  onChange="action.invoiceLine.generate.method.setProductName,action.invoiceLine.generate.method.setGstRate"/>
+			<field name="product"
+				onChange="action.invoiceLine.generate.method.setProductName,action.invoiceLine.generate.method.setGstRate" />
 			<field name="item" />
 			<field name="hsbn" />
 			<field name="qty" />
-			<field name="price" onChange="action.invoiceLine.generate.method.calculatedFieldValue"/>
+			<field name="price"
+				onChange="action.invoiceLine.generate.method.calculatedFieldValue" />
 			<field name="netAmount" />
-			<field name="gstRate"  />
+			<field name="gstRate" />
 			<field name="igst" />
 			<field name="sgst" />
 			<field name="cgst" />

@@ -27,17 +27,18 @@
 		<panel>
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" colSpan="8" />
-			<button name="draft" title="Draft"
-				onClick="action.invoice.create.invoice.set.status.value.draft" colSpan="2" />
 			<button name="validated" title="Validated"
-				onClick="action.invoice.create.invoice.set.status.value.validated" colSpan="2"/>
+				onClick="action.invoice.create.invoice.set.status.value.validated"
+				colSpan="2" />
 			<button name="paid" title="Paid"
-				onClick="action.invoice.create.invoice.set.status.value.paid" colSpan="2"/>
+				onClick="action.invoice.create.invoice.set.status.value.paid"
+				colSpan="2" />
 			<button name="cancelled" title="cancelled"
-				onClick="action.invoice.create.invoice.set.status.value.cancelled" colSpan="2"/>
+				onClick="action.invoice.create.invoice.set.status.value.cancelled"
+				colSpan="2" />
 		</panel>
 		<panel title="Fill all Details">
-			<field name="invoiceSeq" colSpan="4" />
+			<field name="invoiceSeq" />
 			<field name="company" />
 			<field name="onDate" />
 			<field name="priority" />
@@ -53,7 +54,8 @@
 			<field name="netCgst" />
 			<field name="netSgst" />
 		</panel>
-		<panel-related field="invoiceItemsList" />
+		<panel-related field="invoiceItemsList" 
+			onChange="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue" />
 	</form>
 
 	<action-attrs name="action.invoice.status.enable">
@@ -86,17 +88,11 @@
 			method="setInvoiceShippingAddress" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.calculateFieldValue">
+		name="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue">
 		<call class="com.axelor.gst.web.InvoiceController"
-			method="calculateFieldValue" />
+			method="invoiceCalculateFieldValue" />
 	</action-method>
 
-
-	<action-record
-		name="action.invoice.create.invoice.set.status.value.draft"
-		model="com.axelor.gst.db.Invoice">
-		<field name="status" expr="draft" />
-	</action-record>
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.validated"
 		model="com.axelor.gst.db.Invoice">

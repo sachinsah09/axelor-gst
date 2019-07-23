@@ -4,20 +4,29 @@ import java.math.BigDecimal;
 import com.axelor.db.JPA;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Product;
+import com.axelor.gst.db.State;
+import com.google.inject.persist.Transactional;
 
 public class InvoiceLineServiceImp implements InvoiceLineService {
 
+	@Transactional
 	@Override
 	public InvoiceLine calculatedFieldValue(InvoiceLine invoiceLine) {
+
+		BigDecimal sgst, cgst, igst, netAmount;
 		BigDecimal divider = new BigDecimal(2);
 		BigDecimal qty = new BigDecimal(invoiceLine.getQty());
-	
-		BigDecimal sgst, cgst, igst, netAmount;
 		netAmount = qty.multiply(invoiceLine.getPrice());
 		invoiceLine.setNetAmount(qty.multiply(invoiceLine.getPrice()));
-		System.err.println(qty.multiply(invoiceLine.getPrice()));
-		if (invoiceLine.getInvoice().getInvoiceAddress().getState()
-				.equals(invoiceLine.getInvoice().getCompany().getAddress().getState())) {
+
+		State state1 = invoiceLine.getInvoice().getInvoiceAddress().getState();
+		String invoiceState = state1.getName();
+		State state2 = invoiceLine.getInvoice().getCompany().getAddress().getState();
+		String companyState = state2.getName();
+
+			System.out.println(companyState);
+			System.out.println(invoiceState);
+		if (invoiceState.equals(companyState) ) {
 			invoiceLine.setCgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider));
 			invoiceLine.setSgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider));
 			sgst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider);

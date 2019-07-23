@@ -65,13 +65,18 @@ public class InvoiceController extends JpaSupport {
 		}
 	}
 
-	public void calculateFieldValue(ActionRequest request, ActionResponse response) {
+	public void invoiceCalculateFieldValue(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			Invoice setinvoicecalculatedfieldvalue=service.invoiceCalculateFieldValue(invoice);
-			response.setValue("netAmount", setinvoicecalculatedfieldvalue);
-		} catch (Exception e) {
+		invoice = service.invoiceCalculateFieldValue(invoice);
+		response.setValue("netAmount", invoice.getNetAmount());
+		response.setValue("netIgst", invoice.getNetIgst());
+		response.setValue("netSgst", invoice.getNetSgst());
+		response.setValue("netCgst", invoice.getNetCgst());
+		}
+		catch(Exception e){
 			System.out.println(e);
+			
 		}
 	}
 }
