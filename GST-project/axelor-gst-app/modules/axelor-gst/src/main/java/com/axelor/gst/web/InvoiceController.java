@@ -28,8 +28,12 @@ public class InvoiceController extends JpaSupport {
 	public void setInvoicePartyPrimaryContact(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			Contact setInvoicePartyPrimaryContact = service.setInvoicePartyPrimaryContact(invoice);
-			response.setValue("partyContact", setInvoicePartyPrimaryContact);
+			if (invoice.getParty() == null) {
+				response.setValue("partyContact", null);
+			} else {
+				Contact setInvoicePartyPrimaryContact = service.setInvoicePartyPrimaryContact(invoice);
+				response.setValue("partyContact", setInvoicePartyPrimaryContact);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -38,8 +42,12 @@ public class InvoiceController extends JpaSupport {
 	public void setInvoicePartyAddress(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			Address setInvoicePartyAddress = service.setInvoicePartyAddress(invoice);
-			response.setValue("invoiceAddress", setInvoicePartyAddress);
+			if (invoice.getParty() == null) {
+				response.setValue("invoiceAddress", null);
+			} else {
+				Address setInvoicePartyAddress = service.setInvoicePartyAddress(invoice);
+				response.setValue("invoiceAddress", setInvoicePartyAddress);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -58,8 +66,12 @@ public class InvoiceController extends JpaSupport {
 	public void setInvoiceShippingAddress(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			Address setInvoiceShippingAddress = service.setInvoiceShippingAddress(invoice);
-			response.setValue("shippingAddress", setInvoiceShippingAddress);
+			if (invoice.getParty() == null) {
+				response.setValue("shippingAddress", null);
+			} else {
+				Address setInvoiceShippingAddress = service.setInvoiceShippingAddress(invoice);
+				response.setValue("shippingAddress", setInvoiceShippingAddress);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -68,15 +80,14 @@ public class InvoiceController extends JpaSupport {
 	public void invoiceCalculateFieldValue(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-		invoice = service.invoiceCalculateFieldValue(invoice);
-		response.setValue("netAmount", invoice.getNetAmount());
-		response.setValue("netIgst", invoice.getNetIgst());
-		response.setValue("netSgst", invoice.getNetSgst());
-		response.setValue("netCgst", invoice.getNetCgst());
-		}
-		catch(Exception e){
+			invoice = service.invoiceCalculateFieldValue(invoice);
+			response.setValue("netAmount", invoice.getNetAmount());
+			response.setValue("netIgst", invoice.getNetIgst());
+			response.setValue("netSgst", invoice.getNetSgst());
+			response.setValue("netCgst", invoice.getNetCgst());
+		} catch (Exception e) {
 			System.out.println(e);
-			
+
 		}
 	}
 }

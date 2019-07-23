@@ -29,7 +29,6 @@ public class InvoiceServiceImp implements InvoiceService {
 
 			// method 2 to find model id
 			// MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
-
 			long seqId = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getId();
 			String prefix = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getPrefix();
 			String suffix = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getSuffix();
@@ -42,7 +41,7 @@ public class InvoiceServiceImp implements InvoiceService {
 			}
 			sequenceNumber = prefix;
 
-			for (int i = 0; i < padding; i++) {
+			for (int i = 1; i < padding; i++) {
 				sequenceNumber = sequenceNumber + addPaddingZero;
 			}
 			sequenceNumber = sequenceNumber + nextNumber + suffix;
@@ -80,7 +79,7 @@ public class InvoiceServiceImp implements InvoiceService {
 
 		Party party = invoice.getParty();
 		long partyId = party.getId();
-		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
+		 List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
 
 		for (Address address : partyAddressList) {
 			if (address.getType().equals("default")) {
@@ -151,5 +150,5 @@ public class InvoiceServiceImp implements InvoiceService {
 		invoice.setNetIgst(netIgst);
 		invoice.setNetSgst(netSgst);
 		return invoice;
-	}	
+	}
 }

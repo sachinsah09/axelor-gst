@@ -16,10 +16,10 @@
 	</selection>
 
 	<selection name="gst.invoice.status.select">
-		<option value="draft">Draft</option>
-		<option value="validated">Validated</option>
-		<option value="paid">Paid</option>
-		<option value="cancelled">Cancelled</option>
+		<option value="1">Draft</option>
+		<option value="2">Validated</option>
+		<option value="3">Paid</option>
+		<option value="4">Cancelled</option>
 	</selection>
 
 	<selection name="gst.contact.type.select">

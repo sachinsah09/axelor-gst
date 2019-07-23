@@ -23,23 +23,24 @@
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice"
 		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany"
-		onSave="action.invoice.create.invoice.generate.method.setInvoiceSequence">
-		<panel>
-			<field name="status" widget="NavSelect"
-				selection="gst.invoice.status.select" colSpan="8" />
-			<button name="validated" title="Validated"
-				onClick="action.invoice.create.invoice.set.status.value.validated"
-				colSpan="2" />
-			<button name="paid" title="Paid"
-				onClick="action.invoice.create.invoice.set.status.value.paid"
-				colSpan="2" />
-			<button name="cancelled" title="cancelled"
-				onClick="action.invoice.create.invoice.set.status.value.cancelled"
-				colSpan="2" />
-		</panel>
+		onSave="action.invoice.create.invoice.generate.method.setInvoiceSequence,action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue">
+
 		<panel title="Fill all Details">
 			<field name="invoiceSeq" />
+			<field name="status" widget="NavSelect"
+				selection="gst.invoice.status.select" />
 			<field name="company" />
+			<button-group>
+				<button name="validated" title="Validated"
+					onClick="action.invoice.create.invoice.set.status.value.validated"
+					colSpan="2" showIf="status == 1" />
+				<button name="paid" title="Paid"
+					onClick="action.invoice.create.invoice.set.status.value.paid"
+					colSpan="2" showIf="status == 2"/>
+				<button name="cancelled" title="cancelled"
+					onClick="action.invoice.create.invoice.set.status.value.cancelled"
+					colSpan="2" showIf="status == 1 || status == 2"/>
+			</button-group>
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
@@ -48,13 +49,13 @@
 			<field name="invoiceAddress" />
 			<field name="shippingAddress" />
 			<field name="isInvoiceAddressAsShippingAddress"
-				onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress" />
+				onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress,action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue" />
 			<field name="netAmount" />
 			<field name="netIgst" />
 			<field name="netCgst" />
 			<field name="netSgst" />
 		</panel>
-		<panel-related field="invoiceItemsList" 
+		<panel-related field="invoiceItemsList"
 			onChange="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue" />
 	</form>
 
@@ -96,16 +97,33 @@
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.validated"
 		model="com.axelor.gst.db.Invoice">
-		<field name="status" expr="validated" />
+		<field name="status" expr="2" />
 	</action-record>
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.paid"
 		model="com.axelor.gst.db.Invoice">
-		<field name="status" expr="paid" />
+		<field name="status" expr="3" />
 	</action-record>
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.cancelled"
 		model="com.axelor.gst.db.Invoice">
-		<field name="status" expr="cancelled" />
+		<field name="status" expr="4" />
 	</action-record>
+
+	<kanban name="invoice-task-kanban" title="Invoice-Kanban"
+		model="com.axelor.gst.db.Invoice" columnBy="status"
+		sequenceBy="priority" limit="10">
+		<field name="invoiceSeq" />
+		<field name="onDate" />
+		<field name="netAmount" />
+		<template><![CDATA[
+  <h4>{{name}}</h4>
+  <div class="card-body">{{invoiceSeq}}</div>
+  <div class="card-footer">
+   Total Amount: {{netAmount}}
+  </div>   <div class="card-footer">
+      <i class='fa fa-clock-o'></i> <span>{{onDate}}</span>
+    </div>
+  ]]></template>
+	</kanban>
 </object-views>

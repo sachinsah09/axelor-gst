@@ -128,6 +128,8 @@
 		title="Draft-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
+		<domain>self.status = :status</domain>
+		<context name="status" expr="draft" />
 	</action-view>
 	<menuitem name="invoice-root-validated-invoice"
 		parent="invoice-root" title="Validated Invoice"
@@ -136,6 +138,8 @@
 		title="Validated-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
+		<domain>self.status = :status</domain>
+		<context name="status" expr="validated" />
 	</action-view>
 	<menuitem name="invoice-root-paid-invoice"
 		parent="invoice-root" title="Paid Invoice"
@@ -144,6 +148,8 @@
 		title="Paid-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
+		<domain>self.status = :status</domain>
+		<context name="status" expr="paid" />
 	</action-view>
 	<menuitem name="invoice-root-cancelled-invoice"
 		parent="invoice-root" title="Cancelled Invoice"
@@ -152,6 +158,8 @@
 		title="Cancelled-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
+		<domain>self.status = :status</domain>
+		<context name="status" expr="cancelled" />
 	</action-view>
 	<menuitem name="invoice-root-all-invoice"
 		parent="invoice-root" title="All Invoice"
@@ -160,6 +168,7 @@
 		title="all-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
+		<view type="kanban" name="invoice-task-kanban"/>
 	</action-view>
 
 

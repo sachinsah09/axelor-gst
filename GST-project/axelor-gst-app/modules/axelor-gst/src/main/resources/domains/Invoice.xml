@@ -8,7 +8,7 @@
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="Invoice" sequential="true" cachable="true">
 		<string name="status" title="Status" required="true"
-			selection="gst.invoice.status.select" default="draft" readonly="true" />
+			selection="gst.invoice.status.select" default="1" readonly="true" />
 		<many-to-one name="company" title="Company Name"
 			ref="com.axelor.gst.db.Company" required="true" />
 		<string name="invoiceSeq" readonly="true"
