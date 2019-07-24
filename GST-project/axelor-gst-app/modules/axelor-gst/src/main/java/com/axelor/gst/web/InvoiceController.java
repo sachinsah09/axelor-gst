@@ -100,4 +100,14 @@ public class InvoiceController extends JpaSupport {
 		attachmentPath = attachmentPath.endsWith(File.separator) ? attachmentPath : attachmentPath + File.separator;
 		request.getContext().put("AttachmentPath", attachmentPath);
 	}
+
+	public void checkStatus(ActionRequest request, ActionResponse response) {
+		Invoice invoice = request.getContext().asType(Invoice.class);
+		System.out.println(invoice.getStatus());
+		if(invoice.getStatus() == "1")
+		{
+			response.setError("Validated data to save");
+		}
+	}
+
 }

@@ -23,9 +23,11 @@
 	</grid>
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice"
-		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany">
+		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany"
+		onSave="action.invoice.checkstatus"
+		>
 		<toolbar>
-			<button name="btnPrint2" title="Print-Single" showIf="id"
+			<button name="btnPrint2" title="Print" showIf="id"
 				onClick="action.report.attachment.setPath,print.gst.invoice.company"
 				icon="fa-print" />
 		</toolbar>
@@ -108,6 +110,10 @@
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setPath" />
 	</action-method>
+	<action-method name="action.invoice.checkstatus">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="checkStatus" />
+	</action-method>
 
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.validated"
@@ -142,19 +148,8 @@
   ]]></template>
 	</kanban>
 
-	<chart name="chart.invoice.per.status.barchart"
-		title="invoice per status">
-		<dataset type="jpql">
-    <![CDATA[
-   
-    ]]>
-		</dataset>
-		<category key="status" />
-		<series key="invoice" type="bar" />
-	</chart>
-
 	<action-report name="print.gst.invoice.company"
-		design="invoice_report.rptdesign" output="so-${date}${time}"
+		design="invoice_report.rptdesign" output="inv-${date}${time}"
 		format="pdf">
 		<param name="invoiceId" expr="eval: id" />
 		<param name="AttachmentPath" expr="eval: AttachmentPath" />

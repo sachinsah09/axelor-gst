@@ -983,6 +983,7 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="leftMargin">0.6853146853146853in</property>
+            <property name="bottomMargin">3.972027972027972in</property>
             <property name="rightMargin">0.7832167832167832in</property>
             <page-header>
                 <image id="193">

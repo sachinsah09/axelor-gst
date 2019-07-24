@@ -15,20 +15,37 @@
 	</grid>
 	<form name="product-form" title="Product-Form"
 		model="com.axelor.gst.db.Product">
+		<toolbar>
+			<button name="btnPrint" title="Print" showIf="id"
+				onClick="action.report.attachment.setPath,print.report.product.details"
+				icon="fa-print" />
+		</toolbar>
 		<panel title="Fill all Details">
 			<field name="name" />
 			<field name="code" />
 			<field name="hsbn" />
-			<field name="category" onChange="save,action.product.product.method.generate.setgstrate"/>
+			<field name="category"
+				onChange="save,action.product.product.method.generate.setgstrate" />
 			<field name="salesPrice" />
 			<field name="costPrice" />
 			<field name="image" widget="image" />
 			<field name="gstRate" />
 		</panel>
 	</form>
-	<action-method name="action.product.product.method.generate.setgstrate">
+	<action-method
+		name="action.product.product.method.generate.setgstrate">
 		<call class="com.axelor.gst.web.ProductController"
 			method="setGstRate" />
 	</action-method>
+	<action-method name="action.report.attachment.setPath">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setPath" />
+	</action-method>
 
+	<action-report name="print.report.product.details"
+		design="product_report.rptdesign" output="so-${date}${time}"
+		format="pdf">
+		<param name="productId" expr="eval: id" />
+		<param name="AttachmentPath2" expr="eval: AttachmentPath" />
+	</action-report>
 </object-views>

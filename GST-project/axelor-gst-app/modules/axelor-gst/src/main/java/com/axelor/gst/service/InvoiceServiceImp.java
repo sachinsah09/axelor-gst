@@ -118,11 +118,17 @@ public class InvoiceServiceImp implements InvoiceService {
 		long partyId = party.getId();
 		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
 
-		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
+		if (invoice.getIsInvoiceAddressAsShippingAddress() == false) {
 			for (Address address : partyAddressList) {
 				if (address.getType().equals("default")) {
 					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
 				} else if (address.getType().equals("shipping")) {
+					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+				}
+			}
+		} else {
+			for (Address address : partyAddressList) {
+				if (address.getType().equals("invoice")) {
 					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
 				}
 			}
@@ -135,7 +141,7 @@ public class InvoiceServiceImp implements InvoiceService {
 
 		long invoiceId = invoice.getId();
 		List<InvoiceLine> invoiceLineList = JPA.all(InvoiceLine.class).filter("self.invoice = " + invoiceId).fetch();
-	
+
 		BigDecimal netAmount = new BigDecimal(0);
 		BigDecimal netCgst = new BigDecimal(0);
 		BigDecimal netSgst = new BigDecimal(0);
@@ -147,8 +153,8 @@ public class InvoiceServiceImp implements InvoiceService {
 			netSgst = netSgst.add(invoiceLine.getSgst());
 			netIgst = netIgst.add(invoiceLine.getIgst());
 		}
-		grossAmount=netAmount.add(netIgst).add(netSgst).add(netCgst);
-		
+		grossAmount = netAmount.add(netIgst).add(netSgst).add(netCgst);
+
 		invoice.setNetAmount(netAmount);
 		invoice.setNetCgst(netCgst);
 		invoice.setNetIgst(netIgst);

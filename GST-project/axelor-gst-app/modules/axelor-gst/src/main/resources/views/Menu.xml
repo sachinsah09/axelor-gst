@@ -177,9 +177,6 @@
 	<action-view name="welcome" title="Welcome!">
 		<view type="dashboard" name="welcome.dashboard" />
 	</action-view>
-	<dashboard name="welcome.dashboard"
-		title="Invoice Statistics">
-		<dashlet action="chart:chart.invoice.per.status.barchart" />
-	</dashboard>
+	
 </object-views>
 

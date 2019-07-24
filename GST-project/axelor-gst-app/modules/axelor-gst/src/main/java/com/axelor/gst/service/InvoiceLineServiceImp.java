@@ -25,10 +25,10 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 		String companyState = state2.getName();
 
 		if (invoiceState.equals(companyState)) {
-			invoiceLine.setCgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider));
-			invoiceLine.setSgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider));
 			sgst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider);
 			cgst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider);
+			invoiceLine.setCgst(cgst);
+			invoiceLine.setSgst(sgst);
 			invoiceLine.setGrossAmount(netAmount.add(cgst).add(sgst));
 		} else {
 			invoiceLine.setIgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())));
