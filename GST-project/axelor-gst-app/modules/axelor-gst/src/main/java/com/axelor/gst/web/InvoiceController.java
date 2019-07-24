@@ -1,5 +1,8 @@
 package com.axelor.gst.web;
 
+import java.io.File;
+
+import com.axelor.app.AppSettings;
 import com.axelor.db.JpaSupport;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
@@ -21,7 +24,7 @@ public class InvoiceController extends JpaSupport {
 			String invoiceSequenceNumber = service.setInvoiceSequence(invoice);
 			response.setValue("invoiceSeq", invoiceSequenceNumber);
 		} catch (Exception e) {
-			response.setError("Domain not Registered");
+			response.setError("Model not Registered");
 		}
 	}
 
@@ -85,9 +88,16 @@ public class InvoiceController extends JpaSupport {
 			response.setValue("netIgst", invoice.getNetIgst());
 			response.setValue("netSgst", invoice.getNetSgst());
 			response.setValue("netCgst", invoice.getNetCgst());
+			response.setValue("grossAmount", invoice.getGrossAmount());
 		} catch (Exception e) {
 			System.out.println(e);
 
 		}
+	}
+
+	public void setPath(ActionRequest request, ActionResponse response) {
+		String attachmentPath = AppSettings.get().getPath("file.upload.dir", "");
+		attachmentPath = attachmentPath.endsWith(File.separator) ? attachmentPath : attachmentPath + File.separator;
+		request.getContext().put("AttachmentPath", attachmentPath);
 	}
 }

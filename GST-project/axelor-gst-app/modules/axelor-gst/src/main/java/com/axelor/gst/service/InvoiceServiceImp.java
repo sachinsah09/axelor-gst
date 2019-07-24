@@ -10,7 +10,9 @@ import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Sequence;
+import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
+import com.axelor.meta.db.repo.MetaModelRepository;
 import com.google.inject.persist.Transactional;
 
 public class InvoiceServiceImp implements InvoiceService {
@@ -21,20 +23,22 @@ public class InvoiceServiceImp implements InvoiceService {
 
 		String sequenceNumber = "";
 		if (invoice.getInvoiceSeq() == null) {
-			long modelId;
-			int addPaddingZero = 0;
 
+			int addPaddingZero = 0;
+//			long modelId;
 			// method 1 to find model id
-			modelId = JPA.all(MetaModel.class).filter("self.id = 45").fetchOne().getId();
+			// modelId = JPA.all(MetaModel.class).filter("self.name =
+			// Invoice").fetchOne().getId();
 
 			// method 2 to find model id
-			// MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
+			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
+			long modelId = model.getId();
 			long seqId = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getId();
-			String prefix = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getPrefix();
-			String suffix = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getSuffix();
-			int padding = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getPadding();
-			int nextNumber = Integer
-					.parseInt(JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getNextNumber());
+			Sequence sequence = JPA.em().find(Sequence.class, seqId);
+			String prefix = sequence.getPrefix();
+			String suffix = sequence.getSuffix();
+			int padding = sequence.getPadding();
+			int nextNumber = Integer.parseInt(sequence.getNextNumber());
 
 			if (suffix == null) {
 				suffix = "";
@@ -48,8 +52,8 @@ public class InvoiceServiceImp implements InvoiceService {
 
 			nextNumber++;
 			String setNextNumber = "" + nextNumber;
-			Sequence sequence = JPA.em().find(Sequence.class, seqId);
-			sequence.setNextNumber(setNextNumber);
+			Sequence sequenceUpdate = JPA.em().find(Sequence.class, seqId);
+			sequenceUpdate.setNextNumber(setNextNumber);
 			JPA.em().persist(sequence);
 
 		} else {
@@ -79,7 +83,7 @@ public class InvoiceServiceImp implements InvoiceService {
 
 		Party party = invoice.getParty();
 		long partyId = party.getId();
-		 List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
+		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
 
 		for (Address address : partyAddressList) {
 			if (address.getType().equals("default")) {
@@ -131,24 +135,25 @@ public class InvoiceServiceImp implements InvoiceService {
 
 		long invoiceId = invoice.getId();
 		List<InvoiceLine> invoiceLineList = JPA.all(InvoiceLine.class).filter("self.invoice = " + invoiceId).fetch();
-		System.out.println(invoiceLineList);
-
+	
 		BigDecimal netAmount = new BigDecimal(0);
 		BigDecimal netCgst = new BigDecimal(0);
 		BigDecimal netSgst = new BigDecimal(0);
 		BigDecimal netIgst = new BigDecimal(0);
+		BigDecimal grossAmount = new BigDecimal(0);
 		for (InvoiceLine invoiceLine : invoiceLineList) {
 			netAmount = netAmount.add(invoiceLine.getNetAmount());
 			netCgst = netCgst.add(invoiceLine.getCgst());
 			netSgst = netSgst.add(invoiceLine.getSgst());
 			netIgst = netIgst.add(invoiceLine.getIgst());
 		}
-		System.out.println("hello");
-		System.out.println(netAmount);
+		grossAmount=netAmount.add(netIgst).add(netSgst).add(netCgst);
+		
 		invoice.setNetAmount(netAmount);
 		invoice.setNetCgst(netCgst);
 		invoice.setNetIgst(netIgst);
 		invoice.setNetSgst(netSgst);
+		invoice.setGrossAmount(grossAmount);
 		return invoice;
 	}
 }

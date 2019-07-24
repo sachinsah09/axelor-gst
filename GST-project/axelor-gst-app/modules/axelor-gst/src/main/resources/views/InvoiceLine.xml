@@ -28,7 +28,7 @@
 			<field name="hsbn" />
 			<field name="qty" />
 			<field name="price"
-				onChange="action.invoiceLine.generate.method.calculatedFieldValue" />
+				onChange="action.invoiceLine.generate.method.calculatedFieldValue,save" />
 			<field name="netAmount" />
 			<field name="gstRate" />
 			<field name="igst" />

@@ -19,12 +19,16 @@
 		<field name="netIgst" />
 		<field name="netCgst" />
 		<field name="netSgst" />
+		<field name="grossAmount" />
 	</grid>
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice"
-		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany"
-		onSave="action.invoice.create.invoice.generate.method.setInvoiceSequence,action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue">
-
+		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany">
+		<toolbar>
+			<button name="btnPrint2" title="Print-Single" showIf="id"
+				onClick="action.report.attachment.setPath,print.gst.invoice.company"
+				icon="fa-print" />
+		</toolbar>
 		<panel title="Fill all Details">
 			<field name="invoiceSeq" />
 			<field name="status" widget="NavSelect"
@@ -32,14 +36,14 @@
 			<field name="company" />
 			<button-group>
 				<button name="validated" title="Validated"
-					onClick="action.invoice.create.invoice.set.status.value.validated"
+					onClick="action.invoice.create.invoice.set.status.value.validated,action.invoice.create.invoice.generate.method.setInvoiceSequence"
 					colSpan="2" showIf="status == 1" />
 				<button name="paid" title="Paid"
 					onClick="action.invoice.create.invoice.set.status.value.paid"
-					colSpan="2" showIf="status == 2"/>
+					colSpan="2" showIf="status == 2" />
 				<button name="cancelled" title="cancelled"
 					onClick="action.invoice.create.invoice.set.status.value.cancelled"
-					colSpan="2" showIf="status == 1 || status == 2"/>
+					colSpan="2" showIf="status == 1 || status == 2" />
 			</button-group>
 			<field name="onDate" />
 			<field name="priority" />
@@ -49,15 +53,22 @@
 			<field name="invoiceAddress" />
 			<field name="shippingAddress" />
 			<field name="isInvoiceAddressAsShippingAddress"
-				onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress,action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue" />
+				onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress" />
 			<field name="netAmount" />
 			<field name="netIgst" />
 			<field name="netCgst" />
 			<field name="netSgst" />
+			<field name="grossAmount" />
 		</panel>
 		<panel-related field="invoiceItemsList"
-			onChange="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue" />
+			onNew="default-invoice-record"
+			onChange="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue,save">
+		</panel-related>
 	</form>
+	<action-record name="default-invoice-record"
+		model="com.axelor.gst.db.InvoiceLine">
+		<field name="invoice" expr="eval: id" />
+	</action-record>
 
 	<action-attrs name="action.invoice.status.enable">
 		<attribute for="status" name="!readonly" expr="!id" />
@@ -93,6 +104,10 @@
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="invoiceCalculateFieldValue" />
 	</action-method>
+	<action-method name="action.report.attachment.setPath">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setPath" />
+	</action-method>
 
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.validated"
@@ -117,13 +132,31 @@
 		<field name="onDate" />
 		<field name="netAmount" />
 		<template><![CDATA[
-  <h4>{{name}}</h4>
-  <div class="card-body">{{invoiceSeq}}</div>
-  <div class="card-footer">
-   Total Amount: {{netAmount}}
-  </div>   <div class="card-footer">
-      <i class='fa fa-clock-o'></i> <span>{{onDate}}</span>
+ 	<h4>{{name}}</h4>
+  	<div class="card-body">{{invoiceSeq}}</div>
+  	<div class="card-footer">
+   	Total Amount: {{netAmount}}
+  	</div>   <div class="card-footer">
+    <i class='fa fa-clock-o'></i> <span>{{onDate}}</span>
     </div>
   ]]></template>
 	</kanban>
+
+	<chart name="chart.invoice.per.status.barchart"
+		title="invoice per status">
+		<dataset type="jpql">
+    <![CDATA[
+   
+    ]]>
+		</dataset>
+		<category key="status" />
+		<series key="invoice" type="bar" />
+	</chart>
+
+	<action-report name="print.gst.invoice.company"
+		design="invoice_report.rptdesign" output="so-${date}${time}"
+		format="pdf">
+		<param name="invoiceId" expr="eval: id" />
+		<param name="AttachmentPath" expr="eval: AttachmentPath" />
+	</action-report>
 </object-views>

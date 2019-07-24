@@ -11,7 +11,7 @@
 		<field name="city" />
 		<field name="state" />
 		<field name="country" />
-		<field name="pincode" />
+		<field name="pinCode" />
 	</grid>
 
 	<form name="address-form" title="Address-Form"
@@ -23,7 +23,7 @@
 			<field name="city" />
 			<field name="state" />
 			<field name="country" />
-			<field name="pincode" />
+			<field name="pinCode" />
 		</panel>
 	</form>
 </object-views>

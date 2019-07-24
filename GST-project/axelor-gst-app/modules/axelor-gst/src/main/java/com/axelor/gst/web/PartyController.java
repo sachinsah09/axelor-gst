@@ -15,10 +15,10 @@ public class PartyController extends JpaSupport {
 	public void setPartySequence(ActionRequest request, ActionResponse response) {
 		Party party = request.getContext().asType(Party.class);
 		try {
-		String partySequenceNumber=service.setPartySequence(party);
-		response.setValue("partySeq",partySequenceNumber);
-		}catch(Exception e){
-				System.out.println(e);
+			String partySequenceNumber = service.setPartySequence(party);
+			response.setValue("partySeq", partySequenceNumber);
+		} catch (Exception e) {
+			response.setError("Model not Registered");
 		}
 	}
 }

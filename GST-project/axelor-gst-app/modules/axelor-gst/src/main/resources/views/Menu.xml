@@ -129,7 +129,7 @@
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
 		<domain>self.status = :status</domain>
-		<context name="status" expr="draft" />
+		<context name="status" expr="1" />
 	</action-view>
 	<menuitem name="invoice-root-validated-invoice"
 		parent="invoice-root" title="Validated Invoice"
@@ -139,7 +139,7 @@
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
 		<domain>self.status = :status</domain>
-		<context name="status" expr="validated" />
+		<context name="status" expr="2" />
 	</action-view>
 	<menuitem name="invoice-root-paid-invoice"
 		parent="invoice-root" title="Paid Invoice"
@@ -149,7 +149,7 @@
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
 		<domain>self.status = :status</domain>
-		<context name="status" expr="paid" />
+		<context name="status" expr="3" />
 	</action-view>
 	<menuitem name="invoice-root-cancelled-invoice"
 		parent="invoice-root" title="Cancelled Invoice"
@@ -159,7 +159,7 @@
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
 		<domain>self.status = :status</domain>
-		<context name="status" expr="cancelled" />
+		<context name="status" expr="4" />
 	</action-view>
 	<menuitem name="invoice-root-all-invoice"
 		parent="invoice-root" title="All Invoice"
@@ -170,7 +170,16 @@
 		<view type="form" name="invoice-form" />
 		<view type="kanban" name="invoice-task-kanban"/>
 	</action-view>
+	
+	<menuitem name="menu-welcome" 
+		title="Dashboard" action="welcome" />
 
-
+	<action-view name="welcome" title="Welcome!">
+		<view type="dashboard" name="welcome.dashboard" />
+	</action-view>
+	<dashboard name="welcome.dashboard"
+		title="Invoice Statistics">
+		<dashlet action="chart:chart.invoice.per.status.barchart" />
+	</dashboard>
 </object-views>
 

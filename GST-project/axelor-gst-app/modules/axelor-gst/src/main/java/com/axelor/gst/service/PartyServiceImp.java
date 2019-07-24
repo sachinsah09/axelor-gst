@@ -15,21 +15,22 @@ public class PartyServiceImp implements PartyService {
 
 		String sequenceNumber = "";
 		if (party.getPartySeq() == null) {
-			long modelId;
+
 			int addPaddingZero = 0;
 
 			// method 1 to find model id
-			modelId = JPA.all(MetaModel.class).filter("self.id = 47").fetchOne().getId();
+//			long modelId;
+//			modelId = JPA.all(MetaModel.class).filter("self.name = Party").fetchOne().getId();
 
 			// method 2 to find model id
-			// MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
-
+			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
+			long modelId = model.getId();
 			long seqId = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getId();
-			String prefix = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getPrefix();
-			String suffix = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getSuffix();
-			int padding = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getPadding();
-			int nextNumber = Integer
-					.parseInt(JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getNextNumber());
+			Sequence sequence = JPA.em().find(Sequence.class, seqId);
+			String prefix = sequence.getPrefix();
+			String suffix = sequence.getSuffix();
+			int padding = sequence.getPadding();
+			int nextNumber = Integer.parseInt(sequence.getNextNumber());
 
 			if (suffix == null) {
 				suffix = "";
@@ -43,12 +44,12 @@ public class PartyServiceImp implements PartyService {
 
 			nextNumber++;
 			String setNextNumber = "" + nextNumber;
-			Sequence sequence = JPA.em().find(Sequence.class, seqId);
-			sequence.setNextNumber(setNextNumber);
+			Sequence sequenceUpdate = JPA.em().find(Sequence.class, seqId);
+			sequenceUpdate.setNextNumber(setNextNumber);
 			JPA.em().persist(sequence);
 
 		} else {
-				 sequenceNumber=party.getPartySeq();
+			sequenceNumber = party.getPartySeq();
 		}
 		return sequenceNumber;
 	}

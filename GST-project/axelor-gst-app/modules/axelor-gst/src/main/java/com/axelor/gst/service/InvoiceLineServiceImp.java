@@ -24,9 +24,7 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 		State state2 = invoiceLine.getInvoice().getCompany().getAddress().getState();
 		String companyState = state2.getName();
 
-			System.out.println(companyState);
-			System.out.println(invoiceState);
-		if (invoiceState.equals(companyState) ) {
+		if (invoiceState.equals(companyState)) {
 			invoiceLine.setCgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider));
 			invoiceLine.setSgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider));
 			sgst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider);

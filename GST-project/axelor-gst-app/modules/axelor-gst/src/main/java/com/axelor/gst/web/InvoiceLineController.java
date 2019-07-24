@@ -24,6 +24,8 @@ public class InvoiceLineController  extends JpaSupport {
 		response.setValue("cgst",invoiceline.getCgst());
 		response.setValue("grossAmount",invoiceline.getGrossAmount());
 		}catch(Exception e){
+		System.out.println(e);
+			//	response.setError("cannot calculate");
 		}
 	}
 	public void setProductName(ActionRequest request, ActionResponse response) {
@@ -32,7 +34,7 @@ public class InvoiceLineController  extends JpaSupport {
 		String productName=service.setProductName(invoiceLine);
 		response.setValue("item",productName);
 		}catch(Exception e){
-				System.out.println(e);
+				response.setError("cannot fetch address");
 		}
 	}
 	public void setGstRate(ActionRequest request, ActionResponse response) {
@@ -41,7 +43,7 @@ public class InvoiceLineController  extends JpaSupport {
 		BigDecimal gstRate=service.setGstRate(invoiceLine);
 		response.setValue("gstRate",gstRate);
 		}catch(Exception e){
-				System.out.println(e);
+			response.setError("cannot fetch GST rate");
 		}
 	}
 	
