@@ -23,12 +23,12 @@
 		onSave="action.invoiceLine.generate.method.calculatedFieldValue">
 		<panel title="Fill all Details">
 			<field name="product"
-				onChange="action.invoiceLine.generate.method.setProductName,action.invoiceLine.generate.method.setGstRate" />
-			<field name="item" />
+	onChange="action.invoiceLine.generate.method.setProductName,action.invoiceLine.generate.method.setGstRate,action.invoiceLine.generate.method.setPrice,action.invoiceLine.generate.method.setHsbn,action.invoiceLine.generate.method.calculatedFieldValue" />
+	<field name="item" />
 			<field name="hsbn" />
-			<field name="qty" />
-			<field name="price"
-				onChange="action.invoiceLine.generate.method.calculatedFieldValue,save" />
+			<field name="price" />
+			<field name="qty"
+				onChange="action.invoiceLine.generate.method.calculatedFieldValue" />
 			<field name="netAmount" />
 			<field name="gstRate" />
 			<field name="igst" />
@@ -53,4 +53,14 @@
 			method="setGstRate" />
 	</action-method>
 
+	<action-method
+		name="action.invoiceLine.generate.method.setPrice">
+		<call class="com.axelor.gst.web.InvoiceLineController"
+			method="setPrice" />
+	</action-method>
+	<action-method
+		name="action.invoiceLine.generate.method.setHsbn">
+		<call class="com.axelor.gst.web.InvoiceLineController"
+			method="setHsbn" />
+	</action-method>
 </object-views>

@@ -2,7 +2,6 @@ package com.axelor.gst.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import com.axelor.db.JPA;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
@@ -10,6 +9,11 @@ import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Sequence;
+import com.axelor.gst.db.repo.AddressRepository;
+import com.axelor.gst.db.repo.CompanyRepository;
+import com.axelor.gst.db.repo.ContactRepository;
+import com.axelor.gst.db.repo.InvoiceLineRepository;
+import com.axelor.gst.db.repo.SequenceRepository;
 import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
 import com.axelor.meta.db.repo.MetaModelRepository;
@@ -31,10 +35,10 @@ public class InvoiceServiceImp implements InvoiceService {
 			// Invoice").fetchOne().getId();
 
 			// method 2 to find model id
-			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
+			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Invoice");
 			long modelId = model.getId();
-			long seqId = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getId();
-			Sequence sequence = JPA.em().find(Sequence.class, seqId);
+			long seqId = Beans.get(SequenceRepository.class).all().filter("self.model = " + modelId).fetchOne().getId();
+			Sequence sequence = Beans.get(SequenceRepository.class).find(seqId);
 			String prefix = sequence.getPrefix();
 			String suffix = sequence.getSuffix();
 			int padding = sequence.getPadding();
@@ -52,10 +56,9 @@ public class InvoiceServiceImp implements InvoiceService {
 
 			nextNumber++;
 			String setNextNumber = "" + nextNumber;
-			Sequence sequenceUpdate = JPA.em().find(Sequence.class, seqId);
+			Sequence sequenceUpdate = Beans.get(SequenceRepository.class).find(seqId);
 			sequenceUpdate.setNextNumber(setNextNumber);
-			JPA.em().persist(sequence);
-
+			Beans.get(SequenceRepository.class).persist(sequence);
 		} else {
 			sequenceNumber = invoice.getInvoiceSeq();
 		}
@@ -67,11 +70,11 @@ public class InvoiceServiceImp implements InvoiceService {
 		Contact setInvoicePartyPrimaryContact = null;
 		Party party = invoice.getParty();
 		long partyId = party.getId();
-		List<Contact> partyContactList = JPA.all(Contact.class).filter("self.party = " + partyId).fetch();
-
+		List<Contact> partyContactList = Beans.get(ContactRepository.class).all().filter("self.party = " + partyId)
+				.fetch();
 		for (Contact contact : partyContactList) {
 			if (contact.getType().equals("primary")) {
-				setInvoicePartyPrimaryContact = JPA.em().find(Contact.class, contact.getId());
+				setInvoicePartyPrimaryContact = Beans.get(ContactRepository.class).find(contact.getId());
 			}
 		}
 		return setInvoicePartyPrimaryContact;
@@ -83,13 +86,14 @@ public class InvoiceServiceImp implements InvoiceService {
 
 		Party party = invoice.getParty();
 		long partyId = party.getId();
-		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
+		List<Address> partyAddressList = Beans.get(AddressRepository.class).all().filter("self.party = " + partyId)
+				.fetch();
 
 		for (Address address : partyAddressList) {
 			if (address.getType().equals("default")) {
-				setInvoicePartyAddress = JPA.em().find(Address.class, address.getId());
+				setInvoicePartyAddress = Beans.get(AddressRepository.class).find(address.getId());
 			} else if (address.getType().equals("invoice")) {
-				setInvoicePartyAddress = JPA.em().find(Address.class, address.getId());
+				setInvoicePartyAddress = Beans.get(AddressRepository.class).find(address.getId());
 			}
 		}
 		return setInvoicePartyAddress;
@@ -98,13 +102,13 @@ public class InvoiceServiceImp implements InvoiceService {
 	@Override
 	public Company setInvoiceDefaultCompany(Invoice invoice) {
 		Company setInvoiceDefaultCompany = null;
-		List<Company> companyList = JPA.all(Company.class).fetch();
+		List<Company> companyList = Beans.get(CompanyRepository.class).all().fetch();
 
 		for (Company company : companyList) {
 			if (company.getName().equals("Axelor pvt ltd")) {
-				setInvoiceDefaultCompany = JPA.em().find(Company.class, company.getId());
+				setInvoiceDefaultCompany = Beans.get(CompanyRepository.class).find(company.getId());
 			} else {
-				setInvoiceDefaultCompany = JPA.em().find(Company.class, company.getId());
+				setInvoiceDefaultCompany = Beans.get(CompanyRepository.class).find(company.getId());
 			}
 		}
 		return setInvoiceDefaultCompany;
@@ -113,23 +117,23 @@ public class InvoiceServiceImp implements InvoiceService {
 	@Override
 	public Address setInvoiceShippingAddress(Invoice invoice) {
 		Address setInvoiceShippingAddress = null;
-
 		Party party = invoice.getParty();
 		long partyId = party.getId();
-		List<Address> partyAddressList = JPA.all(Address.class).filter("self.party = " + partyId).fetch();
+		List<Address> partyAddressList = Beans.get(AddressRepository.class).all().filter("self.party = " + partyId)
+				.fetch();
 
 		if (invoice.getIsInvoiceAddressAsShippingAddress() == false) {
 			for (Address address : partyAddressList) {
 				if (address.getType().equals("default")) {
-					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
 				} else if (address.getType().equals("shipping")) {
-					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
 				}
 			}
 		} else {
 			for (Address address : partyAddressList) {
 				if (address.getType().equals("invoice")) {
-					setInvoiceShippingAddress = JPA.em().find(Address.class, address.getId());
+					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
 				}
 			}
 		}
@@ -140,7 +144,8 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Invoice invoiceCalculateFieldValue(Invoice invoice) {
 
 		long invoiceId = invoice.getId();
-		List<InvoiceLine> invoiceLineList = JPA.all(InvoiceLine.class).filter("self.invoice = " + invoiceId).fetch();
+		List<InvoiceLine> invoiceLineList = Beans.get(InvoiceLineRepository.class).all()
+				.filter("self.invoice = " + invoiceId).fetch();
 
 		BigDecimal netAmount = new BigDecimal(0);
 		BigDecimal netCgst = new BigDecimal(0);
@@ -162,4 +167,5 @@ public class InvoiceServiceImp implements InvoiceService {
 		invoice.setGrossAmount(grossAmount);
 		return invoice;
 	}
+
 }

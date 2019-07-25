@@ -104,9 +104,14 @@ public class InvoiceController extends JpaSupport {
 	public void checkStatus(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		System.out.println(invoice.getStatus());
-		if(invoice.getStatus() == "1")
-		{
-			response.setError("Validated data to save");
+		if (invoice.getStatus().equals("1")) {
+			response.setFlash("Draft Invoice Saved");
+		} else if (invoice.getStatus().equals("2")) {
+			response.setFlash("Validated Invoice Saved");
+		} else if (invoice.getStatus().equals("3")) {
+			response.setFlash("Paid Invoice Saved");
+		} else {
+			response.setFlash("Cancelled Invoice Saved");
 		}
 	}
 

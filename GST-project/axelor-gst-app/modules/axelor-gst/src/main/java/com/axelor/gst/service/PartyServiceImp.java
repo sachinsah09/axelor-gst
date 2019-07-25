@@ -1,8 +1,8 @@
 package com.axelor.gst.service;
 
-import com.axelor.db.JPA;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Sequence;
+import com.axelor.gst.db.repo.SequenceRepository;
 import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
 import com.axelor.meta.db.repo.MetaModelRepository;
@@ -25,8 +25,8 @@ public class PartyServiceImp implements PartyService {
 			// method 2 to find model id
 			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Party");
 			long modelId = model.getId();
-			long seqId = JPA.all(Sequence.class).filter("self.model = " + modelId).fetchOne().getId();
-			Sequence sequence = JPA.em().find(Sequence.class, seqId);
+			long seqId = Beans.get(SequenceRepository.class).all().filter("self.model = " + modelId).fetchOne().getId();
+			Sequence sequence = Beans.get(SequenceRepository.class).find(seqId);
 			String prefix = sequence.getPrefix();
 			String suffix = sequence.getSuffix();
 			int padding = sequence.getPadding();
@@ -44,10 +44,9 @@ public class PartyServiceImp implements PartyService {
 
 			nextNumber++;
 			String setNextNumber = "" + nextNumber;
-			Sequence sequenceUpdate = JPA.em().find(Sequence.class, seqId);
+			Sequence sequenceUpdate = Beans.get(SequenceRepository.class).find(seqId);
 			sequenceUpdate.setNextNumber(setNextNumber);
-			JPA.em().persist(sequence);
-
+			 Beans.get(SequenceRepository.class).persist(sequence);
 		} else {
 			sequenceNumber = party.getPartySeq();
 		}

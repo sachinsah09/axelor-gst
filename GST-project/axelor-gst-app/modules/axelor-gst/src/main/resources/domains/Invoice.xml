@@ -11,7 +11,7 @@
 			selection="gst.invoice.status.select" default="1" readonly="true" />
 		<many-to-one name="company" title="Company Name"
 			ref="com.axelor.gst.db.Company" required="true" />
-		<string name="invoiceSeq"  required="true" readonly="true"
+		<string name="invoiceSeq"  readonly="true"
 			title="Invoice Number" namecolumn="true" />
 		<datetime name="onDate" title="Invoice Generated Date" />
 		<integer name="priority" title="Set Prority" />

@@ -1537,6 +1537,18 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">total_qty</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["qty"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="245">
                 <property name="width">1.013986013986014in</property>
@@ -1733,9 +1745,8 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                     </cell>
                     <cell id="285">
                         <property name="style">NewStyle</property>
-                        <data id="262">
-                            <property name="display">inline</property>
-                            <property name="resultSetColumn">Aggregation_qty</property>
+                        <data id="295">
+                            <property name="resultSetColumn">total_qty</property>
                         </data>
                     </cell>
                     <cell id="286">

@@ -1,17 +1,18 @@
 package com.axelor.gst.service;
 
 import java.math.BigDecimal;
-import com.axelor.db.JPA;
+import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Product;
-import com.axelor.gst.db.State;
+import com.axelor.gst.db.repo.ProductRepository;
+import com.axelor.inject.Beans;
 import com.google.inject.persist.Transactional;
 
 public class InvoiceLineServiceImp implements InvoiceLineService {
 
 	@Transactional
 	@Override
-	public InvoiceLine calculatedFieldValue(InvoiceLine invoiceLine) {
+	public InvoiceLine calculatedFieldValue(InvoiceLine invoiceLine, Invoice invoice) {
 
 		BigDecimal sgst, cgst, igst, netAmount;
 		BigDecimal divider = new BigDecimal(2);
@@ -19,14 +20,14 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 		netAmount = qty.multiply(invoiceLine.getPrice());
 		invoiceLine.setNetAmount(qty.multiply(invoiceLine.getPrice()));
 
-		State state1 = invoiceLine.getInvoice().getInvoiceAddress().getState();
-		String invoiceState = state1.getName();
-		State state2 = invoiceLine.getInvoice().getCompany().getAddress().getState();
-		String companyState = state2.getName();
+		String invoiceState = invoice.getInvoiceAddress().getState().getName();
+		String companyState = invoice.getCompany().getAddress().getState().getName();
+		System.out.println(invoiceState);
+		System.out.println(companyState);
 
 		if (invoiceState.equals(companyState)) {
 			sgst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider);
-			cgst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider);
+			cgst = sgst;
 			invoiceLine.setCgst(cgst);
 			invoiceLine.setSgst(sgst);
 			invoiceLine.setGrossAmount(netAmount.add(cgst).add(sgst));
@@ -41,7 +42,7 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 	@Override
 	public String setProductName(InvoiceLine invoiceLine) {
 		long productId = invoiceLine.getProduct().getId();
-		Product product = JPA.em().find(Product.class, productId);
+		Product product = Beans.get(ProductRepository.class).find(productId);
 		String productName = "[" + product.getCode() + "] " + product.getName();
 		return productName;
 	}
@@ -49,9 +50,24 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 	@Override
 	public BigDecimal setGstRate(InvoiceLine invoiceLine) {
 		long productId = invoiceLine.getProduct().getId();
-		Product product = JPA.em().find(Product.class, productId);
+		Product product = Beans.get(ProductRepository.class).find(productId);
 		BigDecimal gstRate = product.getGstRate();
 		return gstRate;
 	}
 
+	@Override
+	public BigDecimal setPrice(InvoiceLine invoiceLine) {
+		long productId = invoiceLine.getProduct().getId();
+		Product product = Beans.get(ProductRepository.class).find(productId);
+		BigDecimal price = product.getSalesPrice();
+		return price;
+	}
+	
+	@Override
+	public String setHsbn(InvoiceLine invoiceLine) {
+		long productId = invoiceLine.getProduct().getId();
+		Product product = Beans.get(ProductRepository.class).find(productId);
+		String hsbn = product.getHsbn();
+		return hsbn;
+	}
 }
