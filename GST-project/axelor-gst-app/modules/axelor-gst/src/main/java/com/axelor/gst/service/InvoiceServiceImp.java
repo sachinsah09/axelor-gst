@@ -122,7 +122,7 @@ public class InvoiceServiceImp implements InvoiceService {
 		List<Address> partyAddressList = Beans.get(AddressRepository.class).all().filter("self.party = " + partyId)
 				.fetch();
 
-		if (invoice.getIsInvoiceAddressAsShippingAddress() == false) {
+		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
 			for (Address address : partyAddressList) {
 				if (address.getType().equals("default")) {
 					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());

@@ -23,8 +23,8 @@
 		onSave="action.invoiceLine.generate.method.calculatedFieldValue">
 		<panel title="Fill all Details">
 			<field name="product"
-	onChange="action.invoiceLine.generate.method.setProductName,action.invoiceLine.generate.method.setGstRate,action.invoiceLine.generate.method.setPrice,action.invoiceLine.generate.method.setHsbn,action.invoiceLine.generate.method.calculatedFieldValue" />
-	<field name="item" />
+				onChange="action.invoiceLine.generate.method.setProductName,action.invoiceLine.generate.method.setGstRate,action.invoiceLine.generate.method.setPrice,action.invoiceLine.generate.method.setHsbn,action.invoiceLine.generate.method.calculatedFieldValue" />
+			<field name="item" />
 			<field name="hsbn" />
 			<field name="price" />
 			<field name="qty"

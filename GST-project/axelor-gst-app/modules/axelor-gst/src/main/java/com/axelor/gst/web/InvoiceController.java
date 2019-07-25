@@ -3,7 +3,6 @@ package com.axelor.gst.web;
 import java.io.File;
 
 import com.axelor.app.AppSettings;
-import com.axelor.db.JpaSupport;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
@@ -13,7 +12,7 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.Inject;
 
-public class InvoiceController extends JpaSupport {
+public class InvoiceController {
 
 	@Inject
 	private InvoiceService service;
@@ -114,5 +113,4 @@ public class InvoiceController extends JpaSupport {
 			response.setFlash("Cancelled Invoice Saved");
 		}
 	}
-
 }

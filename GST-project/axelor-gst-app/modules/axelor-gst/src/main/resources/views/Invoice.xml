@@ -24,8 +24,7 @@
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice"
 		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany"
-		onSave="action.invoice.checkstatus"
-		>
+		onSave="action.invoice.checkstatus">
 		<toolbar>
 			<button name="btnPrint2" title="Print" showIf="id"
 				onClick="action.report.attachment.setPath,print.gst.invoice.company"
@@ -36,17 +35,6 @@
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" />
 			<field name="company" />
-			<button-group>
-				<button name="validated" title="Validated"
-					onClick="action.invoice.create.invoice.set.status.value.validated,action.invoice.create.invoice.generate.method.setInvoiceSequence"
-					colSpan="2" showIf="status == 1" />
-				<button name="paid" title="Paid"
-					onClick="action.invoice.create.invoice.set.status.value.paid"
-					colSpan="2" showIf="status == 2" />
-				<button name="cancelled" title="cancelled"
-					onClick="action.invoice.create.invoice.set.status.value.cancelled"
-					colSpan="2" showIf="status == 1 || status == 2" />
-			</button-group>
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
@@ -66,6 +54,22 @@
 			onNew="default-invoice-record"
 			onChange="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue,save">
 		</panel-related>
+		<panel sidebar="true">
+			<button-group>
+				<button name="draft" title="Draft"
+					onClick="action.invoice.create.invoice.set.status.value.draft"
+					colSpan="2" showIf="status == 4" />
+				<button name="validated" title="Validated"
+					onClick="action.invoice.create.invoice.set.status.value.validated,action.invoice.create.invoice.generate.method.setInvoiceSequence"
+					colSpan="2" showIf="status == 1 " />
+				<button name="paid" title="Paid"
+					onClick="action.invoice.create.invoice.set.status.value.paid"
+					colSpan="2" showIf="status == 2" />
+				<button name="cancelled" title="cancelled"
+					onClick="action.invoice.create.invoice.set.status.value.cancelled"
+					colSpan="2" showIf="status == 1 || status == 2" />
+			</button-group>
+		</panel>
 	</form>
 	<action-record name="default-invoice-record"
 		model="com.axelor.gst.db.InvoiceLine">
@@ -116,6 +120,11 @@
 	</action-method>
 
 	<action-record
+		name="action.invoice.create.invoice.set.status.value.draft"
+		model="com.axelor.gst.db.Invoice">
+		<field name="status" expr="1" />
+	</action-record>
+	<action-record
 		name="action.invoice.create.invoice.set.status.value.validated"
 		model="com.axelor.gst.db.Invoice">
 		<field name="status" expr="2" />
@@ -147,7 +156,7 @@
     </div>
   ]]></template>
 	</kanban>
-
+	
 	<action-report name="print.gst.invoice.company"
 		design="invoice_report.rptdesign" output="inv-${date}${time}"
 		format="pdf">

@@ -1,8 +1,6 @@
 package com.axelor.gst.web;
 
 import java.math.BigDecimal;
-
-import com.axelor.db.JpaSupport;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.service.InvoiceLineService;
@@ -10,7 +8,7 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.Inject;
 
-public class InvoiceLineController extends JpaSupport {
+public class InvoiceLineController {
 
 	@Inject
 	private InvoiceLineService service;

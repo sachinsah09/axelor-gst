@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
+
+	<action-attrs name="chart.default.value">
+		<attribute for="fromDate" name="value" expr="eval: __date__" />
+		<attribute for="toDate" name="value" expr="eval: __date__" />
+	</action-attrs>
+
+	<chart onInit="chart.default.value"
+		name="chart.unpaid.invoice.per.company"
+		title="Unpaid Invoice per Company">
+		<search-fields>
+			<field type="date" name="fromDate" title="From Date"
+				x-required="true" />
+			<field type="date" name="toDate" title="To Date"
+				x-required="true" />
+		</search-fields>
+		<dataset type="jpql">
+    <![CDATA[
+    SELECT
+        COUNT(self.status) AS UnpaidInvoice,
+         _party.name AS party,
+       	MONTH(self.onDate) AS month
+    FROM
+        Invoice self
+         LEFT JOIN
+        self.party AS _party
+    WHERE
+         self.onDate BETWEEN :fromDate AND :toDate	
+         AND self.status In ('2') 
+    GROUP BY
+     	_party.name,MONTH(self.onDate)
+ 	
+    ]]>
+		</dataset>
+		<category key="month" type="month" />
+		<series key="UnpaidInvoice" groupBy="party" type="bar" />
+	</chart>
+
+
+	<chart onInit="chart.default.value"
+		name="chart.paid.invoice.per.category.per.product"
+		title="paid Invoice per Category per Product">
+		<search-fields>
+			<field type="date" name="fromDate" title="From Date"
+				x-required="true" />
+			<field type="date" name="toDate" title="To Date"
+				x-required="true" />
+		</search-fields>
+		<dataset type="jpql">
+    <![CDATA[
+    SELECT
+        COUNT(_invoice.status) AS paidInvoice,
+        MONTH(_invoice.onDate) AS month,
+        _product.name AS product
+        
+  		 FROM
+        InvoiceLine self
+         LEFT JOIN
+      	self.invoice AS _invoice
+        LEFT JOIN
+       	self.product AS _product 
+       	LEFT JOIN 
+        _product.category AS _category
+          WHERE
+       _invoice.onDate BETWEEN :fromDate AND :toDate	
+         AND _invoice.status In ('3') 
+    GROUP BY
+     	_product.name, MONTH(_invoice.onDate)     
+ 		
+    ]]>
+		</dataset>
+		<category key="month" type="month" />
+		<series key="paidInvoice" groupBy="product" type="bar" />
+	</chart>
+
+	<chart name="chart.customer.per.state" title="Customer per Sate">
+		<dataset type="jpql">
+    <![CDATA[
+   	 SELECT
+        COUNT(_party.name) AS Customer,
+        _state.name AS state
+   		FROM
+        Address self
+        LEFT JOIN 
+        self.state AS _state
+        LEFT JOIN
+        self.party AS _party
+       GROUP BY
+     	_state.name,_party.name   	
+    ]]>
+		</dataset>
+		<category key="state" />
+		<series key="Customer" type="pie" />
+	</chart>
+
+	<chart name="chart.invoice.per.status" title="Amount per Status">
+		<dataset type="jpql">
+    <![CDATA[
+ 		 SELECT
+        SUM(self.grossAmount) AS Amount,
+        self.status AS status
+    FROM
+        Invoice self
+       GROUP BY
+     	self.status    
+    ]]>
+		</dataset>
+		<category key="status" type="text" />
+		<series key="Amount" type="bar" />
+	</chart>
+
+</object-views>

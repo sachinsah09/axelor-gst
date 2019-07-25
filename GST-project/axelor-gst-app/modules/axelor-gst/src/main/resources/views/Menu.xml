@@ -158,7 +158,7 @@
 		title="Cancelled-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
-		<domain>self.status = :status</domain>
+		<domain>self.onDate = :</domain>
 		<context name="status" expr="4" />
 	</action-view>
 	<menuitem name="invoice-root-all-invoice"
@@ -168,15 +168,23 @@
 		title="all-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<view type="form" name="invoice-form" />
-		<view type="kanban" name="invoice-task-kanban"/>
+		<view type="kanban" name="invoice-task-kanban" />
 	</action-view>
-	
-	<menuitem name="menu-welcome" 
-		title="Dashboard" action="welcome" />
 
+	<menuitem name="menu-welcome" title="DashBoard"
+		action="welcome" />
 	<action-view name="welcome" title="Welcome!">
 		<view type="dashboard" name="welcome.dashboard" />
 	</action-view>
-	
+	<dashboard name="welcome.dashboard"
+		title="Inovice Statistics">
+		<dashlet action="chart:chart.unpaid.invoice.per.company" />
+		<dashlet action="chart:chart.paid.invoice.per.category.per.product" />
+		<dashlet action="chart:chart.customer.per.state" />
+		<dashlet action="chart:chart.invoice.per.status" />
+		
+	</dashboard>
+
+
 </object-views>
 

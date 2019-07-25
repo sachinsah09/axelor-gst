@@ -7,7 +7,7 @@
 
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="Company" sequential="true" cachable="true">
-		<string name="name" title="Company Name" required="true" namecolumn="true"/>
+		<string name="name" namecolumn="true" title="Company Name"  required="true" />
 		<many-to-one name="logo" title="Company's Logo"
 			help="Max size 1MB." ref="com.axelor.meta.db.MetaFile" />
 		<one-to-many name="contactList" title="Contacts"

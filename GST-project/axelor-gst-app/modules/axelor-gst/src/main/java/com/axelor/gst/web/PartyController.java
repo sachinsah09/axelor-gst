@@ -1,13 +1,12 @@
 package com.axelor.gst.web;
 
-import com.axelor.db.JpaSupport;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.service.PartyService;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.Inject;
 
-public class PartyController extends JpaSupport {
+public class PartyController {
 
 	@Inject
 	private PartyService service;
