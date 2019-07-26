@@ -18,12 +18,12 @@
 			<field name="suffix" />
 			<field name="padding" />
 			<field name="nextNumber" />
-			<field name="model"  onChange="save,action.company.sequence.generate.calculateSequenceNumber"/>
+			<field name="model"  onChange="save,action.company.sequence.generate.calculatesequencenumber"/>
 		</panel>
 	</form>
 
 	<action-method
-		name="action.company.sequence.generate.calculateSequenceNumber">
+		name="action.company.sequence.generate.calculatesequencenumber">
 		<call class="com.axelor.gst.web.SequenceController"
 			method="calculateSequenceNumber" />
 	</action-method>

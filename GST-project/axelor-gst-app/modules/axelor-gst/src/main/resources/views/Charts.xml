@@ -30,7 +30,7 @@
         self.party AS _party
     WHERE
          self.onDate BETWEEN :fromDate AND :toDate	
-         AND self.status In ('2') 
+         AND self.status In ('2','1') 
     GROUP BY
      	_party.name,MONTH(self.onDate)
  	

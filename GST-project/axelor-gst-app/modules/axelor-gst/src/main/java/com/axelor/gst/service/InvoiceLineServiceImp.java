@@ -15,18 +15,14 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 	public InvoiceLine calculatedFieldValue(InvoiceLine invoiceLine, Invoice invoice) {
 
 		BigDecimal sgst, cgst, igst, netAmount;
-		BigDecimal divider = new BigDecimal(2);
 		BigDecimal qty = new BigDecimal(invoiceLine.getQty());
 		netAmount = qty.multiply(invoiceLine.getPrice());
 		invoiceLine.setNetAmount(qty.multiply(invoiceLine.getPrice()));
-
 		String invoiceState = invoice.getInvoiceAddress().getState().getName();
 		String companyState = invoice.getCompany().getAddress().getState().getName();
-		System.out.println(invoiceState);
-		System.out.println(companyState);
 
 		if (invoiceState.equals(companyState)) {
-			sgst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())).divide(divider);
+			sgst = (invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))).divide(new BigDecimal(2));
 			cgst = sgst;
 			invoiceLine.setCgst(cgst);
 			invoiceLine.setSgst(sgst);
@@ -62,7 +58,7 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 		BigDecimal price = product.getSalesPrice();
 		return price;
 	}
-	
+
 	@Override
 	public String setHsbn(InvoiceLine invoiceLine) {
 		long productId = invoiceLine.getProduct().getId();

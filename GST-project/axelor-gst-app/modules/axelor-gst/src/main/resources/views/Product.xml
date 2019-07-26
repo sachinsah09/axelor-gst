@@ -5,6 +5,13 @@
 
 	<grid name="product-grid" title="product-Details"
 		model="com.axelor.gst.db.Product">
+		<toolbar>
+			<button name="btnPrint" title="Print"
+				onClick="action.report.attachment.setProductReportValue,print.report.product.details"
+				icon="fa-print" />
+			<button name="btnCreateInvoice" title="Create Invoice"
+				onClick="action.report.attachment.setproductreportvalue,action.wizard.invoice.view.create.invoice" icon="fa-rocket" />
+		</toolbar>
 		<field name="name" />
 		<field name="code" />
 		<field name="hsbn" />
@@ -13,13 +20,14 @@
 		<field name="costPrice" />
 		<field name="gstRate" />
 	</grid>
+	<action-view
+		name="action.wizard.invoice.view.create.invoice"
+		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
+		<view type="form" name="invoice-form" />
+		<context name="idList" expr="eval: idList"/>
+	</action-view>
 	<form name="product-form" title="Product-Form"
 		model="com.axelor.gst.db.Product">
-		<toolbar>
-			<button name="btnPrint" title="Print" showIf="id"
-				onClick="action.report.attachment.setPath,print.report.product.details"
-				icon="fa-print" />
-		</toolbar>
 		<panel title="Fill all Details">
 			<field name="name" />
 			<field name="code" />
@@ -37,15 +45,16 @@
 		<call class="com.axelor.gst.web.ProductController"
 			method="setGstRate" />
 	</action-method>
-	<action-method name="action.report.attachment.setPath">
-		<call class="com.axelor.gst.web.InvoiceController"
-			method="setPath" />
+	<action-method
+		name="action.report.attachment.setproductreportvalue">
+		<call class="com.axelor.gst.web.ProductController"
+			method="setProductReportValue" />
 	</action-method>
 
 	<action-report name="print.report.product.details"
-		design="product_report.rptdesign" output="so-${date}${time}"
+		design="product_report.rptdesign" output="product-${date}"
 		format="pdf">
-		<param name="productId" expr="eval: id" />
-		<param name="AttachmentPath2" expr="eval: AttachmentPath" />
+		<param name="productId" expr="eval: ids" />
+		<param name="Path" expr="eval: Path" />
 	</action-report>
 </object-views>

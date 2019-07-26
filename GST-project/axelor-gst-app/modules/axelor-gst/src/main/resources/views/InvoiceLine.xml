@@ -20,15 +20,15 @@
 	</grid>
 	<form name="invoiceline-form" title="Invoice-Line-Form"
 		model="com.axelor.gst.db.InvoiceLine"
-		onSave="action.invoiceLine.generate.method.calculatedFieldValue">
+		onSave="action.invoiceLine.generate.method.calculatedfieldvalue">
 		<panel title="Fill all Details">
 			<field name="product"
-				onChange="action.invoiceLine.generate.method.setProductName,action.invoiceLine.generate.method.setGstRate,action.invoiceLine.generate.method.setPrice,action.invoiceLine.generate.method.setHsbn,action.invoiceLine.generate.method.calculatedFieldValue" />
+				onChange="action.invoiceLine.generate.method.setproductname,action.invoiceLine.generate.method.setgstrate,action.invoiceLine.generate.method.setprice,action.invoiceLine.generate.method.sethsbn,action.invoiceLine.generate.method.calculatedfieldvalue" />
 			<field name="item" />
 			<field name="hsbn" />
-			<field name="price" />
+			<field name="price" onChange="action.invoiceLine.generate.method.calculatedfieldvalue"/>
 			<field name="qty"
-				onChange="action.invoiceLine.generate.method.calculatedFieldValue" />
+				onChange="action.invoiceLine.generate.method.calculatedfieldvalue" />
 			<field name="netAmount" />
 			<field name="gstRate" />
 			<field name="igst" />
@@ -38,28 +38,28 @@
 		</panel>
 	</form>
 	<action-method
-		name="action.invoiceLine.generate.method.calculatedFieldValue">
+		name="action.invoiceLine.generate.method.calculatedfieldvalue">
 		<call class="com.axelor.gst.web.InvoiceLineController"
 			method="calculatedFieldValue" />
 	</action-method>
 	<action-method
-		name="action.invoiceLine.generate.method.setProductName">
+		name="action.invoiceLine.generate.method.setproductname">
 		<call class="com.axelor.gst.web.InvoiceLineController"
 			method="setProductName" />
 	</action-method>
 	<action-method
-		name="action.invoiceLine.generate.method.setGstRate">
+		name="action.invoiceLine.generate.method.setgstrate">
 		<call class="com.axelor.gst.web.InvoiceLineController"
 			method="setGstRate" />
 	</action-method>
 
 	<action-method
-		name="action.invoiceLine.generate.method.setPrice">
+		name="action.invoiceLine.generate.method.setprice">
 		<call class="com.axelor.gst.web.InvoiceLineController"
 			method="setPrice" />
 	</action-method>
 	<action-method
-		name="action.invoiceLine.generate.method.setHsbn">
+		name="action.invoiceLine.generate.method.sethsbn">
 		<call class="com.axelor.gst.web.InvoiceLineController"
 			method="setHsbn" />
 	</action-method>

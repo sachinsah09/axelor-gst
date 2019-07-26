@@ -6,3 +6,4 @@ import com.axelor.gst.db.Product;
 public interface ProductService {
 	public BigDecimal setGstRate(Product product);
 }
+

@@ -4,12 +4,11 @@
 	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.1.xsd">
 
 	<grid name="invoice-grid" title="Invoice-Details"
-		model="com.axelor.gst.db.Invoice" 
-	 >
+		model="com.axelor.gst.db.Invoice">
 		<field name="invoiceSeq" />
 		<field name="status" />
 		<field name="company" />
-		<field name="onDate"/>
+		<field name="onDate" />
 		<field name="priority" />
 		<field name="party" />
 		<field name="partyContact" />
@@ -25,7 +24,7 @@
 
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice"
-		onNew="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany"
+		onNew="action.invoice.create.invoice.generate.method.setinvoicedefaultcompany,action.invoice.set.product.list"
 		onSave="action.invoice.checkstatus">
 		<toolbar>
 			<button name="btnPrint2" title="Print" showIf="id"
@@ -40,12 +39,12 @@
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
-				onChange="action.invoice.create.invoice.generate.method.setInvoicePartyPrimaryContact,action.invoice.create.invoice.generate.method.setInvoicePartyAddress,action.invoice.create.invoice.generate.method.setInvoiceShippingAddress" />
+				onChange="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
 			<field name="partyContact" />
 			<field name="invoiceAddress" />
 			<field name="shippingAddress" />
 			<field name="isInvoiceAddressAsShippingAddress"
-				onChange="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress" />
+				onChange="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
 			<field name="netAmount" />
 			<field name="netIgst" />
 			<field name="netCgst" />
@@ -54,7 +53,7 @@
 		</panel>
 		<panel-related field="invoiceItemsList"
 			onNew="default-invoice-record"
-			onChange="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue,save">
+			onChange="action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue,save">
 		</panel-related>
 		<panel sidebar="true">
 			<button-group>
@@ -62,7 +61,7 @@
 					onClick="action.invoice.create.invoice.set.status.value.draft"
 					colSpan="2" showIf="status == 4" />
 				<button name="validated" title="Validated"
-					onClick="action.invoice.create.invoice.set.status.value.validated,action.invoice.create.invoice.generate.method.setInvoiceSequence"
+					onClick="action.invoice.create.invoice.set.status.value.validated,action.invoice.create.invoice.generate.method.setinvoicesequence"
 					colSpan="2" showIf="status == 1 " />
 				<button name="paid" title="Paid"
 					onClick="action.invoice.create.invoice.set.status.value.paid"
@@ -73,6 +72,23 @@
 			</button-group>
 		</panel>
 	</form>
+	<kanban name="invoice-task-kanban" title="Invoice-Kanban"
+		model="com.axelor.gst.db.Invoice" columnBy="status"
+		sequenceBy="priority" limit="10">
+		<field name="invoiceSeq" />
+		<field name="onDate" />
+		<field name="netAmount" />
+		<template><![CDATA[
+ 	<h4>{{name}}</h4>
+  	<div class="card-body">{{invoiceSeq}}</div>
+  	<div class="card-footer">
+   	Total Amount: {{netAmount}}
+  	</div>   <div class="card-footer">
+    <i class='fa fa-clock-o'></i> <span>{{onDate}}</span>
+    </div>
+  ]]></template>
+	</kanban>
+	
 	<action-record name="default-invoice-record"
 		model="com.axelor.gst.db.InvoiceLine">
 		<field name="invoice" expr="eval: id" />
@@ -83,32 +99,32 @@
 	</action-attrs>
 
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setInvoiceSequence">
+		name="action.invoice.create.invoice.generate.method.setinvoicesequence">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoiceSequence" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setInvoicePartyPrimaryContact">
+		name="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoicePartyPrimaryContact" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setInvoicePartyAddress">
+		name="action.invoice.create.invoice.generate.method.setinvoicepartyaddress">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoicePartyAddress" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setInvoiceDefaultCompany">
+		name="action.invoice.create.invoice.generate.method.setinvoicedefaultcompany">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoiceDefaultCompany" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setInvoiceShippingAddress">
+		name="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoiceShippingAddress" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.invoiceCalculateFieldValue">
+		name="action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="invoiceCalculateFieldValue" />
 	</action-method>
@@ -119,6 +135,10 @@
 	<action-method name="action.invoice.checkstatus">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="checkStatus" />
+	</action-method>
+	<action-method name="action.invoice.set.product.list">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="setProductItem" />
 	</action-method>
 
 	<action-record
@@ -141,24 +161,6 @@
 		model="com.axelor.gst.db.Invoice">
 		<field name="status" expr="4" />
 	</action-record>
-
-	<kanban name="invoice-task-kanban" title="Invoice-Kanban"
-		model="com.axelor.gst.db.Invoice" columnBy="status"
-		sequenceBy="priority" limit="10">
-		<field name="invoiceSeq" />
-		<field name="onDate" />
-		<field name="netAmount" />
-		<template><![CDATA[
- 	<h4>{{name}}</h4>
-  	<div class="card-body">{{invoiceSeq}}</div>
-  	<div class="card-footer">
-   	Total Amount: {{netAmount}}
-  	</div>   <div class="card-footer">
-    <i class='fa fa-clock-o'></i> <span>{{onDate}}</span>
-    </div>
-  ]]></template>
-	</kanban>
-
 	<action-report name="print.gst.invoice.company"
 		design="invoice_report.rptdesign" output="inv-${date}${time}"
 		format="pdf">

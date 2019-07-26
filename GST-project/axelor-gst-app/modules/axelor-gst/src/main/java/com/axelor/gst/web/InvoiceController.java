@@ -1,13 +1,18 @@
 package com.axelor.gst.web;
 
 import java.io.File;
-
+import java.util.ArrayList;
+import java.util.List;
 import com.axelor.app.AppSettings;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
+import com.axelor.gst.db.InvoiceLine;
+import com.axelor.gst.db.Product;
+import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.service.InvoiceService;
+import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.Inject;
@@ -112,5 +117,32 @@ public class InvoiceController {
 		} else {
 			response.setFlash("Cancelled Invoice Saved");
 		}
+	}
+
+	public void setProductItem(ActionRequest request, ActionResponse response) {
+		Invoice invoice = request.getContext().asType(Invoice.class);
+		String idList = (String) request.getContext().get("idList");
+		System.out.println(idList);
+		InvoiceLine invoiceLine = new InvoiceLine();
+		List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();		
+		String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+		long[] results = new long[items.length];
+		for (int i = 0; i < items.length; i++) {
+			try {
+				results[i] = Integer.parseInt(items[i]);
+				System.out.println(results[i]);
+				Product product = Beans.get(ProductRepository.class).find(results[i]);
+				System.out.println(product.getName());
+				invoiceLine.setItem( "[" + product.getCode() + "] " + product.getName());
+				invoiceLine.setPrice(product.getSalesPrice());
+				invoiceLine.setHsbn(product.getHsbn());
+				invoiceLine.setProduct(product);
+				invoiceItemList.add(invoiceLine);
+			} catch (NumberFormatException nfe) {
+				response.setError("unable to fetch Ids");
+			}	
+		}
+		invoice.setInvoiceItemsList(invoiceItemList);
+		response.setValues(invoice);
 	}
 }
