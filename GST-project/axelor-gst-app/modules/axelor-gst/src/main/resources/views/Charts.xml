@@ -5,7 +5,7 @@
   http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
 	<action-attrs name="chart.default.value">
-		<attribute for="fromDate" name="value" expr="eval: __date__" />
+		<attribute for="fromDate" name="value" expr="eval: __date__.withDayOfMonth(1)" />
 		<attribute for="toDate" name="value" expr="eval: __date__" />
 	</action-attrs>
 
