@@ -167,5 +167,4 @@ public class InvoiceServiceImp implements InvoiceService {
 		invoice.setGrossAmount(grossAmount);
 		return invoice;
 	}
-
 }

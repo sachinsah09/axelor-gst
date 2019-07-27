@@ -9,9 +9,12 @@ import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
+import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Product;
+import com.axelor.gst.db.repo.AddressRepository;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.service.InvoiceService;
+import com.axelor.gst.service.PartyRepository;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
@@ -84,6 +87,7 @@ public class InvoiceController {
 		}
 	}
 
+
 	public void invoiceCalculateFieldValue(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
@@ -122,14 +126,18 @@ public class InvoiceController {
 	public void setProductItem(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		String idList = (String) request.getContext().get("idList");
+		String partyName = (String) request.getContext().get("partyName");
+		Party party = Beans.get(PartyRepository.class).all().filter("self.name = '" + partyName+"'").fetchOne();
+		invoice.setParty(party);
 		if (idList != null) {
-			InvoiceLine invoiceLine = new InvoiceLine();
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
 			String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 			long[] results = new long[items.length];
 			for (int i = 0; i < items.length; i++) {
 				try {
 					results[i] = Integer.parseInt(items[i]);
+					System.out.println(results[i]);
+					InvoiceLine invoiceLine = new InvoiceLine();
 					Product product = Beans.get(ProductRepository.class).find(results[i]);
 					invoiceLine.setItem("[" + product.getCode() + "] " + product.getName());
 					invoiceLine.setPrice(product.getSalesPrice());
@@ -142,6 +150,7 @@ public class InvoiceController {
 			}
 			invoice.setInvoiceItemsList(invoiceItemList);
 			response.setValues(invoice);
+			response.setCanClose(true);
 		}
 	}
 }

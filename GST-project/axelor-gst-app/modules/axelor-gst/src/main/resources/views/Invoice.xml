@@ -24,7 +24,7 @@
 
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice"
-		onNew="action.invoice.create.invoice.generate.method.setinvoicedefaultcompany,action.invoice.set.product.list"
+		onNew="action.invoice.create.invoice.generate.method.setinvoicedefaultcompany,action.invoice.set.product.list,action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress"
 		onSave="action.invoice.checkstatus">
 		<toolbar>
 			<button name="btnPrint2" title="Print" showIf="id"
@@ -35,7 +35,7 @@
 			<field name="invoiceSeq" />
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" />
-			<field name="company" />
+			<field name="company" onChange="action.invoice.method.invoicecalculationonpartychange"/>
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
@@ -139,6 +139,10 @@
 	<action-method name="action.invoice.set.product.list">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setProductItem" />
+	</action-method>
+	<action-method name="action.invoice.method.invoicecalculationonpartychange">
+		<call class="com.axelor.gst.web.InvoiceController"
+			method="invoiceCalculationOnPartyChange" />
 	</action-method>
 
 	<action-record

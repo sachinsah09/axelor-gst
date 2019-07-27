@@ -10,7 +10,7 @@
 				onClick="action.report.attachment.setProductReportValue,print.report.product.details"
 				icon="fa-print" />
 			<button name="btnCreateInvoice" title="Create Invoice"
-				onClick="action.report.attachment.setproductreportvalue,action.wizard.invoice.view.create.invoice"
+				onClick="action.report.attachment.setproductreportvalue,action.wizard.select.party"
 				icon="fa-rocket" />
 		</toolbar>
 		<field name="name" />
@@ -21,12 +21,15 @@
 		<field name="costPrice" />
 		<field name="gstRate" />
 	</grid>
-	<action-view
-		name="action.wizard.invoice.view.create.invoice"
-		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
-		<view type="form" name="invoice-form" />
-		<context name="idList" expr="eval: idList" />
-	</action-view>
+	<form name="invoice-wizard-form" title="invoice-wizard-Form"
+		model="com.axelor.gst.db.Invoice">
+		<panel title="Select Party">
+			<field name="party" type="many-to-one"
+				x-target="com.axelor.gst.db.Party" x-target-name="party" />
+			<button name="buttonSelectParty"
+				onClick="action.wizard.invoice.view.create.invoice" title="Submit" />
+		</panel>
+	</form>
 	<form name="product-form" title="Product-Form"
 		model="com.axelor.gst.db.Product">
 		<panel title="Fill all Details">
@@ -41,6 +44,24 @@
 			<field name="gstRate" />
 		</panel>
 	</form>
+
+	<action-view
+		name="action.wizard.invoice.view.create.invoice"
+		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
+		<view type="form" name="invoice-form" />
+		<context name="idList" expr="eval: idList" />
+		<context name="partyName" expr="eval: party.name" />
+	</action-view>
+	<action-view name="action.wizard.select.party"
+		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
+		<view type="form" name="invoice-wizard-party-select-form" />
+		<view-param name="popup" value="true" />
+		<view-param name="show-toolbar" value="false" />
+		<view-param name="show-confirm" value="false" />
+		<view-param name="popup-save" value="false" />
+		<context name="idList" expr="eval: idList" />
+	</action-view>
+
 	<action-attrs
 		name="action.product.product.method.generate.setgstrate">
 		<attribute for="gstRate" name="value:set"
