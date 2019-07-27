@@ -53,7 +53,7 @@
 		</panel>
 		<panel-related field="invoiceItemsList"
 			onNew="default-invoice-record"
-			onChange="action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue,save">
+			onChange="save,action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue">
 		</panel-related>
 		<panel sidebar="true">
 			<button-group>

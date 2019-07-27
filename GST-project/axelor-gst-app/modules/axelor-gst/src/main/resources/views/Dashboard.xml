@@ -10,6 +10,7 @@
 			action="chart:chart.paid.invoice.per.category.per.product" />
 		<dashlet action="chart:chart.customer.per.state" />
 		<dashlet action="chart:chart.invoice.per.status" />
+		<dashlet action="chart:chart.invoice.per.status.linechart" />
 		<dashlet action="action.view.invoice.older.than.one.month" />
 	</dashboard>
 	<action-view

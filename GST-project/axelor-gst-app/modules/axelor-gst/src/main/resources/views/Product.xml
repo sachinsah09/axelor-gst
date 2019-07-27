@@ -10,7 +10,8 @@
 				onClick="action.report.attachment.setProductReportValue,print.report.product.details"
 				icon="fa-print" />
 			<button name="btnCreateInvoice" title="Create Invoice"
-				onClick="action.report.attachment.setproductreportvalue,action.wizard.invoice.view.create.invoice" icon="fa-rocket" />
+				onClick="action.report.attachment.setproductreportvalue,action.wizard.invoice.view.create.invoice"
+				icon="fa-rocket" />
 		</toolbar>
 		<field name="name" />
 		<field name="code" />
@@ -24,7 +25,7 @@
 		name="action.wizard.invoice.view.create.invoice"
 		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="form" name="invoice-form" />
-		<context name="idList" expr="eval: idList"/>
+		<context name="idList" expr="eval: idList" />
 	</action-view>
 	<form name="product-form" title="Product-Form"
 		model="com.axelor.gst.db.Product">
@@ -33,24 +34,23 @@
 			<field name="code" />
 			<field name="hsbn" />
 			<field name="category"
-				onChange="save,action.product.product.method.generate.setgstrate" />
+				onChange="action.product.product.method.generate.setgstrate" />
 			<field name="salesPrice" />
 			<field name="costPrice" />
 			<field name="image" widget="image" />
 			<field name="gstRate" />
 		</panel>
 	</form>
-	<action-method
+	<action-attrs
 		name="action.product.product.method.generate.setgstrate">
-		<call class="com.axelor.gst.web.ProductController"
-			method="setGstRate" />
-	</action-method>
+		<attribute for="gstRate" name="value:set"
+			expr="eval: category.gstRate" />
+	</action-attrs>
 	<action-method
 		name="action.report.attachment.setproductreportvalue">
 		<call class="com.axelor.gst.web.ProductController"
 			method="setProductReportValue" />
 	</action-method>
-
 	<action-report name="print.report.product.details"
 		design="product_report.rptdesign" output="product-${date}"
 		format="pdf">

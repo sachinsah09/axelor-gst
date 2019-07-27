@@ -28,45 +28,4 @@ public class InvoiceLineController {
 			response.setError("Please Select Party");
 		}
 	}
-
-	public void setProductName(ActionRequest request, ActionResponse response) {
-		InvoiceLine invoiceLine = request.getContext().asType(InvoiceLine.class);
-		try {
-			String productName = service.setProductName(invoiceLine);
-			response.setValue("item", productName);
-		} catch (Exception e) {
-			response.setError("cannot fetch address");
-		}
-	}
-
-	public void setGstRate(ActionRequest request, ActionResponse response) {
-		InvoiceLine invoiceLine = request.getContext().asType(InvoiceLine.class);
-		try {
-			BigDecimal gstRate = service.setGstRate(invoiceLine);
-			response.setValue("gstRate", gstRate);
-		} catch (Exception e) {
-			response.setError("cannot fetch GST rate");
-		}
-	}
-
-	public void setPrice(ActionRequest request, ActionResponse response) {
-		InvoiceLine invoiceLine = request.getContext().asType(InvoiceLine.class);
-		try {
-			BigDecimal price = service.setPrice(invoiceLine);
-			response.setValue("price", price);
-		} catch (Exception e) {
-			response.setError("cannot fetch price");
-		}
-	}
-
-	public void setHsbn(ActionRequest request, ActionResponse response) {
-		InvoiceLine invoiceLine = request.getContext().asType(InvoiceLine.class);
-		try {
-			String hsbn = service.setHsbn(invoiceLine);
-			response.setValue("hsbn", hsbn);
-		} catch (Exception e) {
-			response.setError("cannot fetch hsbn");
-		}
-	}
-
 }

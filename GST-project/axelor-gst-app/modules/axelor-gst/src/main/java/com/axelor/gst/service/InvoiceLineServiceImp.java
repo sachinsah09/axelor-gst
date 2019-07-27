@@ -34,36 +34,4 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 		}
 		return invoiceLine;
 	}
-
-	@Override
-	public String setProductName(InvoiceLine invoiceLine) {
-		long productId = invoiceLine.getProduct().getId();
-		Product product = Beans.get(ProductRepository.class).find(productId);
-		String productName = "[" + product.getCode() + "] " + product.getName();
-		return productName;
-	}
-
-	@Override
-	public BigDecimal setGstRate(InvoiceLine invoiceLine) {
-		long productId = invoiceLine.getProduct().getId();
-		Product product = Beans.get(ProductRepository.class).find(productId);
-		BigDecimal gstRate = product.getGstRate();
-		return gstRate;
-	}
-
-	@Override
-	public BigDecimal setPrice(InvoiceLine invoiceLine) {
-		long productId = invoiceLine.getProduct().getId();
-		Product product = Beans.get(ProductRepository.class).find(productId);
-		BigDecimal price = product.getSalesPrice();
-		return price;
-	}
-
-	@Override
-	public String setHsbn(InvoiceLine invoiceLine) {
-		long productId = invoiceLine.getProduct().getId();
-		Product product = Beans.get(ProductRepository.class).find(productId);
-		String hsbn = product.getHsbn();
-		return hsbn;
-	}
 }

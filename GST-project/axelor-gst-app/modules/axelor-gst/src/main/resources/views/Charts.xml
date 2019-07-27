@@ -5,7 +5,8 @@
   http://axelor.com/xml/ns/object-views/object-views_5.0.xsd">
 
 	<action-attrs name="chart.default.value">
-		<attribute for="fromDate" name="value" expr="eval: __date__.withDayOfMonth(1)" />
+		<attribute for="fromDate" name="value"
+			expr="eval: __date__.withDayOfMonth(1)" />
 		<attribute for="toDate" name="value" expr="eval: __date__" />
 	</action-attrs>
 
@@ -52,29 +53,26 @@
 		</search-fields>
 		<dataset type="jpql">
     <![CDATA[
-    SELECT
-        COUNT(_invoice.status) AS paidInvoice,
-        MONTH(_invoice.onDate) AS month,
-        _product.name AS product
-        
-  		 FROM
-        InvoiceLine self
-         LEFT JOIN
-      	self.invoice AS _invoice
-        LEFT JOIN
-       	self.product AS _product 
-       	LEFT JOIN 
-        _product.category AS _category
-          WHERE
-       _invoice.onDate BETWEEN :fromDate AND :toDate	
-         AND _invoice.status In ('3') 
-    GROUP BY
-     	_product.name, MONTH(_invoice.onDate)     
- 		
+    
+    
+SELECT Count(self.id) as count,
+           _productCategory.name AS pcname,
+           _product.name AS pname
+    FROM Invoice AS self
+    JOIN InvoiceLine AS _invoiceLine ON _invoiceLine.invoice = self.id
+    JOIN Product AS _product ON _product.id = _invoiceLine.product
+    JOIN ProductCategory AS _productCategory ON _productCategory.id = _product.category
+   
+    WHERE self.status = '3'
+           AND self.onDate > :fromDate
+           AND self.onDate < :toDate
+    GROUP BY _productCategory.name, _product.name
+    
+    	
     ]]>
 		</dataset>
-		<category key="month" type="month" />
-		<series key="paidInvoice" groupBy="product" type="bar" />
+		<category key="pcname" />
+		<series key="count" groupBy="pname" type="bar" />
 	</chart>
 
 	<chart name="chart.customer.per.state" title="Customer per Sate">
@@ -112,5 +110,19 @@
 		<category key="status" type="text" />
 		<series key="Amount" type="bar" />
 	</chart>
-
+	<chart name="chart.invoice.per.status.linechart"
+		title="Invoice per Status">
+		<dataset type="jpql">
+    <![CDATA[
+    SELECT
+        invoice.status as status, COUNT(invoice.id) as totalinvoice
+    FROM
+        Invoice as invoice
+    GROUP BY
+        status
+    ]]>
+    </dataset>
+		<category key="totalinvoice" title="Status" type="text" />
+		<series key="totalinvoice" groupBy="status" type="line" title="Invoice" />
+	</chart>
 </object-views>

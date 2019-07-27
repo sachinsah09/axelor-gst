@@ -122,27 +122,26 @@ public class InvoiceController {
 	public void setProductItem(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		String idList = (String) request.getContext().get("idList");
-		System.out.println(idList);
-		InvoiceLine invoiceLine = new InvoiceLine();
-		List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();		
-		String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
-		long[] results = new long[items.length];
-		for (int i = 0; i < items.length; i++) {
-			try {
-				results[i] = Integer.parseInt(items[i]);
-				System.out.println(results[i]);
-				Product product = Beans.get(ProductRepository.class).find(results[i]);
-				System.out.println(product.getName());
-				invoiceLine.setItem( "[" + product.getCode() + "] " + product.getName());
-				invoiceLine.setPrice(product.getSalesPrice());
-				invoiceLine.setHsbn(product.getHsbn());
-				invoiceLine.setProduct(product);
-				invoiceItemList.add(invoiceLine);
-			} catch (NumberFormatException nfe) {
-				response.setError("unable to fetch Ids");
-			}	
+		if (idList != null) {
+			InvoiceLine invoiceLine = new InvoiceLine();
+			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
+			String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+			long[] results = new long[items.length];
+			for (int i = 0; i < items.length; i++) {
+				try {
+					results[i] = Integer.parseInt(items[i]);
+					Product product = Beans.get(ProductRepository.class).find(results[i]);
+					invoiceLine.setItem("[" + product.getCode() + "] " + product.getName());
+					invoiceLine.setPrice(product.getSalesPrice());
+					invoiceLine.setHsbn(product.getHsbn());
+					invoiceLine.setProduct(product);
+					invoiceItemList.add(invoiceLine);
+				} catch (NumberFormatException nfe) {
+					response.setError("unable to fetch Ids");
+				}
+			}
+			invoice.setInvoiceItemsList(invoiceItemList);
+			response.setValues(invoice);
 		}
-		invoice.setInvoiceItemsList(invoiceItemList);
-		response.setValues(invoice);
 	}
 }

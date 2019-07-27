@@ -15,16 +15,6 @@ public class ProductController {
 	@Inject
 	private ProductService service;
 
-	public void setGstRate(ActionRequest request, ActionResponse response) {
-		Product product = request.getContext().asType(Product.class);
-		try {
-			BigDecimal gstRate = service.setGstRate(product);
-			response.setValue("gstRate", gstRate);
-		} catch (Exception e) {
-			response.setError("Error while fetching ID");
-		}
-	}
-
 	public void setProductReportValue(ActionRequest request, ActionResponse response) {
 
 		List<Long> requestIds = (List<Long>) request.getContext().get("_ids");
@@ -35,8 +25,8 @@ public class ProductController {
 			String ids = requestIds.toString();
 			ids = ids.substring(1, ids.length() - 1);
 			request.getContext().put("ids", ids);
-			String idList=requestIds.toString();
-			request.getContext().put("idList",idList);
+			String idList = requestIds.toString();
+			request.getContext().put("idList", idList);
 			String attachmentPathProduct = AppSettings.get().getPath("file.upload.dir", "");
 			attachmentPathProduct = attachmentPathProduct.endsWith(File.separator) ? attachmentPathProduct
 					: attachmentPathProduct + File.separator;
