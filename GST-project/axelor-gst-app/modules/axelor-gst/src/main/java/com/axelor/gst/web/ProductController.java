@@ -31,6 +31,7 @@ public class ProductController {
 			attachmentPathProduct = attachmentPathProduct.endsWith(File.separator) ? attachmentPathProduct
 					: attachmentPathProduct + File.separator;
 			request.getContext().put("path", attachmentPathProduct);
+			response.setCanClose(true);
 		}
 	}
 }

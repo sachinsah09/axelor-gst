@@ -1,6 +1,7 @@
 package com.axelor.gst.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
@@ -8,11 +9,13 @@ import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Party;
+import com.axelor.gst.db.Product;
 import com.axelor.gst.db.Sequence;
 import com.axelor.gst.db.repo.AddressRepository;
 import com.axelor.gst.db.repo.CompanyRepository;
 import com.axelor.gst.db.repo.ContactRepository;
 import com.axelor.gst.db.repo.InvoiceLineRepository;
+import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.db.repo.SequenceRepository;
 import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
@@ -165,6 +168,70 @@ public class InvoiceServiceImp implements InvoiceService {
 		invoice.setNetIgst(netIgst);
 		invoice.setNetSgst(netSgst);
 		invoice.setGrossAmount(grossAmount);
+		return invoice;
+	}
+
+	@Override
+	public Invoice setProductItem(Invoice invoice, String idList, String partyName) {
+
+		if (idList != null) {
+			String companyState = invoice.getCompany().getAddress().getState().getName();
+			Party party = Beans.get(PartyRepository.class).all().filter("self.name = '" + partyName + "'").fetchOne();
+			invoice.setParty(party);
+			List<Address> partyAddressList = Beans.get(AddressRepository.class).all()
+					.filter("self.party = " + party.getId()).fetch();
+			Address setInvoiceShippingAddress = null;
+			if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
+				for (Address address : partyAddressList) {
+					if (address.getType().equals("default")) {
+						setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
+					} else if (address.getType().equals("shipping")) {
+						setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
+					}
+				}
+			}
+			String partyAddress = setInvoiceShippingAddress.getState().getName();
+
+			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
+			String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+			long[] results = new long[items.length];
+
+			for (int i = 0; i < items.length; i++) {
+
+				try {
+					results[i] = Integer.parseInt(items[i]);
+					InvoiceLine invoiceLine = new InvoiceLine();
+					Product product = Beans.get(ProductRepository.class).find(results[i]);
+					invoiceLine.setItem("[" + product.getCode() + "] " + product.getName());
+					invoiceLine.setPrice(product.getSalesPrice());
+					invoiceLine.setHsbn(product.getHsbn());
+					invoiceLine.setGstRate(product.getGstRate());
+					invoiceLine.setProduct(product);
+					invoiceLine.setNetAmount(product.getSalesPrice().multiply(new BigDecimal(1)));
+					BigDecimal cgst = null, sgst = null, igst = null;
+					sgst = product.getSalesPrice().multiply(new BigDecimal(1))
+							.multiply((product.getGstRate()).divide(new BigDecimal(100))).divide(new BigDecimal(2));
+					cgst = sgst;
+
+					if (companyState.equals(partyAddress)) {
+						invoiceLine.setCgst(cgst);
+						invoiceLine.setSgst(sgst);
+						invoiceLine.setGrossAmount(
+								product.getSalesPrice().multiply(new BigDecimal(1)).add(cgst).add(sgst));
+					} else {
+						igst = sgst.add(cgst);
+						invoiceLine.setIgst(igst);
+						invoiceLine.setGrossAmount(
+								product.getSalesPrice().multiply(new BigDecimal(1)).add(cgst).add(sgst));
+
+					}
+					invoiceItemList.add(invoiceLine);
+				} catch (NumberFormatException nfe) {
+					System.out.println(nfe);
+				}
+			}
+			invoice.setInvoiceItemsList(invoiceItemList);
+		}
 		return invoice;
 	}
 }
