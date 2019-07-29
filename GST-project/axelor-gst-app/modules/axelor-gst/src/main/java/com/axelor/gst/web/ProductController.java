@@ -1,24 +1,16 @@
 package com.axelor.gst.web;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.List;
 import com.axelor.app.AppSettings;
-import com.axelor.gst.db.Product;
-import com.axelor.gst.service.ProductService;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
-import com.google.inject.Inject;
 
 public class ProductController {
-
-	@Inject
-	private ProductService service;
 
 	public void setProductReportValue(ActionRequest request, ActionResponse response) {
 
 		List<Long> requestIds = (List<Long>) request.getContext().get("_ids");
-
 		if (requestIds == null) {
 			response.setError("please select one product");
 		} else {

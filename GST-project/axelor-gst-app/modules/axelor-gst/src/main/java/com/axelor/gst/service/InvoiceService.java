@@ -4,8 +4,6 @@ import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
-import com.axelor.rpc.ActionRequest;
-import com.axelor.rpc.ActionResponse;
 
 public interface InvoiceService {
 	public String setInvoiceSequence(Invoice invoice);

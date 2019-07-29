@@ -1,4 +1,4 @@
-package com.axelor.gst.service;
+package com.axelor.gst.repository;
 
 import java.util.Map;
 

@@ -3,8 +3,6 @@ package com.axelor.gst.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.axelor.common.ObjectUtils;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
@@ -17,9 +15,9 @@ import com.axelor.gst.db.repo.AddressRepository;
 import com.axelor.gst.db.repo.CompanyRepository;
 import com.axelor.gst.db.repo.ContactRepository;
 import com.axelor.gst.db.repo.InvoiceLineRepository;
-import com.axelor.gst.db.repo.InvoiceRepository;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.db.repo.SequenceRepository;
+import com.axelor.gst.repository.PartyRepository;
 import com.axelor.inject.Beans;
 import com.axelor.meta.db.MetaModel;
 import com.axelor.meta.db.repo.MetaModelRepository;
@@ -74,10 +72,7 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Contact setInvoicePartyPrimaryContact(Invoice invoice) {
 		Contact setInvoicePartyPrimaryContact = null;
 		Party party = invoice.getParty();
-		long partyId = party.getId();
-		List<Contact> partyContactList = Beans.get(ContactRepository.class).all().filter("self.party = " + partyId)
-				.fetch();
-		for (Contact contact : partyContactList) {
+		for (Contact contact : party.getContactList()) {
 			if (contact.getType().equals("primary")) {
 				setInvoicePartyPrimaryContact = Beans.get(ContactRepository.class).find(contact.getId());
 			}
@@ -90,11 +85,7 @@ public class InvoiceServiceImp implements InvoiceService {
 		Address setInvoicePartyAddress = null;
 
 		Party party = invoice.getParty();
-		long partyId = party.getId();
-		List<Address> partyAddressList = Beans.get(AddressRepository.class).all().filter("self.party = " + partyId)
-				.fetch();
-
-		for (Address address : partyAddressList) {
+		for (Address address : party.getAddressList()) {
 			if (address.getType().equals("default")) {
 				setInvoicePartyAddress = Beans.get(AddressRepository.class).find(address.getId());
 			} else if (address.getType().equals("invoice")) {
@@ -123,12 +114,9 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Address setInvoiceShippingAddress(Invoice invoice) {
 		Address setInvoiceShippingAddress = null;
 		Party party = invoice.getParty();
-		long partyId = party.getId();
-		List<Address> partyAddressList = Beans.get(AddressRepository.class).all().filter("self.party = " + partyId)
-				.fetch();
 
 		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
-			for (Address address : partyAddressList) {
+			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("default")) {
 					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
 				} else if (address.getType().equals("shipping")) {
@@ -136,7 +124,7 @@ public class InvoiceServiceImp implements InvoiceService {
 				}
 			}
 		} else {
-			for (Address address : partyAddressList) {
+			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("invoice")) {
 					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
 				}
@@ -185,11 +173,9 @@ public class InvoiceServiceImp implements InvoiceService {
 			String companyState = invoice.getCompany().getAddress().getState().getName();
 			Party party = Beans.get(PartyRepository.class).all().filter("self.name = '" + partyName + "'").fetchOne();
 			invoice.setParty(party);
-			List<Address> partyAddressList = Beans.get(AddressRepository.class).all()
-					.filter("self.party = " + party.getId()).fetch();
 			Address setInvoiceShippingAddress = null;
 			if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
-				for (Address address : partyAddressList) {
+				for (Address address : party.getAddressList()) {
 					if (address.getType().equals("default")) {
 						setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
 					} else if (address.getType().equals("shipping")) {
@@ -257,7 +243,6 @@ public class InvoiceServiceImp implements InvoiceService {
 		return invoice;
 	}
 
-	@Transactional
 	@Override
 	public Invoice reCalulateValueOnAddressChange(Invoice invoice) {
 
@@ -274,25 +259,24 @@ public class InvoiceServiceImp implements InvoiceService {
 			if (invoice.getInvoiceItemsList() != null) {
 				for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
 					BigDecimal cgst = null, sgst = null, igst = null, amount = null;
+					InvoiceLine invoiceLineValue = Beans.get(InvoiceLineRepository.class).find(invoiceLine.getId());
 					amount = invoiceLine.getNetAmount();
 					if (companyState.equals(invoiceState)) {
 						amount = invoiceLine.getNetAmount();
 						sgst = amount.multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))
 								.divide(new BigDecimal(2));
 						cgst = sgst;
-						invoiceLine.setNetAmount(amount);
 						netCgst = netCgst.add(cgst);
 						netSgst = netSgst.add(sgst);
-						InvoiceLine invoiceLineValue = Beans.get(InvoiceLineRepository.class).find(invoiceLine.getId());
 						invoiceLineValue.setSgst(sgst);
 						invoiceLineValue.setCgst(cgst);
 						invoiceLineValue.setIgst(new BigDecimal(0));
 					} else {
 						igst = amount.multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)));
-						invoiceLine.setIgst(igst);
 						netIgst = netIgst.add(igst);
-						invoiceLine.setSgst(new BigDecimal(0));
-						invoiceLine.setCgst(new BigDecimal(0));
+						invoiceLineValue.setIgst(igst);
+						invoiceLineValue.setSgst(new BigDecimal(0));
+						invoiceLineValue.setCgst(new BigDecimal(0));
 					}
 					invoiceItemList.add(invoiceLine);
 				}

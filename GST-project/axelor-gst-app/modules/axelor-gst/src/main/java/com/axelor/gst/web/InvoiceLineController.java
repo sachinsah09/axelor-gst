@@ -1,6 +1,5 @@
 package com.axelor.gst.web;
 
-import java.math.BigDecimal;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.service.InvoiceLineService;
