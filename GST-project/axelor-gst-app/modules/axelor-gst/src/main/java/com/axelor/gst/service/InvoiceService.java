@@ -15,4 +15,5 @@ public interface InvoiceService {
 	public Address setInvoiceShippingAddress(Invoice invoice);
 	public Invoice invoiceCalculateFieldValue(Invoice invoice);
 	public Invoice setProductItem(Invoice invoice,String idList,String partyName);
+	public void reCalulateValueOnAddressChange(Invoice invoice);
 }

@@ -24,7 +24,7 @@
 		<many-to-one name="shippingAddress"
 			title="Shipping Address" ref="com.axelor.gst.db.Address" />
 		<boolean name="isInvoiceAddressAsShippingAddress"
-			title="Use Shipping Address as Invoice Address " default="true" />
+			title="Use Invoice Address as Shipping Address " default="true" />
 		<decimal name="netAmount" readonly="true" title="Net Amount" />
 		<decimal name="netIgst" readonly="true" title="Net IGST" />
 		<decimal name="netCgst" readonly="true" title="Net CGST" />

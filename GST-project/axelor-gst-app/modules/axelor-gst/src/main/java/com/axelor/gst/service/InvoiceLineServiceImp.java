@@ -28,8 +28,8 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 			invoiceLine.setSgst(sgst);
 			invoiceLine.setGrossAmount(netAmount.add(cgst).add(sgst));
 		} else {
-			invoiceLine.setIgst((invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate())));
-			igst = (invoiceLine.getNetAmount().multiply(invoiceLine.getGstRate()));
+			invoiceLine.setIgst((invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))));
+			igst = (invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100))));
 			invoiceLine.setGrossAmount(netAmount.add(igst));
 		}
 		return invoiceLine;

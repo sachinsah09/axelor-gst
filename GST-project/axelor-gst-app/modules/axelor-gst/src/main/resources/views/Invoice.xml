@@ -13,8 +13,8 @@
 		<field name="party" />
 		<field name="partyContact" />
 		<field name="invoiceAddress" />
-		<field name="shippingAddress" />
 		<field name="isInvoiceAddressAsShippingAddress" />
+		<field name="shippingAddress" />
 		<field name="netAmount" />
 		<field name="netIgst" />
 		<field name="netCgst" />
@@ -35,16 +35,17 @@
 			<field name="invoiceSeq" />
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" />
-			<field name="company" onChange="action.invoice.method.invoicecalculationonpartychange"/>
+			<field name="company"
+				onChange="action.invoice.set.value.on.address.change" />
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
 				onChange="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
 			<field name="partyContact" />
 			<field name="invoiceAddress" />
-			<field name="shippingAddress" />
 			<field name="isInvoiceAddressAsShippingAddress"
 				onChange="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
+			<field name="shippingAddress" />
 			<field name="netAmount" />
 			<field name="netIgst" />
 			<field name="netCgst" />
@@ -88,7 +89,7 @@
     </div>
   ]]></template>
 	</kanban>
-	
+
 	<action-record name="default-invoice-record"
 		model="com.axelor.gst.db.InvoiceLine">
 		<field name="invoice" expr="eval: id" />
@@ -140,9 +141,10 @@
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setProductItem" />
 	</action-method>
-	<action-method name="action.invoice.method.invoicecalculationonpartychange">
+	<action-method
+		name="action.invoice.set.value.on.address.change">
 		<call class="com.axelor.gst.web.InvoiceController"
-			method="invoiceCalculationOnPartyChange" />
+			method="reCalulateValueOnAddressChange" />
 	</action-method>
 
 	<action-record

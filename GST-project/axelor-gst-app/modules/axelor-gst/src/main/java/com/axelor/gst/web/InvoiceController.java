@@ -119,6 +119,11 @@ public class InvoiceController {
 		String partyName = (String) request.getContext().get("partyName");
 		Invoice invoiceSetValue = service.setProductItem(invoice, idList, partyName);
 		response.setValues(invoiceSetValue);
-		;
 	}
+
+	public void reCalulateValueOnAddressChange(ActionRequest request, ActionResponse response) {
+		Invoice invoice = request.getContext().asType(Invoice.class);
+		service.reCalulateValueOnAddressChange(invoice);
+	}
+
 }

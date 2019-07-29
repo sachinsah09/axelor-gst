@@ -55,7 +55,7 @@
     <![CDATA[
     
     
-SELECT Count(self.id) as count,
+	SELECT Count(self.id) as count,
            _productCategory.name AS pcname,
            _product.name AS pname
     FROM Invoice AS self
@@ -123,6 +123,7 @@ SELECT Count(self.id) as count,
     ]]>
     </dataset>
 		<category key="totalinvoice" title="Status" type="text" />
-		<series key="totalinvoice" groupBy="status" type="line" title="Invoice" />
+		<series key="totalinvoice" groupBy="status" type="line"
+			title="Invoice" />
 	</chart>
 </object-views>

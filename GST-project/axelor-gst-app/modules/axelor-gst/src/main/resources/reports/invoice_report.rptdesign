@@ -979,6 +979,9 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
             <property name="textTransform">capitalize</property>
             <property name="verticalAlign">middle</property>
         </style>
+        <style name="NewStyle1" id="334">
+            <property name="textAlign">left</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -1551,7 +1554,7 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                 </structure>
             </list-property>
             <column id="245">
-                <property name="width">1.013986013986014in</property>
+                <property name="width">1.4125874125874125in</property>
             </column>
             <column id="246">
                 <property name="width">0.993006993006993in</property>
@@ -1673,71 +1676,17 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                 </row>
             </detail>
             <footer>
-                <row id="236">
-                    <property name="style">footer</property>
-                    <cell id="237">
-                        <property name="style">NewStyle</property>
-                        <label id="260">
-                            <property name="display">inline</property>
-                            <text-property name="text">Total Items : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="238">
-                        <property name="style">NewStyle</property>
-                        <label id="261">
-                            <property name="display">inline</property>
-                            <text-property name="text">Total Qty : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="239">
-                        <property name="style">NewStyle</property>
-                        <label id="263">
-                            <property name="display">inline</property>
-                            <text-property name="text">Total Price : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="240">
-                        <property name="style">NewStyle</property>
-                        <label id="265">
-                            <property name="display">inline</property>
-                            <text-property name="text">Net Amount Total : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="241">
-                        <property name="style">NewStyle</property>
-                        <label id="267">
-                            <property name="display">inline</property>
-                            <text-property name="text">IGST Total : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="242">
-                        <property name="style">NewStyle</property>
-                        <label id="269">
-                            <property name="display">inline</property>
-                            <text-property name="text">SGST Total : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="243">
-                        <property name="style">NewStyle</property>
-                        <label id="271">
-                            <property name="display">inline</property>
-                            <text-property name="text">CGST Total : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="244">
-                        <property name="style">NewStyle</property>
-                        <label id="273">
-                            <property name="display">inline</property>
-                            <text-property name="text">Gross Amount Total : </text-property>
-                        </label>
-                    </cell>
-                </row>
                 <row id="283">
-                    <property name="style">footerd</property>
+                    <property name="style">footer</property>
                     <cell id="284">
                         <property name="style">NewStyle</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">medium</property>
+                        <label id="333">
+                            <property name="style">NewStyle1</property>
+                            <property name="display">inline</property>
+                            <text-property name="text">TOTAL  : </text-property>
+                        </label>
                         <data id="259">
                             <property name="display">inline</property>
                             <property name="resultSetColumn">Aggregation</property>

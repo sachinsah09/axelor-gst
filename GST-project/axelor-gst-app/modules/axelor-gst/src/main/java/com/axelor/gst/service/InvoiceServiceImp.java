@@ -175,6 +175,11 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Invoice setProductItem(Invoice invoice, String idList, String partyName) {
 
 		if (idList != null) {
+			BigDecimal netAmount = new BigDecimal(0);
+			BigDecimal netIgst = new BigDecimal(0);
+			BigDecimal netCgst = new BigDecimal(0);
+			BigDecimal netSgst = new BigDecimal(0);
+			BigDecimal netGrossAmount = new BigDecimal(0);
 			String companyState = invoice.getCompany().getAddress().getState().getName();
 			Party party = Beans.get(PartyRepository.class).all().filter("self.name = '" + partyName + "'").fetchOne();
 			invoice.setParty(party);
@@ -208,22 +213,32 @@ public class InvoiceServiceImp implements InvoiceService {
 					invoiceLine.setGstRate(product.getGstRate());
 					invoiceLine.setProduct(product);
 					invoiceLine.setNetAmount(product.getSalesPrice().multiply(new BigDecimal(1)));
-					BigDecimal cgst = null, sgst = null, igst = null;
-					sgst = product.getSalesPrice().multiply(new BigDecimal(1))
-							.multiply((product.getGstRate()).divide(new BigDecimal(100))).divide(new BigDecimal(2));
-					cgst = sgst;
+					BigDecimal cgst = null, sgst = null, igst = null, grossAmount = null, amount = null;
+					amount = product.getSalesPrice().multiply(new BigDecimal(1));
+					netAmount = netAmount.add(amount);
 
 					if (companyState.equals(partyAddress)) {
+
+						sgst = amount.multiply((product.getGstRate()).divide(new BigDecimal(100)))
+								.divide(new BigDecimal(2));
+						cgst = sgst;
+						invoiceLine.setNetAmount(amount);
+						netCgst = netCgst.add(cgst);
+						netIgst = netIgst.add(igst);
+
 						invoiceLine.setCgst(cgst);
 						invoiceLine.setSgst(sgst);
-						invoiceLine.setGrossAmount(
-								product.getSalesPrice().multiply(new BigDecimal(1)).add(cgst).add(sgst));
+						invoice.setNetCgst(netCgst);
+						invoice.setNetSgst(netSgst);
+						grossAmount = amount.add(cgst).add(sgst);
+						invoiceLine.setGrossAmount(grossAmount);
 					} else {
-						igst = sgst.add(cgst);
+						igst = amount.multiply((product.getGstRate()).divide(new BigDecimal(100)));
 						invoiceLine.setIgst(igst);
-						invoiceLine.setGrossAmount(
-								product.getSalesPrice().multiply(new BigDecimal(1)).add(cgst).add(sgst));
-
+						netIgst = netIgst.add(igst);
+						grossAmount = amount.add(igst);
+						invoiceLine.setGrossAmount(grossAmount);
+						netGrossAmount = netGrossAmount.add(grossAmount);
 					}
 					invoiceItemList.add(invoiceLine);
 				} catch (NumberFormatException nfe) {
@@ -231,7 +246,18 @@ public class InvoiceServiceImp implements InvoiceService {
 				}
 			}
 			invoice.setInvoiceItemsList(invoiceItemList);
+			invoice.setNetAmount(netAmount);
+			invoice.setNetCgst(netCgst);
+			invoice.setNetIgst(netIgst);
+			invoice.setGrossAmount(netGrossAmount);
 		}
 		return invoice;
+	}
+
+	@Override
+	public void reCalulateValueOnAddressChange(Invoice invoice) {
+	
+	}
+	
 	}
 }
