@@ -27,7 +27,6 @@ public class SequenceServiceImp implements SequenceService {
 				sequenceNumber = sequenceNumber + addPaddingZero;
 			}
 			sequenceNumber = sequenceNumber + nextNumber + suffix;
-			System.out.println(sequenceNumber);
 		}
 		return sequenceNumber;
 	}

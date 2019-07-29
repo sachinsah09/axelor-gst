@@ -118,15 +118,15 @@ public class InvoiceServiceImp implements InvoiceService {
 		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
 			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("default")) {
-					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
+					setInvoiceShippingAddress = address;
 				} else if (address.getType().equals("shipping")) {
-					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
+					setInvoiceShippingAddress = address;
 				}
 			}
 		} else {
 			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("invoice")) {
-					setInvoiceShippingAddress = Beans.get(AddressRepository.class).find(address.getId());
+					setInvoiceShippingAddress = address;
 				}
 			}
 		}
