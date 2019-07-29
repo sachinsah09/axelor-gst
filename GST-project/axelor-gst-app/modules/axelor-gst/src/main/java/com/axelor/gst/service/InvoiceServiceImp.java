@@ -3,6 +3,8 @@ package com.axelor.gst.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.axelor.common.ObjectUtils;
 import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
@@ -15,6 +17,7 @@ import com.axelor.gst.db.repo.AddressRepository;
 import com.axelor.gst.db.repo.CompanyRepository;
 import com.axelor.gst.db.repo.ContactRepository;
 import com.axelor.gst.db.repo.InvoiceLineRepository;
+import com.axelor.gst.db.repo.InvoiceRepository;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.db.repo.SequenceRepository;
 import com.axelor.inject.Beans;
@@ -59,9 +62,8 @@ public class InvoiceServiceImp implements InvoiceService {
 
 			nextNumber++;
 			String setNextNumber = "" + nextNumber;
-			Sequence sequenceUpdate = Beans.get(SequenceRepository.class).find(seqId);
-			sequenceUpdate.setNextNumber(setNextNumber);
-			Beans.get(SequenceRepository.class).persist(sequence);
+			sequence.setNextNumber(setNextNumber);
+			Beans.get(SequenceRepository.class).save(sequence);
 		} else {
 			sequenceNumber = invoice.getInvoiceSeq();
 		}
@@ -224,7 +226,7 @@ public class InvoiceServiceImp implements InvoiceService {
 						cgst = sgst;
 						invoiceLine.setNetAmount(amount);
 						netCgst = netCgst.add(cgst);
-						netIgst = netIgst.add(igst);
+						netSgst = netSgst.add(sgst);
 
 						invoiceLine.setCgst(cgst);
 						invoiceLine.setSgst(sgst);
@@ -249,15 +251,57 @@ public class InvoiceServiceImp implements InvoiceService {
 			invoice.setNetAmount(netAmount);
 			invoice.setNetCgst(netCgst);
 			invoice.setNetIgst(netIgst);
+			invoice.setNetSgst(netSgst);
 			invoice.setGrossAmount(netGrossAmount);
 		}
 		return invoice;
 	}
 
+	@Transactional
 	@Override
-	public void reCalulateValueOnAddressChange(Invoice invoice) {
-	
-	}
-	
+	public Invoice reCalulateValueOnAddressChange(Invoice invoice) {
+
+		String invoiceState = invoice.getInvoiceAddress().getState().getName();
+		String companyState = invoice.getCompany().getAddress().getState().getName();
+
+		if (!invoiceState.equals("") || !companyState.equals("")) {
+			BigDecimal netIgst = new BigDecimal(0);
+			BigDecimal netCgst = new BigDecimal(0);
+			BigDecimal netSgst = new BigDecimal(0);
+			System.out.println(invoiceState + companyState);
+			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
+
+			if (invoice.getInvoiceItemsList() != null) {
+				for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
+					BigDecimal cgst = null, sgst = null, igst = null, amount = null;
+					amount = invoiceLine.getNetAmount();
+					if (companyState.equals(invoiceState)) {
+						amount = invoiceLine.getNetAmount();
+						sgst = amount.multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))
+								.divide(new BigDecimal(2));
+						cgst = sgst;
+						invoiceLine.setNetAmount(amount);
+						netCgst = netCgst.add(cgst);
+						netSgst = netSgst.add(sgst);
+						InvoiceLine invoiceLineValue = Beans.get(InvoiceLineRepository.class).find(invoiceLine.getId());
+						invoiceLineValue.setSgst(sgst);
+						invoiceLineValue.setCgst(cgst);
+						invoiceLineValue.setIgst(new BigDecimal(0));
+					} else {
+						igst = amount.multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)));
+						invoiceLine.setIgst(igst);
+						netIgst = netIgst.add(igst);
+						invoiceLine.setSgst(new BigDecimal(0));
+						invoiceLine.setCgst(new BigDecimal(0));
+					}
+					invoiceItemList.add(invoiceLine);
+				}
+				invoice.setInvoiceItemsList(invoiceItemList);
+				invoice.setNetSgst(netSgst);
+				invoice.setNetCgst(netCgst);
+				invoice.setNetIgst(netIgst);
+			}
+		}
+		return invoice;
 	}
 }

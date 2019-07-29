@@ -36,11 +36,11 @@
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" />
 			<field name="company"
-				onChange="action.invoice.set.value.on.address.change" />
+				onChange="action.invoice.method.recalulatevalueOnaddresschange" />
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
-				onChange="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
+				onChange="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress,action.invoice.method.recalulatevalueOnaddresschange" />
 			<field name="partyContact" />
 			<field name="invoiceAddress" />
 			<field name="isInvoiceAddressAsShippingAddress"
@@ -142,7 +142,7 @@
 			method="setProductItem" />
 	</action-method>
 	<action-method
-		name="action.invoice.set.value.on.address.change">
+		name="action.invoice.method.recalulatevalueOnaddresschange">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="reCalulateValueOnAddressChange" />
 	</action-method>

@@ -44,9 +44,8 @@ public class PartyServiceImp implements PartyService {
 
 			nextNumber++;
 			String setNextNumber = "" + nextNumber;
-			Sequence sequenceUpdate = Beans.get(SequenceRepository.class).find(seqId);
-			sequenceUpdate.setNextNumber(setNextNumber);
-			 Beans.get(SequenceRepository.class).persist(sequence);
+			sequence.setNextNumber(setNextNumber);
+			 Beans.get(SequenceRepository.class).save(sequence);
 		} else {
 			sequenceNumber = party.getPartySeq();
 		}

@@ -1687,10 +1687,6 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                             <property name="display">inline</property>
                             <text-property name="text">TOTAL  : </text-property>
                         </label>
-                        <data id="259">
-                            <property name="display">inline</property>
-                            <property name="resultSetColumn">Aggregation</property>
-                        </data>
                     </cell>
                     <cell id="285">
                         <property name="style">NewStyle</property>

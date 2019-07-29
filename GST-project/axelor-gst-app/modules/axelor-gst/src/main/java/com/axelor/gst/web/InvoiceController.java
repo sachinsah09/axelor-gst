@@ -123,7 +123,16 @@ public class InvoiceController {
 
 	public void reCalulateValueOnAddressChange(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
-		service.reCalulateValueOnAddressChange(invoice);
+		try {
+			Invoice invoiceCaluculateValue = service.reCalulateValueOnAddressChange(invoice);
+			response.setValue("invoiceItemsList",invoiceCaluculateValue.getInvoiceItemsList());
+			response.setValue("netIgst", invoiceCaluculateValue.getNetIgst());
+			response.setValue("netCgst", invoiceCaluculateValue.getNetCgst());
+			response.setValue("netSgst", invoiceCaluculateValue.getNetSgst());
+		} catch (Exception e) {
+			response.setError("please address properly");
+		}
+
 	}
 
 }
