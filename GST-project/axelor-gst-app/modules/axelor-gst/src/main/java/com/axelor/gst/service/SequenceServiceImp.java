@@ -2,6 +2,8 @@ package com.axelor.gst.service;
 
 import com.axelor.common.ObjectUtils;
 import com.axelor.gst.db.Sequence;
+import com.axelor.gst.db.repo.SequenceRepository;
+import com.axelor.inject.Beans;
 
 public class SequenceServiceImp implements SequenceService {
 
@@ -27,6 +29,10 @@ public class SequenceServiceImp implements SequenceService {
 				sequenceNumber = sequenceNumber + addPaddingZero;
 			}
 			sequenceNumber = sequenceNumber + nextNumber + suffix;
+			nextNumber++;
+			String setNextNumber = "" + nextNumber;
+			sequence.setNextNumber(setNextNumber);
+			Beans.get(SequenceRepository.class).save(sequence);
 		}
 		return sequenceNumber;
 	}

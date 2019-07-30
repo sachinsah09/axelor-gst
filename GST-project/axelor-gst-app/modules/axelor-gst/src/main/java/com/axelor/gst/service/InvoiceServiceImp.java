@@ -23,7 +23,7 @@ import com.axelor.meta.db.MetaModel;
 import com.axelor.meta.db.repo.MetaModelRepository;
 import com.google.inject.persist.Transactional;
 
-public class InvoiceServiceImp implements InvoiceService {
+public class InvoiceServiceImp extends SequenceServiceImp implements InvoiceService {
 
 	@Override
 	@Transactional
@@ -32,7 +32,6 @@ public class InvoiceServiceImp implements InvoiceService {
 		String sequenceNumber = "";
 		if (invoice.getInvoiceSeq() == null) {
 
-			int addPaddingZero = 0;
 //			long modelId;
 			// method 1 to find model id
 			// modelId = JPA.all(MetaModel.class).filter("self.name =
@@ -41,27 +40,8 @@ public class InvoiceServiceImp implements InvoiceService {
 			// method 2 to find model id
 			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Invoice");
 			long modelId = model.getId();
-			long seqId = Beans.get(SequenceRepository.class).all().filter("self.model = " + modelId).fetchOne().getId();
-			Sequence sequence = Beans.get(SequenceRepository.class).find(seqId);
-			String prefix = sequence.getPrefix();
-			String suffix = sequence.getSuffix();
-			int padding = sequence.getPadding();
-			int nextNumber = Integer.parseInt(sequence.getNextNumber());
-
-			if (suffix == null) {
-				suffix = "";
-			}
-			sequenceNumber = prefix;
-
-			for (int i = 1; i < padding; i++) {
-				sequenceNumber = sequenceNumber + addPaddingZero;
-			}
-			sequenceNumber = sequenceNumber + nextNumber + suffix;
-
-			nextNumber++;
-			String setNextNumber = "" + nextNumber;
-			sequence.setNextNumber(setNextNumber);
-			Beans.get(SequenceRepository.class).save(sequence);
+			Sequence sequence = Beans.get(SequenceRepository.class).all().filter("self.model = ?", modelId).fetchOne();
+			sequenceNumber = calculateSequenceNumber(sequence);
 		} else {
 			sequenceNumber = invoice.getInvoiceSeq();
 		}
@@ -137,6 +117,7 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Invoice invoiceCalculateFieldValue(Invoice invoice) {
 
 		long invoiceId = invoice.getId();
+
 		List<InvoiceLine> invoiceLineList = Beans.get(InvoiceLineRepository.class).all()
 				.filter("self.invoice = " + invoiceId).fetch();
 
