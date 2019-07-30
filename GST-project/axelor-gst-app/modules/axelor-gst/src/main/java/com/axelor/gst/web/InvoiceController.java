@@ -130,7 +130,7 @@ public class InvoiceController {
 			response.setValue("netCgst", invoiceCaluculateValue.getNetCgst());
 			response.setValue("netSgst", invoiceCaluculateValue.getNetSgst());
 		} catch (Exception e) {
-			response.setError("please address properly");
+			response.setError("please enter party address properly");
 		}
 
 	}

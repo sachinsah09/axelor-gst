@@ -249,6 +249,12 @@
                     <expression name="expression" type="javascript">dataSetRow["cost_price"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
+                <structure>
+                    <property name="name">Column Binding</property>
+                    <expression name="expression" type="javascript">"/home/axelor/.axelor/attachments/"+row["file_path"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="281"/>
             <column id="282"/>
@@ -270,11 +276,12 @@
                 <row id="261">
                     <property name="height">0.5804195804195804in</property>
                     <cell id="262">
-                        <image id="288">
-                            <property name="height">135px</property>
-                            <property name="width">201px</property>
-                            <property name="source">embed</property>
-                            <property name="imageName">barcode3456.jpg</property>
+                        <image id="290">
+                            <property name="display">inline</property>
+                            <property name="height">1.006993006993007in</property>
+                            <property name="width">1.062937062937063in</property>
+                            <property name="source">file</property>
+                            <expression name="uri" type="javascript">"/home/axelor/.axelor/attachments/"+row["file_path"]</expression>
                         </image>
                     </cell>
                     <cell id="264">

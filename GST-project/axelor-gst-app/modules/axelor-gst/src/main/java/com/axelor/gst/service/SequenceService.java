@@ -1,7 +1,7 @@
 package com.axelor.gst.service;
 
-import com.axelor.gst.db.Sequence;
+import com.axelor.meta.db.MetaModel;
 
 public interface SequenceService {
-	public String calculateSequenceNumber(Sequence sequence);
+	public String calculateSequenceNumber(MetaModel metaModel);
 }
