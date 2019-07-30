@@ -9,14 +9,12 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 
 	@Override
 	public InvoiceLine calculatedFieldValue(InvoiceLine invoiceLine, Invoice invoice) {
-
 		BigDecimal sgst, cgst, igst, netAmount;
 		BigDecimal qty = new BigDecimal(invoiceLine.getQty());
 		netAmount = qty.multiply(invoiceLine.getPrice());
 		invoiceLine.setNetAmount(qty.multiply(invoiceLine.getPrice()));
 		State invoiceState = invoice.getInvoiceAddress().getState();
 		State companyState = invoice.getCompany().getAddress().getState();
-
 		if (invoiceState.equals(companyState)) {
 			sgst = (invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))).divide(new BigDecimal(2));
 			cgst = sgst;

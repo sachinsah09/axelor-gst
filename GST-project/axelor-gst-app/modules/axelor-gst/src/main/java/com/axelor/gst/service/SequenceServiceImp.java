@@ -12,8 +12,7 @@ public class SequenceServiceImp implements SequenceService {
 	@Override
 	@Transactional
 	public String calculateSequenceNumber(MetaModel metaModel) {
-		long modelId = metaModel.getId();
-		Sequence sequence = Beans.get(SequenceRepository.class).all().filter("self.model = ?" , modelId).fetchOne();
+		Sequence sequence = Beans.get(SequenceRepository.class).all().filter("self.model = ?", metaModel).fetchOne();
 		String sequenceNumber = "";
 		int addPaddingZero = 0;
 		if (ObjectUtils.isEmpty(sequence.getId())) {
@@ -25,7 +24,6 @@ public class SequenceServiceImp implements SequenceService {
 			String suffix = sequence.getSuffix();
 			int padding = sequence.getPadding();
 			int nextNumber = Integer.parseInt(sequence.getNextNumber());
-
 			if (suffix == null) {
 				suffix = "";
 			}

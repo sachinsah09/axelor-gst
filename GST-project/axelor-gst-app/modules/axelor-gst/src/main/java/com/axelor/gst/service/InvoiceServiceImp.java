@@ -27,7 +27,6 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Override
 	public String setInvoiceSequence(Invoice invoice) {
-
 		String sequenceNumber = "";
 		if (invoice.getInvoiceSeq() == null) {
 			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Invoice");
@@ -53,7 +52,6 @@ public class InvoiceServiceImp implements InvoiceService {
 	@Override
 	public Address setInvoicePartyAddress(Invoice invoice) {
 		Address setInvoicePartyAddress = null;
-
 		Party party = invoice.getParty();
 		for (Address address : party.getAddressList()) {
 			if (address.getType().equals("default")) {
@@ -69,7 +67,6 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Company setInvoiceDefaultCompany(Invoice invoice) {
 		Company setInvoiceDefaultCompany = null;
 		List<Company> companyList = Beans.get(CompanyRepository.class).all().fetch();
-
 		for (Company company : companyList) {
 			if (company.getName().equals("Axelor pvt ltd")) {
 				setInvoiceDefaultCompany = company;
@@ -84,7 +81,6 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Address setInvoiceShippingAddress(Invoice invoice) {
 		Address setInvoiceShippingAddress = null;
 		Party party = invoice.getParty();
-
 		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
 			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("default")) {
@@ -105,25 +101,18 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Override
 	public Invoice invoiceCalculateFieldValue(Invoice invoice) {
-
-		long invoiceId = invoice.getId();
-
-		List<InvoiceLine> invoiceLineList = Beans.get(InvoiceLineRepository.class).all()
-				.filter("self.invoice = ?", invoiceId).fetch();
-
 		BigDecimal netAmount = new BigDecimal(0);
 		BigDecimal netCgst = new BigDecimal(0);
 		BigDecimal netSgst = new BigDecimal(0);
 		BigDecimal netIgst = new BigDecimal(0);
 		BigDecimal grossAmount = new BigDecimal(0);
-		for (InvoiceLine invoiceLine : invoiceLineList) {
+		for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
 			netAmount = netAmount.add(invoiceLine.getNetAmount());
 			netCgst = netCgst.add(invoiceLine.getCgst());
 			netSgst = netSgst.add(invoiceLine.getSgst());
 			netIgst = netIgst.add(invoiceLine.getIgst());
 		}
 		grossAmount = netAmount.add(netIgst).add(netSgst).add(netCgst);
-
 		invoice.setNetAmount(netAmount);
 		invoice.setNetCgst(netCgst);
 		invoice.setNetIgst(netIgst);
@@ -134,7 +123,6 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Override
 	public Invoice setProductItem(Invoice invoice, String idList, String partyName) {
-
 		if (idList != null) {
 			BigDecimal netAmount = new BigDecimal(0);
 			BigDecimal netIgst = new BigDecimal(0);
@@ -155,13 +143,10 @@ public class InvoiceServiceImp implements InvoiceService {
 				}
 			}
 			State partyAddress = setInvoiceShippingAddress.getState();
-
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
 			String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 			long[] results = new long[items.length];
-
 			for (int i = 0; i < items.length; i++) {
-
 				try {
 					results[i] = Integer.parseInt(items[i]);
 					InvoiceLine invoiceLine = new InvoiceLine();
@@ -177,7 +162,6 @@ public class InvoiceServiceImp implements InvoiceService {
 					netAmount = netAmount.add(amount);
 
 					if (companyState.equals(partyAddress)) {
-
 						sgst = amount.multiply((product.getGstRate()).divide(new BigDecimal(100)))
 								.divide(new BigDecimal(2));
 						cgst = sgst;
@@ -220,12 +204,11 @@ public class InvoiceServiceImp implements InvoiceService {
 		State invoiceState = invoice.getInvoiceAddress().getState();
 		State companyState = invoice.getCompany().getAddress().getState();
 
-		if (!invoiceState.equals("") || !companyState.equals("")) {
+		if (invoiceState != null || companyState != null) {
 			BigDecimal netIgst = new BigDecimal(0);
 			BigDecimal netCgst = new BigDecimal(0);
 			BigDecimal netSgst = new BigDecimal(0);
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
-
 			if (invoice.getInvoiceItemsList() != null) {
 				for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
 					BigDecimal cgst = null, sgst = null, igst = null, amount = null;
