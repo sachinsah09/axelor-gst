@@ -3,7 +3,6 @@ package com.axelor.gst.web;
 import java.io.File;
 import com.axelor.app.AppSettings;
 import com.axelor.gst.db.Address;
-import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.service.InvoiceService;
@@ -49,16 +48,6 @@ public class InvoiceController {
 				Address setInvoicePartyAddress = service.setInvoicePartyAddress(invoice);
 				response.setValue("invoiceAddress", setInvoicePartyAddress);
 			}
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
-
-	public void setInvoiceDefaultCompany(ActionRequest request, ActionResponse response) {
-		Invoice invoice = request.getContext().asType(Invoice.class);
-		try {
-			Company setInvoiceDefaultCompany = service.setInvoiceDefaultCompany(invoice);
-			response.setValue("company", setInvoiceDefaultCompany);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

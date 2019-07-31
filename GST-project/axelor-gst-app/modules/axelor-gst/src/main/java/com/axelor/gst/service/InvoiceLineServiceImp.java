@@ -15,7 +15,14 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 		invoiceLine.setNetAmount(qty.multiply(invoiceLine.getPrice()));
 		State invoiceState = invoice.getInvoiceAddress().getState();
 		State companyState = invoice.getCompany().getAddress().getState();
-		if (invoiceState.equals(companyState)) {
+		
+		if(invoiceState == null || companyState == null)
+		{
+			invoiceLine.setCgst(cgst);
+			invoiceLine.setSgst(sgst);
+			invoiceLine.setIgst(igst);
+		}
+		else if (invoiceState.equals(companyState)) {
 			sgst = (invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))).divide(new BigDecimal(2));
 			cgst = sgst;
 			invoiceLine.setCgst(cgst);
@@ -29,6 +36,7 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 			igst = (invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100))));
 			invoiceLine.setGrossAmount(netAmount.add(igst));
 		}
+		
 		return invoiceLine;
 	}
 }

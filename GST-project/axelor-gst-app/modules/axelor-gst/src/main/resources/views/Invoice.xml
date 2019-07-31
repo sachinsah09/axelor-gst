@@ -23,8 +23,8 @@
 	</grid>
 
 	<form name="invoice-form" title="Invoice-Form"
-		model="com.axelor.gst.db.Invoice"
-		onNew="action.invoice.create.invoice.generate.method.setinvoicedefaultcompany,action.invoice.set.product.list,action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress"
+		model="com.axelor.gst.db.Invoice" canNew="false"
+		onNew="default-invoice-record,action.invoice.set.product.list,action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress"
 		onSave="action.invoice.checkstatus">
 		<toolbar>
 			<button name="btnPrint2" title="Print" showIf="id"
@@ -75,7 +75,7 @@
 	</form>
 	<kanban name="invoice-task-kanban" title="Invoice-Kanban"
 		model="com.axelor.gst.db.Invoice" columnBy="status"
-		sequenceBy="priority" limit="10">
+		sequenceBy="priority" limit="10" draggable="false">
 		<field name="invoiceSeq" />
 		<field name="onDate" />
 		<field name="netAmount" />
@@ -93,6 +93,15 @@
 	<action-record name="default-invoice-record"
 		model="com.axelor.gst.db.InvoiceLine">
 		<field name="invoice" expr="eval: id" />
+		<field name="company" expr="action:default-company-record"
+			if="!(__ref__ instanceof Company)" />
+		<field name="company" expr="eval: __ref__"
+			if="__ref__ instanceof Company" />
+	</action-record>
+	<action-record name="default-company-record"
+		model="com.axelor.gst.db.Company"
+		search="self.name = 'GAIL(INDIA) pvt ltd.'">
+		<field name="name" expr="'GAIL(INDIA) pvt ltd.'" />
 	</action-record>
 
 	<action-attrs name="action.invoice.status.enable">
@@ -113,11 +122,6 @@
 		name="action.invoice.create.invoice.generate.method.setinvoicepartyaddress">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoicePartyAddress" />
-	</action-method>
-	<action-method
-		name="action.invoice.create.invoice.generate.method.setinvoicedefaultcompany">
-		<call class="com.axelor.gst.web.InvoiceController"
-			method="setInvoiceDefaultCompany" />
 	</action-method>
 	<action-method
 		name="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress">
@@ -146,7 +150,7 @@
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="calulateValueOnAddressChange" />
 	</action-method>
-	
+
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.draft"
 		model="com.axelor.gst.db.Invoice">
@@ -167,10 +171,12 @@
 		model="com.axelor.gst.db.Invoice">
 		<field name="status" expr="4" />
 	</action-record>
+
 	<action-report name="print.gst.invoice.company"
 		design="invoice_report.rptdesign" output="inv-${date}${time}"
 		format="pdf">
 		<param name="invoiceId" expr="eval: id" />
 		<param name="AttachmentPath" expr="eval: AttachmentPath" />
 	</action-report>
+
 </object-views>

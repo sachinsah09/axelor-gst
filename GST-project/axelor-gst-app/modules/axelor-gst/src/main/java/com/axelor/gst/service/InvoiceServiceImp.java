@@ -4,13 +4,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import com.axelor.gst.db.Address;
-import com.axelor.gst.db.Company;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Product;
-import com.axelor.gst.db.repo.CompanyRepository;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.repository.PartyRepository;
 import com.axelor.inject.Beans;
@@ -62,20 +60,6 @@ public class InvoiceServiceImp implements InvoiceService {
 			}
 		}
 		return setInvoicePartyAddress;
-	}
-
-	@Override
-	public Company setInvoiceDefaultCompany(Invoice invoice) {
-		Company setInvoiceDefaultCompany = null;
-		List<Company> companyList = Beans.get(CompanyRepository.class).all().fetch();
-		for (Company company : companyList) {
-			if (company.getName().equals("Axelor pvt ltd")) {
-				setInvoiceDefaultCompany = company;
-			} else {
-				setInvoiceDefaultCompany = company;
-			}
-		}
-		return setInvoiceDefaultCompany;
 	}
 
 	@Override
