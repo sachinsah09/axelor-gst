@@ -9,7 +9,7 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 
 	@Override
 	public InvoiceLine calculatedFieldValue(InvoiceLine invoiceLine, Invoice invoice) {
-		BigDecimal sgst, cgst, igst, netAmount;
+		BigDecimal sgst=null, cgst=null, igst=null, netAmount;
 		BigDecimal qty = new BigDecimal(invoiceLine.getQty());
 		netAmount = qty.multiply(invoiceLine.getPrice());
 		invoiceLine.setNetAmount(qty.multiply(invoiceLine.getPrice()));
@@ -20,8 +20,11 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 			cgst = sgst;
 			invoiceLine.setCgst(cgst);
 			invoiceLine.setSgst(sgst);
+			invoiceLine.setIgst(igst);
 			invoiceLine.setGrossAmount(netAmount.add(cgst).add(sgst));
 		} else {
+			invoiceLine.setCgst(cgst);
+			invoiceLine.setSgst(sgst);
 			invoiceLine.setIgst((invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))));
 			igst = (invoiceLine.getNetAmount().multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100))));
 			invoiceLine.setGrossAmount(netAmount.add(igst));

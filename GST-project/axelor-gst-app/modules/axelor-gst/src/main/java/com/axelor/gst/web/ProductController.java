@@ -9,7 +9,6 @@ import com.axelor.rpc.ActionResponse;
 public class ProductController {
 
 	public void setProductReportValue(ActionRequest request, ActionResponse response) {
-
 		List<Long> requestIds = (List<Long>) request.getContext().get("_ids");
 		if (requestIds == null) {
 			response.setError("please select one product");
@@ -23,7 +22,6 @@ public class ProductController {
 			attachmentPathProduct = attachmentPathProduct.endsWith(File.separator) ? attachmentPathProduct
 					: attachmentPathProduct + File.separator;
 			request.getContext().put("path", attachmentPathProduct);
-			response.setCanClose(true);
 		}
 	}
 }

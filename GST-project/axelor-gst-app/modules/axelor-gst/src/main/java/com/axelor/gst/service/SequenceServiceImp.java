@@ -28,7 +28,7 @@ public class SequenceServiceImp implements SequenceService {
 				suffix = "";
 			}
 			sequenceNumber = prefix;
-			for (int i = 0; i < padding; i++) {
+			for (int i = 1; i < padding; i++) {
 				sequenceNumber = sequenceNumber + addPaddingZero;
 			}
 			sequenceNumber = sequenceNumber + nextNumber + suffix;

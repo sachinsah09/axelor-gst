@@ -12,7 +12,6 @@ import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Product;
 import com.axelor.gst.db.State;
 import com.axelor.gst.db.repo.CompanyRepository;
-import com.axelor.gst.db.repo.InvoiceLineRepository;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.repository.PartyRepository;
 import com.axelor.inject.Beans;
@@ -23,14 +22,17 @@ import com.google.inject.Inject;
 public class InvoiceServiceImp implements InvoiceService {
 
 	@Inject
-	private SequenceService service;
+	private SequenceService sequenceService;
+	
+	@Inject
+	private InvoiceLineService invoiceLineService;
 
 	@Override
 	public String setInvoiceSequence(Invoice invoice) {
 		String sequenceNumber = "";
 		if (invoice.getInvoiceSeq() == null) {
 			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Invoice");
-			sequenceNumber = service.calculateSequenceNumber(model);
+			sequenceNumber = sequenceService.calculateSequenceNumber(model);
 		} else {
 			sequenceNumber = invoice.getInvoiceSeq();
 		}
@@ -124,12 +126,6 @@ public class InvoiceServiceImp implements InvoiceService {
 	@Override
 	public Invoice setProductItem(Invoice invoice, String idList, String partyName) {
 		if (idList != null) {
-			BigDecimal netAmount = new BigDecimal(0);
-			BigDecimal netIgst = new BigDecimal(0);
-			BigDecimal netCgst = new BigDecimal(0);
-			BigDecimal netSgst = new BigDecimal(0);
-			BigDecimal netGrossAmount = new BigDecimal(0);
-			State companyState = invoice.getCompany().getAddress().getState();
 			Party party = Beans.get(PartyRepository.class).all().filter("self.name = ?", partyName).fetchOne();
 			invoice.setParty(party);
 			Address setInvoiceShippingAddress = null;
@@ -142,103 +138,49 @@ public class InvoiceServiceImp implements InvoiceService {
 					}
 				}
 			}
-			State partyAddress = setInvoiceShippingAddress.getState();
+			Address partyAddress = setInvoiceShippingAddress;
+			invoice.setInvoiceAddress(partyAddress);
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
 			String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 			long[] results = new long[items.length];
 			for (int i = 0; i < items.length; i++) {
-				try {
-					results[i] = Integer.parseInt(items[i]);
-					InvoiceLine invoiceLine = new InvoiceLine();
-					Product product = Beans.get(ProductRepository.class).find(results[i]);
-					invoiceLine.setItem("[" + product.getCode() + "] " + product.getName());
-					invoiceLine.setPrice(product.getSalesPrice());
-					invoiceLine.setHsbn(product.getHsbn());
-					invoiceLine.setGstRate(product.getGstRate());
-					invoiceLine.setProduct(product);
-					invoiceLine.setNetAmount(product.getSalesPrice().multiply(new BigDecimal(1)));
-					BigDecimal cgst = null, sgst = null, igst = null, grossAmount = null, amount = null;
-					amount = product.getSalesPrice().multiply(new BigDecimal(1));
-					netAmount = netAmount.add(amount);
-
-					if (companyState.equals(partyAddress)) {
-						sgst = amount.multiply((product.getGstRate()).divide(new BigDecimal(100)))
-								.divide(new BigDecimal(2));
-						cgst = sgst;
-						invoiceLine.setNetAmount(amount);
-						netCgst = netCgst.add(cgst);
-						netSgst = netSgst.add(sgst);
-
-						invoiceLine.setCgst(cgst);
-						invoiceLine.setSgst(sgst);
-						invoice.setNetCgst(netCgst);
-						invoice.setNetSgst(netSgst);
-						grossAmount = amount.add(cgst).add(sgst);
-						invoiceLine.setGrossAmount(grossAmount);
-					} else {
-						igst = amount.multiply((product.getGstRate()).divide(new BigDecimal(100)));
-						invoiceLine.setIgst(igst);
-						netIgst = netIgst.add(igst);
-						grossAmount = amount.add(igst);
-						invoiceLine.setGrossAmount(grossAmount);
-						netGrossAmount = netGrossAmount.add(grossAmount);
-					}
-					invoiceItemList.add(invoiceLine);
-				} catch (NumberFormatException nfe) {
-					System.out.println(nfe);
-				}
+				results[i] = Integer.parseInt(items[i]);
+				InvoiceLine invoiceLine = new InvoiceLine();
+				Product product = Beans.get(ProductRepository.class).find(results[i]);
+				invoiceLine.setItem("[" + product.getCode() + "] " + product.getName());
+				invoiceLine.setPrice(product.getSalesPrice());
+				invoiceLine.setHsbn(product.getHsbn());
+				invoiceLine.setGstRate(product.getGstRate());
+				invoiceLine.setProduct(product);
+				invoiceLine.setNetAmount(product.getSalesPrice().multiply(new BigDecimal(1)));
+				invoiceLine=invoiceLineService.calculatedFieldValue(invoiceLine, invoice);
+				invoiceItemList.add(invoiceLine);
 			}
 			invoice.setInvoiceItemsList(invoiceItemList);
-			invoice.setNetAmount(netAmount);
-			invoice.setNetCgst(netCgst);
-			invoice.setNetIgst(netIgst);
-			invoice.setNetSgst(netSgst);
-			invoice.setGrossAmount(netGrossAmount);
+			invoice=invoiceCalculateFieldValue(invoice);
+			invoice.setNetAmount(invoice.getNetAmount());
+			invoice.setNetSgst(invoice.getNetSgst());
+			invoice.setNetCgst(invoice.getNetCgst());
+			invoice.setNetIgst(invoice.getNetIgst());
+			invoice.setGrossAmount(invoice.getGrossAmount());
 		}
 		return invoice;
 	}
 
 	@Override
-	public Invoice reCalulateValueOnAddressChange(Invoice invoice) {
-
-		State invoiceState = invoice.getInvoiceAddress().getState();
-		State companyState = invoice.getCompany().getAddress().getState();
-
-		if (invoiceState != null || companyState != null) {
-			BigDecimal netIgst = new BigDecimal(0);
-			BigDecimal netCgst = new BigDecimal(0);
-			BigDecimal netSgst = new BigDecimal(0);
+	public Invoice calulateValueOnAddressChange(Invoice invoice) {
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
 			if (invoice.getInvoiceItemsList() != null) {
 				for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
-					BigDecimal cgst = null, sgst = null, igst = null, amount = null;
-					InvoiceLine invoiceLineValue = Beans.get(InvoiceLineRepository.class).find(invoiceLine.getId());
-					amount = invoiceLine.getNetAmount();
-					if (companyState.equals(invoiceState)) {
-						amount = invoiceLine.getNetAmount();
-						sgst = amount.multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)))
-								.divide(new BigDecimal(2));
-						cgst = sgst;
-						netCgst = netCgst.add(cgst);
-						netSgst = netSgst.add(sgst);
-						invoiceLineValue.setSgst(sgst);
-						invoiceLineValue.setCgst(cgst);
-						invoiceLineValue.setIgst(new BigDecimal(0));
-					} else {
-						igst = amount.multiply((invoiceLine.getGstRate()).divide(new BigDecimal(100)));
-						netIgst = netIgst.add(igst);
-						invoiceLineValue.setIgst(igst);
-						invoiceLineValue.setSgst(new BigDecimal(0));
-						invoiceLineValue.setCgst(new BigDecimal(0));
-					}
+					invoiceLine=invoiceLineService.calculatedFieldValue(invoiceLine, invoice);
 					invoiceItemList.add(invoiceLine);
 				}
 				invoice.setInvoiceItemsList(invoiceItemList);
-				invoice.setNetSgst(netSgst);
-				invoice.setNetCgst(netCgst);
-				invoice.setNetIgst(netIgst);
+				invoice=invoiceCalculateFieldValue(invoice);
+				invoice.setNetSgst(invoice.getNetSgst());
+				invoice.setNetCgst(invoice.getNetCgst());
+				invoice.setNetIgst(invoice.getNetIgst());
 			}
-		}
 		return invoice;
 	}
 }

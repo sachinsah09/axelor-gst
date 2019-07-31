@@ -39,14 +39,23 @@
 		</panel>
 	</form>
 	<action-attrs name="action.invoiceLine.set.product.value">
-		<attribute for="gstRate" name="value:set"
-			expr="eval: product.gstRate" />
+		<attribute for="gstRate" name="value"
+			expr="eval: product.gstRate" if="product"/>
+		<attribute for="gstRate" name="value"
+			expr="0" if="!product"/>
 		<attribute for="price" name="value:set"
-			expr="eval: product.salesPrice" />
+			expr="eval: product.salesPrice" if="product" />
+		<attribute for="price" name="value:set"
+			expr="0" if="!product" />
 		<attribute for="hsbn" name="value:set"
-			expr="eval: product.hsbn" />
+			expr="eval: product.hsbn" if="product"/>
+		<attribute for="hsbn" name="value:set"
+			expr="" if="!product"/>
 		<attribute for="item" name="value:set"
-			expr="eval: '['+product.code+']'+product.name" />
+			expr="eval: '['+product.code+']'+product.name" if="product"/>
+		<attribute for="item" name="value:set"
+			expr="" if="!product"/>
+
 	</action-attrs>
 
 	<action-method

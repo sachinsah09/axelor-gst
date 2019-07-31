@@ -121,16 +121,16 @@ public class InvoiceController {
 		response.setValues(invoiceSetValue);
 	}
 
-	public void reCalulateValueOnAddressChange(ActionRequest request, ActionResponse response) {
+	public void calulateValueOnAddressChange(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			Invoice invoiceCaluculateValue = service.reCalulateValueOnAddressChange(invoice);
+			Invoice invoiceCaluculateValue = service.calulateValueOnAddressChange(invoice);
 			response.setValue("invoiceItemsList",invoiceCaluculateValue.getInvoiceItemsList());
 			response.setValue("netIgst", invoiceCaluculateValue.getNetIgst());
 			response.setValue("netCgst", invoiceCaluculateValue.getNetCgst());
 			response.setValue("netSgst", invoiceCaluculateValue.getNetSgst());
 		} catch (Exception e) {
-			response.setError("please enter party address properly");
+			response.setError("Please Select Party");
 		}
 
 	}

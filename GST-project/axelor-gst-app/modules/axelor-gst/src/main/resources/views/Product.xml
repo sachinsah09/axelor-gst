@@ -25,9 +25,9 @@
 		model="com.axelor.gst.db.Invoice">
 		<panel title="Select Party">
 			<field name="party" type="many-to-one"
-				x-target="com.axelor.gst.db.Party" x-target-name="party" />
+				x-target="com.axelor.gst.db.Party" x-target-name="party"  />
 			<button name="buttonSelectParty"
-				onClick="action.wizard.invoice.view.create.invoice" title="Submit" />
+				onClick="action.wizard.invoice.view.create.invoice,close" title="Submit" />
 		</panel>
 	</form>
 	<form name="product-form" title="Product-Form"
@@ -55,9 +55,9 @@
 	<action-view name="action.wizard.select.party"
 		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="form" name="invoice-wizard-party-select-form" />
-		<view-param name="popup" value="true" />
 		<view-param name="show-toolbar" value="false" />
 		<view-param name="show-confirm" value="false" />
+		<view-param name="popup" value="true" />
 		<view-param name="popup-save" value="false" />
 		<context name="idList" expr="eval: idList" />
 	</action-view>
