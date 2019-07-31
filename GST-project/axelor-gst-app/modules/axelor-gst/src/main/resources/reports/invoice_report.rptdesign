@@ -1393,7 +1393,7 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
             <property name="borderRightStyle">none</property>
             <property name="borderTopStyle">none</property>
             <property name="marginTop">40pt</property>
-            <property name="width">7.013986013986014in</property>
+            <property name="width">6.944055944055944in</property>
             <property name="dataSet">InvoiceLine Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1557,29 +1557,30 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                 <property name="width">1.4125874125874125in</property>
             </column>
             <column id="246">
-                <property name="width">0.993006993006993in</property>
+                <property name="width">0.6083916083916084in</property>
             </column>
             <column id="247">
-                <property name="width">0.7412587412587412in</property>
+                <property name="width">0.6783216783216783in</property>
             </column>
             <column id="248">
-                <property name="width">0.8251748251748252in</property>
+                <property name="width">0.7762237762237763in</property>
             </column>
             <column id="249">
-                <property name="width">0.8671328671328671in</property>
+                <property name="width">0.6923076923076923in</property>
             </column>
             <column id="250">
-                <property name="width">0.9020979020979021in</property>
+                <property name="width">0.5664335664335665in</property>
             </column>
             <column id="251">
-                <property name="width">0.6433566433566433in</property>
+                <property name="width">0.7762237762237763in</property>
             </column>
             <column id="252">
-                <property name="width">1.034965034965035in</property>
+                <property name="width">1.4335664335664335in</property>
             </column>
             <header>
                 <row id="202">
                     <property name="style">header</property>
+                    <property name="height">0.1888111888111888in</property>
                     <cell id="203">
                         <label id="204">
                             <property name="marginBottom">0pt</property>

@@ -7,7 +7,6 @@ import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 
 public class ProductController {
-
 	public void setProductReportValue(ActionRequest request, ActionResponse response) {
 		List<Long> requestIds = (List<Long>) request.getContext().get("_ids");
 		if (requestIds == null) {
@@ -21,7 +20,7 @@ public class ProductController {
 			String attachmentPathProduct = AppSettings.get().getPath("file.upload.dir", "");
 			attachmentPathProduct = attachmentPathProduct.endsWith(File.separator) ? attachmentPathProduct
 					: attachmentPathProduct + File.separator;
-			request.getContext().put("path", attachmentPathProduct);
+			request.getContext().put("Path", attachmentPathProduct);
 		}
 	}
 }

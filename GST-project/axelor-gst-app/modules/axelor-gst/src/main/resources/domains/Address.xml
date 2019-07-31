@@ -10,14 +10,15 @@
 		<string name="type" title="Address Type" required="true"
 			selection="gst.address.type.select" namecolumn="true" />
 		<string name="line1" title="Address Line 1" required="true" />
-		<string name="line2" title="Address Line 2" default=""/>
+		<string name="line2" title="Address Line 2" default="" />
 		<many-to-one name="city" title="City" required="true"
 			ref="com.axelor.gst.db.City" />
 		<many-to-one name="state" title="State"
 			ref="com.axelor.gst.db.State" />
 		<many-to-one name="country" title="Country"
 			required="true" ref="com.axelor.gst.db.Country" />
-		<string name="pinCode"  />
+		<string name="pinCode" />
+		<many-to-one name="party" ref="com.axelor.gst.db.Party" />
 	</entity>
 </domain-models>
 

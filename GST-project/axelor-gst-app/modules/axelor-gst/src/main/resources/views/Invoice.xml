@@ -53,8 +53,7 @@
 			<field name="grossAmount" />
 		</panel>
 		<panel-related field="invoiceItemsList"
-			onNew="default-invoice-record"
-			onSelect="save"
+			onNew="default-invoice-record" onSelect="save"
 			onChange="save,action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue,save">
 		</panel-related>
 		<panel sidebar="true">
@@ -147,7 +146,7 @@
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="calulateValueOnAddressChange" />
 	</action-method>
-
+	
 	<action-record
 		name="action.invoice.create.invoice.set.status.value.draft"
 		model="com.axelor.gst.db.Invoice">

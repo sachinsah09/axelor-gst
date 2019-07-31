@@ -8,19 +8,18 @@
 	<module name="gst" package="com.axelor.gst.db" />
 	<entity name="Party" sequential="true" cachable="true"
 		repository="abstract">
-		<string name="partySeq" title="Party No." readonly="true"
-			 />
+		<string name="partySeq" title="Party No." readonly="true" />
 		<string name="name" required="true" title="Party Name"
 			namecolumn="true" />
 		<string name="type" title="Party Type"
 			selection="gst.party.type.select" required="true" default="company" />
 		<boolean name="isCustomer" title="Party is a Customer" />
 		<boolean name="isSupplier" title="Party is a Supplier" />
-		<string name="gstin" title="GSTIN" min="15" max="15"/>
+		<string name="gstin" title="GSTIN" min="15" max="15" />
 		<one-to-many name="contactList" title="Contacts"
-			ref="com.axelor.gst.db.Contact"  />
+			ref="com.axelor.gst.db.Contact" mappedBy="party" />
 		<one-to-many name="addressList" title="Addresses"
-			ref="com.axelor.gst.db.Address" />
+			ref="com.axelor.gst.db.Address" mappedBy="party" />
 	</entity>
 </domain-models>
 

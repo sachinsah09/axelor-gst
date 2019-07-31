@@ -10,7 +10,6 @@ import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Product;
-import com.axelor.gst.db.State;
 import com.axelor.gst.db.repo.CompanyRepository;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.repository.PartyRepository;
@@ -23,7 +22,6 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Inject
 	private SequenceService sequenceService;
-	
 	@Inject
 	private InvoiceLineService invoiceLineService;
 
@@ -55,6 +53,7 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Address setInvoicePartyAddress(Invoice invoice) {
 		Address setInvoicePartyAddress = null;
 		Party party = invoice.getParty();
+		System.out.println(party);
 		for (Address address : party.getAddressList()) {
 			if (address.getType().equals("default")) {
 				setInvoicePartyAddress = address;
@@ -127,19 +126,10 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Invoice setProductItem(Invoice invoice, String idList, String partyName) {
 		if (idList != null) {
 			Party party = Beans.get(PartyRepository.class).all().filter("self.name = ?", partyName).fetchOne();
-			invoice.setParty(party);
-			Address setInvoiceShippingAddress = null;
-			if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
-				for (Address address : party.getAddressList()) {
-					if (address.getType().equals("default")) {
-						setInvoiceShippingAddress = address;
-					} else if (address.getType().equals("shipping")) {
-						setInvoiceShippingAddress = address;
-					}
-				}
-			}
-			Address partyAddress = setInvoiceShippingAddress;
+			invoice.setParty(party);			
+			Address partyAddress = setInvoicePartyAddress(invoice);
 			invoice.setInvoiceAddress(partyAddress);
+			setInvoicePartyAddress(invoice);
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
 			String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 			long[] results = new long[items.length];
@@ -158,11 +148,6 @@ public class InvoiceServiceImp implements InvoiceService {
 			}
 			invoice.setInvoiceItemsList(invoiceItemList);
 			invoice=invoiceCalculateFieldValue(invoice);
-			invoice.setNetAmount(invoice.getNetAmount());
-			invoice.setNetSgst(invoice.getNetSgst());
-			invoice.setNetCgst(invoice.getNetCgst());
-			invoice.setNetIgst(invoice.getNetIgst());
-			invoice.setGrossAmount(invoice.getGrossAmount());
 		}
 		return invoice;
 	}
@@ -177,9 +162,6 @@ public class InvoiceServiceImp implements InvoiceService {
 				}
 				invoice.setInvoiceItemsList(invoiceItemList);
 				invoice=invoiceCalculateFieldValue(invoice);
-				invoice.setNetSgst(invoice.getNetSgst());
-				invoice.setNetCgst(invoice.getNetCgst());
-				invoice.setNetIgst(invoice.getNetIgst());
 			}
 		return invoice;
 	}
