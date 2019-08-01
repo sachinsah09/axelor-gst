@@ -112,16 +112,16 @@ public class InvoiceController {
 
 	public void calulateValueOnAddressChange(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
+		if (invoice.getCompany().getAddress() == null) {
+			response.setError("Selected Company has no Address");
+		}
 		try {
-			Invoice invoiceCaluculateValue = service.calulateValueOnAddressChange(invoice);
-			response.setValue("invoiceItemsList", invoiceCaluculateValue.getInvoiceItemsList());
-			response.setValue("netIgst", invoiceCaluculateValue.getNetIgst());
-			response.setValue("netCgst", invoiceCaluculateValue.getNetCgst());
-			response.setValue("netSgst", invoiceCaluculateValue.getNetSgst());
+			Invoice invoiceCalculateValue = service.calulateValueOnAddressChange(invoice);
+			response.setValue("invoiceItemsList", invoiceCalculateValue.getInvoiceItemsList());
+			response.setValues(invoice);
 		} catch (Exception e) {
 			response.setError("Please Select Party");
 		}
-
 	}
 
 }

@@ -119,7 +119,6 @@
 	<action-view name="action.invoice.view.create.invoice"
 		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="form" name="invoice-form" />
-		<view type="grid" name="invoice-grid" />
 	</action-view>
 	<menuitem name="invoice-root-draft-invoice"
 		parent="invoice-root" title="Draft Invoice"

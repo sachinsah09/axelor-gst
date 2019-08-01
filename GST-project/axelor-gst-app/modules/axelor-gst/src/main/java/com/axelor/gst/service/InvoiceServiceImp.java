@@ -66,16 +66,17 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Address setInvoiceShippingAddress(Invoice invoice) {
 		Address setInvoiceShippingAddress = null;
 		Party party = invoice.getParty();
-		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
-			setInvoiceShippingAddress=invoice.getInvoiceAddress();		
-		} else {
+		if (invoice.getIsInvoiceAddressAsShippingAddress() == false) {
 			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("default")) {
 					setInvoiceShippingAddress = address;
 				} else if (address.getType().equals("shipping")) {
 					setInvoiceShippingAddress = address;
 				}
-			}		}
+			}
+		} else {
+			setInvoiceShippingAddress = invoice.getInvoiceAddress();
+		}
 		return setInvoiceShippingAddress;
 	}
 
@@ -105,7 +106,7 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Invoice setProductItem(Invoice invoice, String idList, String partyName) {
 		if (idList != null) {
 			Party party = Beans.get(PartyRepository.class).all().filter("self.name = ?", partyName).fetchOne();
-			invoice.setParty(party);			
+			invoice.setParty(party);
 			invoice.setInvoiceAddress(setInvoicePartyAddress(invoice));
 			setInvoicePartyAddress(invoice);
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
@@ -121,26 +122,26 @@ public class InvoiceServiceImp implements InvoiceService {
 				invoiceLine.setGstRate(product.getGstRate());
 				invoiceLine.setProduct(product);
 				invoiceLine.setNetAmount(product.getSalesPrice().multiply(new BigDecimal(1)));
-				invoiceLine=invoiceLineService.calculatedFieldValue(invoiceLine, invoice);
+				invoiceLine = invoiceLineService.calculatedFieldValue(invoiceLine, invoice);
 				invoiceItemList.add(invoiceLine);
 			}
 			invoice.setInvoiceItemsList(invoiceItemList);
-			invoice=invoiceCalculateFieldValue(invoice);
+			invoice = invoiceCalculateFieldValue(invoice);
 		}
 		return invoice;
 	}
 
 	@Override
 	public Invoice calulateValueOnAddressChange(Invoice invoice) {
-			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
-			if (invoice.getInvoiceItemsList() != null) {
-				for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
-					invoiceLine=invoiceLineService.calculatedFieldValue(invoiceLine, invoice);
-					invoiceItemList.add(invoiceLine);
-				}
-				invoice.setInvoiceItemsList(invoiceItemList);
-				invoice=invoiceCalculateFieldValue(invoice);
+		List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
+		if (invoice.getInvoiceItemsList() != null) {
+			for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
+				invoiceLine = invoiceLineService.calculatedFieldValue(invoiceLine, invoice);
+				invoiceItemList.add(invoiceLine);
 			}
+			invoice.setInvoiceItemsList(invoiceItemList);
+			invoice = invoiceCalculateFieldValue(invoice);
+		}
 		return invoice;
 	}
 }
