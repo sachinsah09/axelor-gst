@@ -91,11 +91,11 @@ public class InvoiceController {
 	public void checkStatus(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		System.out.println(invoice.getStatus());
-		if (invoice.getStatus().equals("1")) {
+		if (invoice.getStatus().equals("draft")) {
 			response.setFlash("Draft Invoice Saved");
-		} else if (invoice.getStatus().equals("2")) {
+		} else if (invoice.getStatus().equals("validated")) {
 			response.setFlash("Validated Invoice Saved");
-		} else if (invoice.getStatus().equals("3")) {
+		} else if (invoice.getStatus().equals("paid")) {
 			response.setFlash("Paid Invoice Saved");
 		} else {
 			response.setFlash("Cancelled Invoice Saved");

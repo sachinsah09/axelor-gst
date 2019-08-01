@@ -18,7 +18,7 @@
 		title="Validated-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="grid" name="invoice-grid" />
 		<domain>self.status = :status AND self.onDate &lt; :date</domain>
-		<context name="status" expr="2" />
+		<context name="status" expr="validated" />
 		<context name="date" expr="eval: __datetime__.minusMonths(1)" />
 	</action-view>
 </object-views>

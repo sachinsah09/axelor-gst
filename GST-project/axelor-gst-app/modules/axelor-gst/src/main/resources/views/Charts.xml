@@ -31,7 +31,7 @@
         self.party AS _party
     WHERE
          self.onDate BETWEEN :fromDate AND :toDate	
-         AND self.status In ('2','1') 
+         AND self.status In ('draft','validated') 
     GROUP BY
      	_party.name,MONTH(self.onDate)
  	
@@ -44,7 +44,7 @@
 
 	<chart onInit="chart.default.value"
 		name="chart.paid.invoice.per.category.per.product"
-		title="paid Invoice per Category per Product">
+		title="Paid Invoice per Category per Product">
 		<search-fields>
 			<field type="date" name="fromDate" title="From Date"
 				x-required="true" />
@@ -62,8 +62,7 @@
     JOIN InvoiceLine AS _invoiceLine ON _invoiceLine.invoice = self.id
     JOIN Product AS _product ON _product.id = _invoiceLine.product
     JOIN ProductCategory AS _productCategory ON _productCategory.id = _product.category
-   
-    WHERE self.status = '3'
+    WHERE self.status = 'paid'
            AND self.onDate > :fromDate
            AND self.onDate < :toDate
     GROUP BY _productCategory.name, _product.name
