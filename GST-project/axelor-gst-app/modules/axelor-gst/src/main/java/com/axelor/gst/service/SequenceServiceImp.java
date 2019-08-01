@@ -14,7 +14,6 @@ public class SequenceServiceImp implements SequenceService {
 	public String calculateSequenceNumber(MetaModel metaModel) {
 		Sequence sequence = Beans.get(SequenceRepository.class).all().filter("self.model = ?", metaModel).fetchOne();
 		String sequenceNumber = "";
-		int addPaddingZero = 0;
 		if (ObjectUtils.isEmpty(sequence.getId())) {
 			sequenceNumber = "not";
 			return sequenceNumber;
@@ -27,11 +26,8 @@ public class SequenceServiceImp implements SequenceService {
 			if (suffix == null) {
 				suffix = "";
 			}
-			sequenceNumber = prefix;
-			for (int i = 1; i < padding; i++) {
-				sequenceNumber = sequenceNumber + addPaddingZero;
-			}
-			sequenceNumber = sequenceNumber + nextNumber + suffix;
+			String middle = String.format("%0" + padding + "d", nextNumber);
+			sequenceNumber = prefix + middle + suffix;
 			nextNumber++;
 			String setNextNumber = "" + nextNumber;
 			sequence.setNextNumber(setNextNumber);

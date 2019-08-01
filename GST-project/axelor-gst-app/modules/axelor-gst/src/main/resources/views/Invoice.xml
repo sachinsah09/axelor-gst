@@ -24,8 +24,7 @@
 
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice" canNew="false"
-		onNew="default-invoice-record,action.invoice.set.product.list,action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress"
-		onSave="action.invoice.checkstatus">
+		onNew="action-invoice-onnew" onSave="action.invoice.checkstatus">
 		<toolbar>
 			<button name="btnPrint2" title="Print" showIf="id"
 				onClick="action.report.attachment.setPath,print.gst.invoice.company"
@@ -36,16 +35,20 @@
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" />
 			<field name="company"
+				readonlyIf="status == 2 || status == 3 || status == 4"
 				onChange="action.invoice.method.calulatevalueOnaddresschange" />
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party"
-				onChange="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact,action.invoice.create.invoice.generate.method.setinvoicepartyaddress,action.invoice.create.invoice.generate.method.setinvoiceshippingaddress,action.invoice.method.calulatevalueOnaddresschange" />
+				readonlyIf="status == 2 || status == 3 || status == 4"
+				onChange="action-invoice-party-onchange" />
 			<field name="partyContact" />
-			<field name="invoiceAddress" />
+			<field name="invoiceAddress"
+				onChange="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress,action.invoice.method.calulatevalueOnaddresschange"
+				domain="self.party = :party" />
 			<field name="isInvoiceAddressAsShippingAddress"
 				onChange="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress,action.invoice.method.calulatevalueOnaddresschange" />
-			<field name="shippingAddress" />
+			<field name="shippingAddress" domain="self.party = :party" />
 			<field name="netAmount" />
 			<field name="netIgst" />
 			<field name="netCgst" />
@@ -56,14 +59,14 @@
 			onNew="default-invoice-record" onSelect="save"
 			onChange="save,action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue,save">
 		</panel-related>
-		<panel sidebar="true">
+		<panel sidebar="true" hideIf="status == 3">
 			<button-group>
 				<button name="draft" title="Draft"
 					onClick="action.invoice.create.invoice.set.status.value.draft"
 					colSpan="2" showIf="status == 4" />
 				<button name="validated" title="Validated"
-					onClick="action.invoice.create.invoice.set.status.value.validated,action.invoice.create.invoice.generate.method.setinvoicesequence"
-					colSpan="2" showIf="status == 1 &amp;&amp; party != null " />
+					onClick="action.invoice.create.invoice.set.status.value.validated,action.invoice.create.invoice.generate.method.setinvoicesequence,save"
+					colSpan="2" showIf="status == 1 &amp;&amp; party != null" />
 				<button name="paid" title="Paid"
 					onClick="action.invoice.create.invoice.set.status.value.paid"
 					colSpan="2" showIf="status == 2" />
@@ -75,7 +78,8 @@
 	</form>
 	<kanban name="invoice-task-kanban" title="Invoice-Kanban"
 		model="com.axelor.gst.db.Invoice" columnBy="status"
-		sequenceBy="priority" limit="10" draggable="false">
+		sequenceBy="priority" limit="10"
+		onMove="action-invoice-kanban-validate">
 		<field name="invoiceSeq" />
 		<field name="onDate" />
 		<field name="netAmount" />
@@ -89,6 +93,37 @@
     </div>
   ]]></template>
 	</kanban>
+
+	<action-group name="action-invoice-onnew">
+		<action name="default-invoice-record" />
+		<action name="action.invoice.set.product.list" />
+		<action
+			name="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact" />
+		<action
+			name="action.invoice.create.invoice.generate.method.setinvoicepartyaddress" />
+		<action
+			name="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
+	</action-group>
+
+	<action-group name="action-invoice-party-onchange">
+		<action
+			name="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact" />
+		<action
+			name="action.invoice.create.invoice.generate.method.setinvoicepartyaddress" />
+		<action
+			name="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
+		<action
+			name="action.invoice.method.calulatevalueOnaddresschange" />
+	</action-group>
+
+	<action-validate name="action-invoice-kanban-validate">
+		<error message="You cannot Move Paid invoices"
+			if="__self__.status == '3'" />
+		<error message="You cannot Move Cancelled invoices here"
+			if="__self__.status == '4' &amp;&amp; status == '3' || status == '2'" />
+		<error message="You cannot Move Draft invoices here"
+			if="__self__.status == '1' &amp;&amp; status == '3'" />
+	</action-validate>
 
 	<action-record name="default-invoice-record"
 		model="com.axelor.gst.db.InvoiceLine">
@@ -106,6 +141,8 @@
 
 	<action-attrs name="action.invoice.status.enable">
 		<attribute for="status" name="!readonly" expr="!id" />
+		<attribute for="party" name="readonly" expr=""
+			if="status == 2" />
 	</action-attrs>
 
 	<action-method

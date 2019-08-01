@@ -41,7 +41,7 @@
 		<panel title="Select Party">
 			<field name="party" type="many-to-one"
 				x-target="com.axelor.gst.db.Party" x-target-name="party" />
-			<button name="buttonSelectParty"
+			<button name="buttonSelectParty" readonlyIf="!party"
 				onClick="action.wizard.invoice.view.create.invoice,close"
 				title="Submit" />
 		</panel>
@@ -50,7 +50,7 @@
 		name="action.wizard.invoice.view.create.invoice"
 		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
 		<view type="form" name="invoice-form" />
-		<view-param name="reload-dotted" value="true"/>
+		<view-param name="reload-dotted" value="true" />
 		<context name="idList" expr="eval: idList" />
 		<context name="partyName" expr="eval: party.name" />
 	</action-view>

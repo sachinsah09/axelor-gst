@@ -67,20 +67,15 @@ public class InvoiceServiceImp implements InvoiceService {
 		Address setInvoiceShippingAddress = null;
 		Party party = invoice.getParty();
 		if (invoice.getIsInvoiceAddressAsShippingAddress() == true) {
+			setInvoiceShippingAddress=invoice.getInvoiceAddress();		
+		} else {
 			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("default")) {
 					setInvoiceShippingAddress = address;
 				} else if (address.getType().equals("shipping")) {
 					setInvoiceShippingAddress = address;
 				}
-			}
-		} else {
-			for (Address address : party.getAddressList()) {
-				if (address.getType().equals("invoice")) {
-					setInvoiceShippingAddress = address;
-				}
-			}
-		}
+			}		}
 		return setInvoiceShippingAddress;
 	}
 
@@ -111,8 +106,7 @@ public class InvoiceServiceImp implements InvoiceService {
 		if (idList != null) {
 			Party party = Beans.get(PartyRepository.class).all().filter("self.name = ?", partyName).fetchOne();
 			invoice.setParty(party);			
-			Address partyAddress = setInvoicePartyAddress(invoice);
-			invoice.setInvoiceAddress(partyAddress);
+			invoice.setInvoiceAddress(setInvoicePartyAddress(invoice));
 			setInvoicePartyAddress(invoice);
 			List<InvoiceLine> invoiceItemList = new ArrayList<InvoiceLine>();
 			String[] items = idList.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
