@@ -35,7 +35,7 @@ public class InvoiceController {
 				response.setValue("partyContact", setInvoicePartyPrimaryContact);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -49,7 +49,7 @@ public class InvoiceController {
 				response.setValue("invoiceAddress", setInvoicePartyAddress);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -63,7 +63,7 @@ public class InvoiceController {
 				response.setValue("shippingAddress", setInvoiceShippingAddress);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -76,9 +76,26 @@ public class InvoiceController {
 			response.setValue("netSgst", invoice.getNetSgst());
 			response.setValue("netCgst", invoice.getNetCgst());
 			response.setValue("grossAmount", invoice.getGrossAmount());
+			if ((invoice.getParty().getAddressList()).isEmpty()) {
+				response.setNotify("Selected Party has no address");
+			}
 		} catch (Exception e) {
-			System.out.println(e);
-
+			if (invoice.getCompany() == null) {
+				response.setNotify("Select Company");
+			} else if (invoice.getCompany().getAddress() == null) {
+				response.setNotify("Selected Company has no Address");
+			} else if ((invoice.getCompany().getAddress().getState()) == null) {
+				response.setNotify("Selected Company Address has no State");
+			} else if (invoice.getParty() == null) {
+				response.setNotify("Select Party");
+			} else if ((invoice.getParty().getAddressList()).isEmpty()) {
+				response.setNotify("Selected Party has no address");
+			} else if (invoice.getInvoiceAddress() == null) {
+				response.setNotify("Please select Invoice Address");
+			} else if ((invoice.getInvoiceAddress().getState()) == null) {
+				response.setNotify("Selected Invoice Address has no state");
+			}
+			e.printStackTrace();
 		}
 	}
 
@@ -108,24 +125,40 @@ public class InvoiceController {
 			int partyId = (int) request.getContext().get("partyId");
 			Invoice invoiceSetValue = service.setProductItem(invoice, idList, partyId);
 			response.setValues(invoiceSetValue);
+			if ((invoice.getParty().getAddressList()).isEmpty()) {
+				response.setNotify("Selected Party has no address");
+			}
 		}
 	}
 
 	public void calulateValueOnAddressChange(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
-		if (invoice.getCompany().getAddress() == null) {
-			response.setNotify("Selected Company has no Address");
-		} else if ((invoice.getParty().getAddressList()).isEmpty()) {
-			response.setNotify("Select Party has no address");
-		} else if (invoice.getInvoiceAddress() == null) {
-			response.setNotify("Please select Invoice Address");
-		}
 		try {
 			Invoice invoiceCalculateValue = service.calulateValueOnAddressChange(invoice);
 			response.setValue("invoiceItemsList", invoiceCalculateValue.getInvoiceItemsList());
 			response.setValues(invoice);
+			if ((invoice.getParty().getAddressList()).isEmpty()) {
+				response.setNotify("Selected Party has no address");
+			}
+			if ((invoice.getCompany().getAddress()) == null) {
+				response.setNotify("Selected Party has no address");
+			}
 		} catch (Exception e) {
-			response.setNotify("Please Select Party");
+			if (invoice.getCompany() == null) {
+				response.setNotify("Select Company");
+			} else if (invoice.getCompany().getAddress() == null) {
+				response.setNotify("Selected Company has no Address");
+			} else if ((invoice.getCompany().getAddress().getState()) == null) {
+				response.setNotify("Selected Company Address has no State");
+			} else if (invoice.getParty() == null) {
+				response.setNotify("Select Party");
+			} else if ((invoice.getParty().getAddressList()).isEmpty()) {
+				response.setNotify("Selected Party has no address");
+			} else if (invoice.getInvoiceAddress() == null) {
+				response.setNotify("Please select Invoice Address");
+			} else if ((invoice.getInvoiceAddress().getState()) == null) {
+				response.setNotify("Selected Invoice Address has no state");
+			}
 		}
 	}
 

@@ -82,9 +82,9 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Override
 	public Invoice invoiceCalculateFieldValue(Invoice invoice) {
-		BigDecimal netAmount = new BigDecimal(0);
-		BigDecimal netCgst = new BigDecimal(0);
-		BigDecimal netSgst = new BigDecimal(0);
+		BigDecimal netAmount = BigDecimal.ZERO;
+		BigDecimal netCgst = BigDecimal.ZERO;
+		BigDecimal netSgst = BigDecimal.ZERO;
 		BigDecimal netIgst = new BigDecimal(0);
 		BigDecimal grossAmount = new BigDecimal(0);
 		for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {

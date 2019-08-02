@@ -34,12 +34,12 @@
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" />
 			<field name="company" readonlyIf="status != 'draft'"
-				onChange="action-invoice-check-field-validation,action-invoice-method-calulatevalueonaddresschange" />
+				onChange="action-invoice-method-calulatevalueonaddresschange,action-invoice-check-field-validation" />
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party" readonlyIf="status != 'draft'"
 				onChange="action-invoice-check-field-validation,action-invoice-party-onchange,action.calculate.on.null" />
-			<field name="partyContact" domain="self.party = :party" />
+			<field name="partyContact" domain="self.party = :party" readonlyIf="status != 'draft'"/>
 			<field name="invoiceAddress" readonlyIf="status != 'draft'"
 				onChange="action-invoice-create-invoice-generate-method-setinvoiceshippingaddress,action-invoice-method-calulatevalueonaddresschange"
 				domain="self.party = :party" />

@@ -35,5 +35,4 @@ public class SequenceServiceImp implements SequenceService {
 		}
 		return sequenceNumber;
 	}
-
 }

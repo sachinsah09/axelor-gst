@@ -11,7 +11,6 @@ public class InvoiceLineServiceImp implements InvoiceLineService {
 	public InvoiceLine calculatedFieldValue(InvoiceLine invoiceLine, Invoice invoice) {
 		BigDecimal sgst = BigDecimal.ZERO, cgst = BigDecimal.ZERO, igst = BigDecimal.ZERO, netAmount=BigDecimal.ZERO,grossAmount=BigDecimal.ZERO;
 		BigDecimal qty = new BigDecimal(invoiceLine.getQty());
-
 		invoiceLine.setNetAmount(qty.multiply(invoiceLine.getPrice()));
 		if (invoice.getInvoiceAddress() != null && invoice.getCompany() != null) {
 			State invoiceState = invoice.getInvoiceAddress().getState();

@@ -20,16 +20,16 @@
 	</grid>
 	<form name="invoiceline-form" title="Invoice-Line-Form"
 		model="com.axelor.gst.db.InvoiceLine"
-		onSave="action.invoiceLine.generate.method.calculatedfieldvalue">
+		onSave="action-invoiceLine-generate-method-calculatedfieldvalue">
 		<panel title="Fill all Details">
 			<field name="product"
-				onChange="action.invoiceLine.set.product.value,action.invoiceLine.generate.method.calculatedfieldvalue" />
+				onChange="action-invoiceLine-set-product-value,action-invoiceLine-generate-method-calculatedfieldvalue" />
 			<field name="item" />
 			<field name="hsbn" />
 			<field name="price"
-				onChange="action.invoiceLine.generate.method.calculatedfieldvalue" />
+				onChange="action-invoiceLine-generate-method-calculatedfieldvalue" />
 			<field name="qty"
-				onChange="action.invoiceLine.generate.method.calculatedfieldvalue,save" />
+				onChange="action-invoiceLine-validate-field-qty,action-invoiceLine-generate-method-calculatedfieldvalue,save" />
 			<field name="netAmount" />
 			<field name="gstRate" />
 			<field name="igst" />
@@ -38,28 +38,29 @@
 			<field name="grossAmount" />
 		</panel>
 	</form>
-	<action-attrs name="action.invoiceLine.set.product.value">
+	<action-attrs name="action-invoiceLine-set-product-value">
 		<attribute for="gstRate" name="value"
-			expr="eval: product.gstRate" if="product"/>
-		<attribute for="gstRate" name="value"
-			expr="0" if="!product"/>
+			expr="eval: product.gstRate" if="product" />
+		<attribute for="gstRate" name="value" expr="0" if="!product" />
 		<attribute for="price" name="value:set"
 			expr="eval: product.salesPrice" if="product" />
-		<attribute for="price" name="value:set"
-			expr="0" if="!product" />
+		<attribute for="price" name="value:set" expr="0"
+			if="!product" />
 		<attribute for="hsbn" name="value:set"
-			expr="eval: product.hsbn" if="product"/>
-		<attribute for="hsbn" name="value:set"
-			expr="" if="!product"/>
+			expr="eval: product.hsbn" if="product" />
+		<attribute for="hsbn" name="value:set" expr="" if="!product" />
 		<attribute for="item" name="value:set"
-			expr="eval: '['+product.code+']'+product.name" if="product"/>
-		<attribute for="item" name="value:set"
-			expr="" if="!product"/>
-
+			expr="eval: '['+product.code+']'+product.name" if="product" />
+		<attribute for="item" name="value:set" expr="" if="!product" />
 	</action-attrs>
 
+	<action-validate name="action-invoiceLine-validate-field-qty">
+		<error message="Quantity cannot be less then 1"
+			if="eval: qty &lt;= 0 " />
+	</action-validate>
+
 	<action-method
-		name="action.invoiceLine.generate.method.calculatedfieldvalue">
+		name="action-invoiceLine-generate-method-calculatedfieldvalue">
 		<call class="com.axelor.gst.web.InvoiceLineController"
 			method="calculatedFieldValue" />
 	</action-method>

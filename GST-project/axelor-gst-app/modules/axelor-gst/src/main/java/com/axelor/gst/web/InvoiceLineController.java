@@ -24,7 +24,21 @@ public class InvoiceLineController {
 			response.setValue("cgst", invoiceline.getCgst());
 			response.setValue("grossAmount", invoiceline.getGrossAmount());
 		} catch (Exception e) {
-			response.setError("Please Select Party");
+			if (invoice.getCompany() == null) {
+				response.setNotify("Select Company");
+			} else if (invoice.getCompany().getAddress() == null) {
+				response.setNotify("Selected Company has no Address");
+			} else if ((invoice.getCompany().getAddress().getState()) == null) {
+				response.setNotify("Selected Company Address has no State");
+			} else if (invoice.getParty() == null) {
+				response.setNotify("Select Party");
+			} else if ((invoice.getParty().getAddressList()).isEmpty()) {
+				response.setNotify("Selected Party has no address");
+			} else if (invoice.getInvoiceAddress() == null) {
+				response.setNotify("Please select Invoice Address");
+			} else if ((invoice.getInvoiceAddress().getState()) == null) {
+				response.setNotify("Selected Invoice Address has no state");
+			} 
 		}
 	}
 }
