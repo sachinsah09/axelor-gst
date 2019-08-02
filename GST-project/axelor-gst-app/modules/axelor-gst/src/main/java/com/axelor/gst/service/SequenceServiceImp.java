@@ -13,7 +13,7 @@ public class SequenceServiceImp implements SequenceService {
 	@Transactional
 	public String calculateSequenceNumber(MetaModel metaModel) {
 		Sequence sequence = Beans.get(SequenceRepository.class).all().filter("self.model = ?", metaModel).fetchOne();
-		String sequenceNumber = "";
+		String sequenceNumber = null;
 		if (ObjectUtils.isEmpty(sequence.getId())) {
 			sequenceNumber = "not";
 			return sequenceNumber;

@@ -982,6 +982,9 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
         <style name="NewStyle1" id="334">
             <property name="textAlign">left</property>
         </style>
+        <style name="rowaside" id="335">
+            <property name="textAlign">right</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -1638,16 +1641,19 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                     </cell>
                     <cell id="222">
                         <data id="223">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">qty</property>
                         </data>
                     </cell>
                     <cell id="224">
                         <data id="225">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">price</property>
                         </data>
                     </cell>
                     <cell id="226">
                         <data id="227">
+                            <property name="style">rowaside</property>
                             <property name="paddingLeft">0pt</property>
                             <property name="paddingRight">0pt</property>
                             <property name="resultSetColumn">net_amount</property>
@@ -1655,22 +1661,26 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                     </cell>
                     <cell id="228">
                         <data id="229">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">igst</property>
                         </data>
                     </cell>
                     <cell id="230">
                         <property name="style">NewStyle</property>
                         <data id="231">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">sgst</property>
                         </data>
                     </cell>
                     <cell id="232">
+                        <property name="style">rowaside</property>
                         <data id="233">
                             <property name="resultSetColumn">cgst</property>
                         </data>
                     </cell>
                     <cell id="234">
                         <data id="235">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">gross_amount</property>
                         </data>
                     </cell>
@@ -1692,42 +1702,49 @@ from gst_invoice self Join gst_party gp ON(gp.id = self.party) where self.id = ?
                     <cell id="285">
                         <property name="style">NewStyle</property>
                         <data id="295">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">total_qty</property>
                         </data>
                     </cell>
                     <cell id="286">
                         <property name="style">NewStyle</property>
                         <data id="276">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">totalprice</property>
                         </data>
                     </cell>
                     <cell id="287">
                         <property name="style">NewStyle</property>
                         <data id="278">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">netamounttotal</property>
                         </data>
                     </cell>
                     <cell id="288">
                         <property name="style">NewStyle</property>
                         <data id="279">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">igst_total</property>
                         </data>
                     </cell>
                     <cell id="289">
                         <property name="style">NewStyle</property>
                         <data id="280">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">sgst_total</property>
                         </data>
                     </cell>
                     <cell id="290">
                         <property name="style">NewStyle</property>
                         <data id="281">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">cgst_total</property>
                         </data>
                     </cell>
                     <cell id="291">
                         <property name="style">NewStyle</property>
                         <data id="282">
+                            <property name="style">rowaside</property>
                             <property name="resultSetColumn">gross_total</property>
                         </data>
                     </cell>

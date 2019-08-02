@@ -6,6 +6,10 @@ import com.axelor.gst.db.Address;
 import com.axelor.gst.db.Contact;
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.service.InvoiceService;
+import com.axelor.gst.service.SequenceService;
+import com.axelor.inject.Beans;
+import com.axelor.meta.db.MetaModel;
+import com.axelor.meta.db.repo.MetaModelRepository;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.Inject;
@@ -14,12 +18,20 @@ public class InvoiceController {
 
 	@Inject
 	private InvoiceService service;
+	@Inject
+	private SequenceService sequenceService;
 
 	public void setInvoiceSequence(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		try {
-			String invoiceSequenceNumber = service.setInvoiceSequence(invoice);
-			response.setValue("invoiceSeq", invoiceSequenceNumber);
+			String sequenceNumber = null;
+			if (invoice.getInvoiceSeq() == null) {
+				MetaModel model = Beans.get(MetaModelRepository.class).findByName("Invoice");
+				sequenceNumber = sequenceService.calculateSequenceNumber(model);
+			} else {
+				sequenceNumber = invoice.getInvoiceSeq();
+			}
+			response.setValue("invoiceSeq", sequenceNumber);
 		} catch (Exception e) {
 			response.setError("Model not Registered");
 		}

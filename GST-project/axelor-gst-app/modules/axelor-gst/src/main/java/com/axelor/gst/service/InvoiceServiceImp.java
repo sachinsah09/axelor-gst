@@ -12,28 +12,12 @@ import com.axelor.gst.db.Product;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.repository.PartyRepository;
 import com.axelor.inject.Beans;
-import com.axelor.meta.db.MetaModel;
-import com.axelor.meta.db.repo.MetaModelRepository;
 import com.google.inject.Inject;
 
 public class InvoiceServiceImp implements InvoiceService {
 
 	@Inject
-	private SequenceService sequenceService;
-	@Inject
 	private InvoiceLineService invoiceLineService;
-
-	@Override
-	public String setInvoiceSequence(Invoice invoice) {
-		String sequenceNumber = "";
-		if (invoice.getInvoiceSeq() == null) {
-			MetaModel model = Beans.get(MetaModelRepository.class).findByName("Invoice");
-			sequenceNumber = sequenceService.calculateSequenceNumber(model);
-		} else {
-			sequenceNumber = invoice.getInvoiceSeq();
-		}
-		return sequenceNumber;
-	}
 
 	@Override
 	public Contact setInvoicePartyPrimaryContact(Invoice invoice) {
@@ -85,8 +69,8 @@ public class InvoiceServiceImp implements InvoiceService {
 		BigDecimal netAmount = BigDecimal.ZERO;
 		BigDecimal netCgst = BigDecimal.ZERO;
 		BigDecimal netSgst = BigDecimal.ZERO;
-		BigDecimal netIgst = new BigDecimal(0);
-		BigDecimal grossAmount = new BigDecimal(0);
+		BigDecimal netIgst = BigDecimal.ZERO;
+		BigDecimal grossAmount = BigDecimal.ZERO;
 		for (InvoiceLine invoiceLine : invoice.getInvoiceItemsList()) {
 			netAmount = netAmount.add(invoiceLine.getNetAmount());
 			netCgst = netCgst.add(invoiceLine.getCgst());
@@ -129,7 +113,7 @@ public class InvoiceServiceImp implements InvoiceService {
 			invoice = invoiceCalculateFieldValue(invoice);
 		}
 		return invoice;
-	}	
+	}
 
 	@Override
 	public Invoice calulateValueOnAddressChange(Invoice invoice) {
