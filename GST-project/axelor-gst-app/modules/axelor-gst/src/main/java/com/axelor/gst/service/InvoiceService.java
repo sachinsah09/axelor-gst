@@ -10,6 +10,6 @@ public interface InvoiceService {
 	public Address setInvoicePartyAddress(Invoice invoice);
 	public Address setInvoiceShippingAddress(Invoice invoice);
 	public Invoice invoiceCalculateFieldValue(Invoice invoice);
-	public Invoice setProductItem(Invoice invoice,String idList,String partyName);
+	public Invoice setProductItem(Invoice invoice,String idList,int partyId);
 	public Invoice calulateValueOnAddressChange(Invoice invoice);
 }

@@ -23,10 +23,10 @@
 	</grid>
 	<form name="invoice-form" title="Invoice-Form"
 		model="com.axelor.gst.db.Invoice" canNew="false"
-		onNew="action-invoice-onnew" onSave="action.invoice.checkstatus">
+		onNew="action-invoice-onnew" onSave="action-invoice-checkstatus">
 		<toolbar>
 			<button name="btnPrint'validated'" title="Print" showIf="id"
-				onClick="action.report.attachment.setPath,print.gst.invoice.company"
+				onClick="action-report-attachment-setpath,print-gst-invoice-company"
 				icon="fa-print" />
 		</toolbar>
 		<panel title="Fill all Details">
@@ -34,24 +34,24 @@
 			<field name="status" widget="NavSelect"
 				selection="gst.invoice.status.select" />
 			<field name="company" readonlyIf="status != 'draft'"
-				onChange="action.invoice.method.calulatevalueOnaddresschange" />
+				onChange="action-invoice-check-field-validation,action-invoice-method-calulatevalueonaddresschange" />
 			<field name="onDate" />
 			<field name="priority" />
 			<field name="party" readonlyIf="status != 'draft'"
-				onChange="action-invoice-party-onchange,action.calculate.on.null" />
+				onChange="action-invoice-check-field-validation,action-invoice-party-onchange,action.calculate.on.null" />
 			<field name="partyContact" domain="self.party = :party" />
 			<field name="invoiceAddress" readonlyIf="status != 'draft'"
-				onChange="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress,action.invoice.method.calulatevalueOnaddresschange"
+				onChange="action-invoice-create-invoice-generate-method-setinvoiceshippingaddress,action-invoice-method-calulatevalueonaddresschange"
 				domain="self.party = :party" />
 			<field name="isInvoiceAddressAsShippingAddress"
-				onChange="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress,action.invoice.method.calulatevalueOnaddresschange" />
+				onChange="action-invoice-create-invoice-generate-method-setinvoiceshippingaddress,action-invoice-method-calulatevalueonaddresschange" />
 			<field name="shippingAddress" domain="self.party = :party"
 				readonlyIf="status != 'draft'" />
 		</panel>
 		<panel-related field="invoiceItemsList"
 			readonlyIf="status == 'paid' || status == 'cancelled'"
 			onNew="default-invoice-record" onSelect="save"
-			onChange="action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue">
+			onChange="action-invoice-create-invoice-generate-method-invoicecalculatefieldvalue">
 		</panel-related>
 		<panel>
 			<field name="netAmount" />
@@ -63,17 +63,17 @@
 		<panel sidebar="true" hideIf="status == 'paid'">
 			<button-group>
 				<button name="draft" title="Draft"
-					onClick="action.invoice.create.invoice.set.status.value.draft"
+					onClick="action-invoice-create-invoice-set-status-value-draft"
 					colSpan="2" showIf="status == 'cancelled'" />
 				<button name="validated" title="Validated"
-					onClick="action.invoice.create.invoice.generate.method.setinvoicesequence,action.invoice.create.invoice.set.status.value.validated,save"
+					onClick="action-invoice-status-enable,action-invoice-create-invoice-generate-method-setinvoicesequence,action-invoice-create-invoice-set-status-value-validated,save"
 					colSpan="2"
 					showIf="status == 'draft' &amp;&amp; party != null &amp;&amp; invoiceAddress !=null &amp;&amp; shippingAddress !=null &amp;&amp;company != null " />
 				<button name="paid" title="Paid"
-					onClick="action.invoice.create.invoice.set.status.value.paid"
+					onClick="action-invoice-create-invoice-set-status-value-paid"
 					colSpan="2" showIf="status == 'validated'" />
 				<button name="cancelled" title="Cancelled"
-					onClick="action.invoice.create.invoice.set.status.value.'cancelled'"
+					onClick="action-invoice-create-invoice-set-status-value-cancelled"
 					colSpan="2" showIf="status == 'draft' || status == 'validated'" />
 			</button-group>
 		</panel>
@@ -96,26 +96,33 @@
   ]]></template>
 	</kanban>
 
+	<action-condition
+		name="action-invoice-check-field-validation">
+		<check field="party" if="!party" error="please select party" />
+		<check field="company" if="!company"
+			error="please select company" />
+	</action-condition>
+
 	<action-group name="action-invoice-onnew">
 		<action name="default-invoice-record" />
-		<action name="action.invoice.set.product.list" />
+		<action name="action-invoice-set-product-list" />
 		<action
-			name="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact" />
+			name="action-invoice-create-invoice-generate-method-setinvoicepartyprimarycontact" />
 		<action
-			name="action.invoice.create.invoice.generate.method.setinvoicepartyaddress" />
+			name="action-invoice-create-invoice-generate-method-setinvoicepartyaddress" />
 		<action
-			name="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
+			name="action-invoice-create-invoice-generate-method-setinvoiceshippingaddress" />
 	</action-group>
 
 	<action-group name="action-invoice-party-onchange">
 		<action
-			name="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact" />
+			name="action-invoice-create-invoice-generate-method-setinvoicepartyprimarycontact" />
 		<action
-			name="action.invoice.create.invoice.generate.method.setinvoicepartyaddress" />
+			name="action-invoice-create-invoice-generate-method-setinvoicepartyaddress" />
 		<action
-			name="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress" />
+			name="action-invoice-create-invoice-generate-method-setinvoiceshippingaddress" />
 		<action
-			name="action.invoice.method.calulatevalueOnaddresschange" />
+			name="action-invoice-method-calulatevalueonaddresschange" />
 	</action-group>
 
 	<action-validate name="action-invoice-kanban-validate">
@@ -124,7 +131,8 @@
 		<error
 			message="You can only move cancelled invoices to draft invoice"
 			if="__self__.status == 'cancelled' &amp;&amp; status == 'paid'" />
-		<error message="You cannot Move cancelled invoices here"
+		<error
+			message="You cannot Move cancelled invoices to draft invoice"
 			if="__self__.status == 'cancelled' &amp;&amp; status == 'validated'" />
 		<error
 			message="You can move Draft invoices to Validated or Cancelled invoice"
@@ -151,18 +159,16 @@
 	<action-record name="action.calculate.on.null"
 		model="com.axelor.gst.db.Invoice">
 		<field name="party"
-			expr="action:action.invoice.method.calulatevalueOnaddresschange"
+			expr="action:action-invoice-method-calulatevalueonaddresschange"
 			if="!(__ref__ instanceof Party)" />
 		<field name="company"
-			expr="action:action.invoice.method.calulatevalueOnaddresschange"
+			expr="action:action-invoice-method-calulatevalueonaddresschange"
 			if="__ref__ instanceof Company" />
 	</action-record>
 
-
-
-	<action-attrs name="action.invoice.status.enable">
+	<action-attrs name="action-invoice-status-enable">
 		<attribute for="status" name="!readonly" expr="!id" />
-		<attribute for="party" name="rsetInvoiceShippingAddresseadonly" expr=""
+		<attribute for="party" name="readonly" expr=""
 			if="status == 'validated'" />
 		<attribute for="invoiceAddress" name="readonly" expr=""
 			if="status == 'validated'" />
@@ -171,70 +177,70 @@
 	</action-attrs>
 
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setinvoicesequence">
+		name="action-invoice-create-invoice-generate-method-setinvoicesequence">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoiceSequence" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setinvoicepartyprimarycontact">
+		name="action-invoice-create-invoice-generate-method-setinvoicepartyprimarycontact">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoicePartyPrimaryContact" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setinvoicepartyaddress">
+		name="action-invoice-create-invoice-generate-method-setinvoicepartyaddress">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoicePartyAddress" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.setinvoiceshippingaddress">
+		name="action-invoice-create-invoice-generate-method-setinvoiceshippingaddress">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setInvoiceShippingAddress" />
 	</action-method>
 	<action-method
-		name="action.invoice.create.invoice.generate.method.invoicecalculatefieldvalue">
+		name="action-invoice-create-invoice-generate-method-invoicecalculatefieldvalue">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="invoiceCalculateFieldValue" />
 	</action-method>
-	<action-method name="action.report.attachment.setPath">
+	<action-method name="action-report-attachment-setpath">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setPath" />
 	</action-method>
-	<action-method name="action.invoice.checkstatus">
+	<action-method name="action-invoice-checkstatus">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="checkStatus" />
 	</action-method>
-	<action-method name="action.invoice.set.product.list">
+	<action-method name="action-invoice-set-product-list">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="setProductItem" />
 	</action-method>
 	<action-method
-		name="action.invoice.method.calulatevalueOnaddresschange">
+		name="action-invoice-method-calulatevalueonaddresschange">
 		<call class="com.axelor.gst.web.InvoiceController"
 			method="calulateValueOnAddressChange" />
 	</action-method>
 
 	<action-record
-		name="action.invoice.create.invoice.set.status.value.draft"
+		name="action-invoice-create-invoice-set-status-value-draft"
 		model="com.axelor.gst.db.Invoice">
 		<field name="status" expr="draft" />
 	</action-record>
 	<action-record
-		name="action.invoice.create.invoice.set.status.value.validated"
+		name="action-invoice-create-invoice-set-status-value-validated"
 		model="com.axelor.gst.db.Invoice">
 		<field name="status" expr="validated" if="invoiceSeq != null" />
 	</action-record>
 	<action-record
-		name="action.invoice.create.invoice.set.status.value.paid"
+		name="action-invoice-create-invoice-set-status-value-paid"
 		model="com.axelor.gst.db.Invoice">
 		<field name="status" expr="paid" />
 	</action-record>
 	<action-record
-		name="action.invoice.create.invoice.set.status.value.'cancelled'"
+		name="action-invoice-create-invoice-set-status-value-cancelled"
 		model="com.axelor.gst.db.Invoice">
 		<field name="status" expr="cancelled" />
 	</action-record>
 
-	<action-report name="print.gst.invoice.company"
+	<action-report name="print-gst-invoice-company"
 		design="invoice_report.rptdesign" output="inv-${date}${time}"
 		format="pdf">
 		<param name="invoiceId" expr="eval: id" />

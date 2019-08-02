@@ -100,6 +100,7 @@
 		title="Product" model="com.axelor.gst.db.Product">
 		<view type="grid" name="product-grid" />
 		<view type="form" name="product-form" />
+		<view type="cards" name="product-cards"/>
 	</action-view>
 	<menuitem name="company-root-productcategory"
 		parent="product-root" title="Product categories"

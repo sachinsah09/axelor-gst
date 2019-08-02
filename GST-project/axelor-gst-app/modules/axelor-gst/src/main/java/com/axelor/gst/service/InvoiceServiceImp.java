@@ -53,9 +53,9 @@ public class InvoiceServiceImp implements InvoiceService {
 		Party party = invoice.getParty();
 		System.out.println(party);
 		for (Address address : party.getAddressList()) {
-			if (address.getType().equals("default")) {
+			if (address.getType().equals("invoice")) {
 				setInvoicePartyAddress = address;
-			} else if (address.getType().equals("invoice")) {
+			} else if (address.getType().equals("default")) {
 				setInvoicePartyAddress = address;
 			}
 		}
@@ -68,9 +68,9 @@ public class InvoiceServiceImp implements InvoiceService {
 		Party party = invoice.getParty();
 		if (invoice.getIsInvoiceAddressAsShippingAddress() == false) {
 			for (Address address : party.getAddressList()) {
-				if (address.getType().equals("default")) {
+				if (address.getType().equals("shipping")) {
 					setInvoiceShippingAddress = address;
-				} else if (address.getType().equals("shipping")) {
+				} else if (address.getType().equals("default")) {
 					setInvoiceShippingAddress = address;
 				}
 			}
@@ -103,9 +103,9 @@ public class InvoiceServiceImp implements InvoiceService {
 	}
 
 	@Override
-	public Invoice setProductItem(Invoice invoice, String idList, String partyName) {
+	public Invoice setProductItem(Invoice invoice, String idList, int partyId) {
 		if (idList != null) {
-			Party party = Beans.get(PartyRepository.class).all().filter("self.name = ?", partyName).fetchOne();
+			Party party = Beans.get(PartyRepository.class).all().filter("self.id = ?", partyId).fetchOne();
 			invoice.setParty(party);
 			invoice.setInvoiceAddress(setInvoicePartyAddress(invoice));
 			setInvoicePartyAddress(invoice);
@@ -121,7 +121,7 @@ public class InvoiceServiceImp implements InvoiceService {
 				invoiceLine.setHsbn(product.getHsbn());
 				invoiceLine.setGstRate(product.getGstRate());
 				invoiceLine.setProduct(product);
-				invoiceLine.setNetAmount(product.getSalesPrice().multiply(new BigDecimal(1)));
+				invoiceLine.setNetAmount(product.getSalesPrice());
 				invoiceLine = invoiceLineService.calculatedFieldValue(invoiceLine, invoice);
 				invoiceItemList.add(invoiceLine);
 			}
@@ -129,7 +129,7 @@ public class InvoiceServiceImp implements InvoiceService {
 			invoice = invoiceCalculateFieldValue(invoice);
 		}
 		return invoice;
-	}
+	}	
 
 	@Override
 	public Invoice calulateValueOnAddressChange(Invoice invoice) {

@@ -90,7 +90,6 @@ public class InvoiceController {
 
 	public void checkStatus(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
-		System.out.println(invoice.getStatus());
 		if (invoice.getStatus().equals("draft")) {
 			response.setFlash("Draft Invoice Saved");
 		} else if (invoice.getStatus().equals("validated")) {
@@ -105,22 +104,28 @@ public class InvoiceController {
 	public void setProductItem(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		String idList = (String) request.getContext().get("idList");
-		String partyName = (String) request.getContext().get("partyName");
-		Invoice invoiceSetValue = service.setProductItem(invoice, idList, partyName);
-		response.setValues(invoiceSetValue);
+		if (idList != null) {
+			int partyId = (int) request.getContext().get("partyId");
+			Invoice invoiceSetValue = service.setProductItem(invoice, idList, partyId);
+			response.setValues(invoiceSetValue);
+		}
 	}
 
 	public void calulateValueOnAddressChange(ActionRequest request, ActionResponse response) {
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		if (invoice.getCompany().getAddress() == null) {
-			response.setError("Selected Company has no Address");
+			response.setNotify("Selected Company has no Address");
+		} else if ((invoice.getParty().getAddressList()).isEmpty()) {
+			response.setNotify("Select Party has no address");
+		} else if (invoice.getInvoiceAddress() == null) {
+			response.setNotify("Please select Invoice Address");
 		}
 		try {
 			Invoice invoiceCalculateValue = service.calulateValueOnAddressChange(invoice);
 			response.setValue("invoiceItemsList", invoiceCalculateValue.getInvoiceItemsList());
 			response.setValues(invoice);
 		} catch (Exception e) {
-			response.setError("Please Select Party");
+			response.setNotify("Please Select Party");
 		}
 	}
 

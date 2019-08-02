@@ -35,7 +35,31 @@
 			<field name="gstRate" />
 		</panel>
 	</form>
-
+	<cards name="product-cards" title="Products"
+		model="com.axelor.gst.db.Product">
+		<field name="name" />
+		<field name="code" />
+		<field name="hsbn" />
+		<field name="category" />
+		<field name="salesPrice" />
+		<field name="costPrice" />
+		<field name="gstRate" />
+		<field name="image" />
+		<template><![CDATA[
+		 <div class="span4 card-image">
+        <img ng-if="image"  ng-src="{{$image(null, 'image')}}">
+        <img ng-if="!image" ng-src="{{$image(null, 'image')}}">
+        <strong>{{name}}</strong><br>
+      </div>
+         <abbr ng-if="code" title="code">Code:</abbr><strong> {{code}}</strong><br>
+         <abbr ng-if="hsbn" title="hsbn">HSBN:</abbr><strong> {{hsbn}}</strong><br>
+          <abbr ng-if="category" title="category">Category:</abbr><strong> {{category.name}}</strong><br>
+          <abbr  title="salesPrice">Sales Price:</abbr><strong> {{salesPrice}}</strong><br>
+          Cost Price:<strong> {{costPrice}}</strong><br>
+    	  Gst Rate:<strong> {{gstRate}}</strong><br>
+    	</div>
+    ]]></template>
+	</cards>
 	<form name="invoice-wizard-party-select-form"
 		title="invoice-wizard-Form" model="com.axelor.gst.db.Invoice">
 		<panel title="Select Party">
@@ -52,7 +76,7 @@
 		<view type="form" name="invoice-form" />
 		<view-param name="reload-dotted" value="true" />
 		<context name="idList" expr="eval: idList" />
-		<context name="partyName" expr="eval: party.name" />
+		<context name="partyId" expr="eval: party.id" />
 	</action-view>
 	<action-view name="action.wizard.select.party"
 		title="Create-Invoice" model="com.axelor.gst.db.Invoice">
