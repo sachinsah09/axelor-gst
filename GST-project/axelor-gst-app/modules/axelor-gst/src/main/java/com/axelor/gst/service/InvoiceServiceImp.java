@@ -9,6 +9,8 @@ import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
 import com.axelor.gst.db.Party;
 import com.axelor.gst.db.Product;
+import com.axelor.gst.db.repo.AddressRepository;
+import com.axelor.gst.db.repo.ContactRepository;
 import com.axelor.gst.db.repo.ProductRepository;
 import com.axelor.gst.repository.PartyRepository;
 import com.axelor.inject.Beans;
@@ -18,13 +20,15 @@ public class InvoiceServiceImp implements InvoiceService {
 
 	@Inject
 	private InvoiceLineService invoiceLineService;
+	private AddressRepository addressRepository;
+	private ContactRepository contactRepository;
 
 	@Override
 	public Contact setInvoicePartyPrimaryContact(Invoice invoice) {
 		Contact setInvoicePartyPrimaryContact = null;
 		Party party = invoice.getParty();
 		for (Contact contact : party.getContactList()) {
-			if (contact.getType().equals("primary")) {
+			if (contact.getType().equals(ContactRepository.CONTACT_TYPE_PRIMARY)) {
 				setInvoicePartyPrimaryContact = contact;
 			}
 		}
@@ -36,13 +40,13 @@ public class InvoiceServiceImp implements InvoiceService {
 		Address setInvoicePartyAddress = null;
 		Party party = invoice.getParty();
 		for (Address address : party.getAddressList()) {
-			if (address.getType().equals("invoice")) {
+			if (address.getType().equals(AddressRepository.ADDRESS_TYPE_INVOICE)) {
 				setInvoicePartyAddress = address;
 			}
 		}
 		if (setInvoicePartyAddress == null) {
 			for (Address address : party.getAddressList()) {
-				if (address.getType().equals("default")) {
+				if (address.getType().equals(AddressRepository.ADDRESS_TYPE_DEFAULT)) {
 					setInvoicePartyAddress = address;
 				}
 			}
@@ -56,13 +60,13 @@ public class InvoiceServiceImp implements InvoiceService {
 		Party party = invoice.getParty();
 		if (invoice.getIsInvoiceAddressAsShippingAddress() == false) {
 			for (Address address : party.getAddressList()) {
-				if (address.getType().equals("shipping")) {
+				if (address.getType().equals(AddressRepository.ADDRESS_TYPE_SHIPPING)) {
 					setInvoiceShippingAddress = address;
 				}
 			}
 			if (setInvoiceShippingAddress == null) {
 				for (Address address : party.getAddressList()) {
-					if (address.getType().equals("default")) {
+					if (address.getType().equals(AddressRepository.ADDRESS_TYPE_DEFAULT)) {
 						setInvoiceShippingAddress = address;
 					}
 				}

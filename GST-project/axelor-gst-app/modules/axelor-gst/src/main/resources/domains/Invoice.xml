@@ -11,7 +11,7 @@
 			selection="gst.invoice.status.select" default="draft" readonly="true" />
 		<many-to-one name="company" title="Company Name"
 			ref="com.axelor.gst.db.Company" required="true" />
-		<string name="invoiceSeq"  readonly="true"
+		<string name="invoiceSeq" readonly="true"
 			title="Invoice Number" namecolumn="true" />
 		<datetime name="onDate" title="Invoice Generated Date" />
 		<integer name="priority" title="Set Prority" />
@@ -20,7 +20,7 @@
 		<many-to-one name="partyContact" title="Party Contact"
 			ref="com.axelor.gst.db.Contact" />
 		<many-to-one name="invoiceAddress" title="Invoice Address"
-			ref="com.axelor.gst.db.Address" required="true"/>
+			ref="com.axelor.gst.db.Address" required="true" />
 		<many-to-one name="shippingAddress"
 			title="Shipping Address" ref="com.axelor.gst.db.Address" />
 		<boolean name="isInvoiceAddressAsShippingAddress"

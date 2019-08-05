@@ -15,6 +15,11 @@
 		<string name="primaryPhone" title="Primary Phone" />
 		<string name="secondaryPhone" title="Secondary Phone" />
 		<many-to-one name="party" ref="com.axelor.gst.db.Party" />
+		<extra-code>
+		<![CDATA[
+	   			public static final String CONTACT_TYPE_PRIMARY = "primary";
+	   		]]>
+		</extra-code>
 	</entity>
 </domain-models>
 

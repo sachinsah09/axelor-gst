@@ -39,7 +39,8 @@
 			<field name="priority" />
 			<field name="party" readonlyIf="status != 'draft'"
 				onChange="action-invoice-check-field-validation,action-invoice-party-onchange,action.calculate.on.null" />
-			<field name="partyContact" domain="self.party = :party" readonlyIf="status != 'draft'"/>
+			<field name="partyContact" domain="self.party = :party"
+				readonlyIf="status != 'draft'" />
 			<field name="invoiceAddress" readonlyIf="status != 'draft'"
 				onChange="action-invoice-create-invoice-generate-method-setinvoiceshippingaddress,action-invoice-method-calulatevalueonaddresschange"
 				domain="self.party = :party" />
