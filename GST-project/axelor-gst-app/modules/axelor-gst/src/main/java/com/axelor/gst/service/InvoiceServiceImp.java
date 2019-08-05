@@ -35,12 +35,16 @@ public class InvoiceServiceImp implements InvoiceService {
 	public Address setInvoicePartyAddress(Invoice invoice) {
 		Address setInvoicePartyAddress = null;
 		Party party = invoice.getParty();
-		System.out.println(party);
 		for (Address address : party.getAddressList()) {
 			if (address.getType().equals("invoice")) {
 				setInvoicePartyAddress = address;
-			} else if (address.getType().equals("default")) {
-				setInvoicePartyAddress = address;
+			}
+		}
+		if (setInvoicePartyAddress == null) {
+			for (Address address : party.getAddressList()) {
+				if (address.getType().equals("default")) {
+					setInvoicePartyAddress = address;
+				}
 			}
 		}
 		return setInvoicePartyAddress;
@@ -54,8 +58,13 @@ public class InvoiceServiceImp implements InvoiceService {
 			for (Address address : party.getAddressList()) {
 				if (address.getType().equals("shipping")) {
 					setInvoiceShippingAddress = address;
-				} else if (address.getType().equals("default")) {
-					setInvoiceShippingAddress = address;
+				}
+			}
+			if (setInvoiceShippingAddress == null) {
+				for (Address address : party.getAddressList()) {
+					if (address.getType().equals("default")) {
+						setInvoiceShippingAddress = address;
+					}
 				}
 			}
 		} else {
